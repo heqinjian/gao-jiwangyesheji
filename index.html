@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="何秦剑的高级网页设计课堂实践作品集">
+    <title>高级网页设计 | 何秦剑的课堂实践</title>
+    <style>
+        :root {
+            --he_bg: #0b0d0a;
+            --he_panel: #12150f;
+            --he_panel-2: #191d14;
+            --he_line: #2b3126;
+            --he_text: #eef1e6;
+            --he_muted: #98a189;
+            --he_accent: #c9f24f;
+            --he_dark: #0a0c09;
+            --he_mono: "Cascadia Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+            --he_sans: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--he_text);
+            background-color: var(--he_bg);
+            background-image:
+                radial-gradient(880px 520px at 88% -10%, rgba(201, 242, 79, 0.13), transparent 72%),
+                radial-gradient(700px 460px at -6% 6%, rgba(96, 142, 255, 0.08), transparent 72%),
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 64px),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 64px);
+            background-attachment: fixed;
+            font-family: var(--he_sans);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ::selection {
+            background: var(--he_accent);
+            color: var(--he_dark);
+        }
+
+        .he_page-shell {
+            min-height: 100vh;
+        }
+
+        .he_topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid var(--he_line);
+            background: rgba(11, 13, 10, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .he_topbar-inner {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .he_brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+
+        .he_brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            color: var(--he_dark);
+            background: var(--he_accent);
+            border-radius: 3px;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .he_topbar nav {
+            display: flex;
+            gap: 26px;
+            font-family: var(--he_mono);
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .he_topbar nav a {
+            color: var(--he_muted);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color 160ms ease, border-color 160ms ease;
+        }
+
+        .he_topbar nav a:hover {
+            color: var(--he_accent);
+            border-bottom-color: var(--he_accent);
+        }
+
+        .he_hero {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: clamp(58px, 9vw, 118px) 0 clamp(44px, 6vw, 76px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .he_hero::before {
+            content: "17";
+            position: absolute;
+            right: -1vw;
+            top: 3%;
+            font-family: var(--he_mono);
+            font-weight: 900;
+            font-size: clamp(168px, 25vw, 360px);
+            line-height: 0.78;
+            letter-spacing: -0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(201, 242, 79, 0.18);
+            pointer-events: none;
+        }
+
+        .he_hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .he_eyebrow {
+            margin: 0 0 18px;
+            color: var(--he_accent);
+            font-family: var(--he_mono);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+        }
+
+        .he_eyebrow::before {
+            content: "";
+            display: inline-block;
+            width: 34px;
+            height: 1px;
+            margin-right: 12px;
+            vertical-align: 4px;
+            background: var(--he_accent);
+        }
+
+        .he_section-eyebrow {
+            color: var(--he_muted);
+        }
+
+        .he_section-eyebrow::before {
+            background: var(--he_line);
+        }
+
+        h1 {
+            max-width: 900px;
+            margin: 0;
+            font-size: clamp(38px, 6.4vw, 76px);
+            font-weight: 800;
+            line-height: 1.06;
+            letter-spacing: -0.01em;
+        }
+
+        .he_hl {
+            color: var(--he_accent);
+        }
+
+        .he_hero-intro {
+            max-width: 60ch;
+            margin: 26px 0 0;
+            color: var(--he_muted);
+            font-size: 16.5px;
+        }
+
+        .he_hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .he_hero-meta span {
+            padding: 7px 13px;
+            color: #cbd3bd;
+            border: 1px solid var(--he_line);
+            background: var(--he_panel);
+            border-radius: 2px;
+            font-family: var(--he_mono);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+        }
+
+        .he_hero-meta span::before {
+            content: "// ";
+            color: var(--he_accent);
+        }
+
+        .he_hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: clamp(40px, 5vw, 62px);
+            border-top: 1px solid var(--he_line);
+        }
+
+        .he_stat {
+            padding: 22px 26px 0;
+            border-right: 1px solid var(--he_line);
+        }
+
+        .he_stat:first-child {
+            padding-left: 0;
+        }
+
+        .he_stat:last-child {
+            border-right: 0;
+        }
+
+        .he_stat b {
+            display: block;
+            color: var(--he_accent);
+            font-family: var(--he_mono);
+            font-size: clamp(26px, 3.4vw, 40px);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .he_stat span {
+            color: var(--he_muted);
+            font-family: var(--he_mono);
+            font-size: 12px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .he_marquee {
+            overflow: hidden;
+            border-top: 1px solid var(--he_line);
+            border-bottom: 1px solid var(--he_line);
+            background: var(--he_panel);
+        }
+
+        .he_marquee-track {
+            display: flex;
+            width: max-content;
+            animation: he_ticker-scroll 42s linear infinite;
+        }
+
+        .he_marquee-track span {
+            padding: 11px 24px;
+            border-right: 1px solid var(--he_line);
+            color: var(--he_muted);
+            font-family: var(--he_mono);
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .he_marquee-track span::before {
+            content: "\2733";
+            margin-right: 12px;
+            color: var(--he_accent);
+        }
+
+        @keyframes he_ticker-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        main {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: clamp(54px, 7vw, 88px) 0 clamp(58px, 7vw, 92px);
+        }
+
+        .he_section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 28px;
+            margin-bottom: 26px;
+        }
+
+        .he_section-heading h2 {
+            margin: 0;
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 800;
+            letter-spacing: 0.01em;
+        }
+
+        .he_section-heading p {
+            max-width: 420px;
+            margin: 0;
+            color: var(--he_muted);
+            font-size: 13.5px;
+            text-align: right;
+        }
+
+        .he_works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border-top: 1px solid var(--he_line);
+            border-left: 1px solid var(--he_line);
+        }
+
+        .he_work-card {
+            position: relative;
+            min-height: 200px;
+            padding: 26px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+            border-right: 1px solid var(--he_line);
+            border-bottom: 1px solid var(--he_line);
+            background: transparent;
+            transition: background 200ms ease;
+        }
+
+        .he_work-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--he_accent);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 220ms ease;
+        }
+
+        .he_work-card:hover {
+            background: var(--he_panel-2);
+        }
+
+        .he_work-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .he_card-number {
+            color: var(--he_accent);
+            font-family: var(--he_mono);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .he_work-card h3 {
+            margin: 12px 0 8px;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .he_work-card p {
+            margin: 0;
+            color: var(--he_muted);
+            font-size: 13.5px;
+        }
+
+        .he_card-link {
+            width: fit-content;
+            padding-bottom: 2px;
+            color: var(--he_muted);
+            border-bottom: 1px solid currentColor;
+            font-family: var(--he_mono);
+            font-size: 12.5px;
+            letter-spacing: 0.08em;
+            transition: color 160ms ease, letter-spacing 220ms ease;
+        }
+
+        .he_work-card:hover .he_card-link {
+            color: var(--he_accent);
+            letter-spacing: 0.14em;
+        }
+
+        .he_work-card.he_featured {
+            grid-column: span 2;
+            color: var(--he_dark);
+            background: var(--he_accent);
+        }
+
+        .he_work-card.he_featured::before {
+            background: var(--he_dark);
+        }
+
+        .he_featured .he_card-number {
+            color: rgba(10, 12, 9, 0.6);
+        }
+
+        .he_featured h3 {
+            font-size: clamp(24px, 2.6vw, 32px);
+        }
+
+        .he_featured p {
+            max-width: 46ch;
+            color: rgba(10, 12, 9, 0.72);
+            font-size: 14px;
+        }
+
+        .he_featured .he_card-link,
+        .he_work-card.he_featured:hover .he_card-link {
+            color: var(--he_dark);
+        }
+
+        .he_work-card.he_featured:hover {
+            background: #d8ff62;
+        }
+
+        .he_about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            margin-top: clamp(54px, 7vw, 86px);
+            border-top: 1px solid var(--he_line);
+            border-left: 1px solid var(--he_line);
+        }
+
+        .he_profile-panel,
+        .he_prompt-panel {
+            padding: 30px 28px;
+            border-right: 1px solid var(--he_line);
+            border-bottom: 1px solid var(--he_line);
+            background: var(--he_panel);
+        }
+
+        .he_profile-panel {
+            background:
+                linear-gradient(160deg, rgba(201, 242, 79, 0.08), transparent 62%),
+                var(--he_panel-2);
+        }
+
+        .he_profile-label,
+        .he_prompt-label {
+            margin: 0 0 14px;
+            font-family: var(--he_mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+        }
+
+        .he_profile-label {
+            color: var(--he_accent);
+        }
+
+        .he_prompt-label {
+            color: var(--he_muted);
+        }
+
+        .he_profile-panel h2,
+        .he_prompt-panel h2 {
+            margin: 0 0 12px;
+            font-size: 22px;
+        }
+
+        .he_profile-panel p,
+        .he_prompt-panel p {
+            margin: 0;
+            font-size: 13.5px;
+        }
+
+        .he_profile-panel p {
+            color: #c6ceb9;
+        }
+
+        .he_prompt-panel p {
+            color: var(--he_muted);
+        }
+
+        footer {
+            padding: 26px 20px 42px;
+            border-top: 1px solid var(--he_line);
+            color: var(--he_muted);
+            font-family: var(--he_mono);
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-align: center;
+        }
+
+        @media (max-width: 980px) {
+            .he_works-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .he_work-card.he_featured {
+                grid-column: span 2;
+            }
+
+            .he_about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .he_topbar-inner,
+            .he_section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .he_topbar nav {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+
+            .he_hero {
+                padding-top: 46px;
+            }
+
+            .he_hero::before {
+                font-size: 132px;
+                opacity: 0.7;
+            }
+
+            .he_section-heading p {
+                text-align: left;
+            }
+
+            .he_works-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .he_work-card.he_featured {
+                grid-column: auto;
+            }
+
+            .he_hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .he_stat {
+                padding: 18px 0;
+                border-right: 0;
+                border-bottom: 1px solid var(--he_line);
+            }
+
+            .he_stat:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .he_marquee-track {
+                animation: none;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="he_page-shell">
+        <header class="he_topbar">
+            <div class="he_topbar-inner">
+                <a class="he_brand" href="index.html" aria-label="返回首页">
+                    <span class="he_brand-mark">何</span>
+                    <span class="he_brand-text">课堂实践档案</span>
+                </a>
+                <nav aria-label="页面导航">
+                    <a href="#he_works">实践作品</a>
+                    <a href="#he_about">关于本页</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="he_hero" aria-labelledby="he_page-title">
+            <p class="he_eyebrow">ADVANCED WEB DESIGN / CLASS PRACTICE</p>
+            <h1 id="he_page-title">何秦剑的<br>《高级网页设计》<span class="he_hl">课堂实践</span></h1>
+            <p class="he_hero-intro">从 HTML 基础结构到 CSS 页面样式，这里记录每一次课堂练习，也保留继续探索网页设计的起点。</p>
+            <div class="he_hero-meta">
+                <span>学号 418</span>
+                <span>计算机24004</span>
+                <span>原生 HTML / CSS</span>
+            </div>
+            <div class="he_hero-stats">
+                <div class="he_stat">
+                    <b>17</b>
+                    <span>实践页面</span>
+                </div>
+                <div class="he_stat">
+                    <b>11</b>
+                    <span>学习章节</span>
+                </div>
+                <div class="he_stat">
+                    <b>100%</b>
+                    <span>原生代码</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="he_marquee" aria-hidden="true">
+            <div class="he_marquee-track">
+                <span>HTML 结构</span>
+                <span>CSS 样式</span>
+                <span>盒模型</span>
+                <span>选择器</span>
+                <span>文本与列表</span>
+                <span>超链接与图片</span>
+                <span>表单控件</span>
+                <span>FLEX 布局</span>
+                <span>定位与浮动</span>
+                <span>CSS3 过渡</span>
+                <span>2D 变换</span>
+                <span>关键帧动画</span>
+                <span>媒体查询</span>
+                <span>CSS 长度单位</span>
+                <span>HTML 结构</span>
+                <span>CSS 样式</span>
+                <span>盒模型</span>
+                <span>选择器</span>
+                <span>文本与列表</span>
+                <span>超链接与图片</span>
+                <span>表单控件</span>
+                <span>FLEX 布局</span>
+                <span>定位与浮动</span>
+                <span>CSS3 过渡</span>
+                <span>2D 变换</span>
+                <span>关键帧动画</span>
+                <span>媒体查询</span>
+                <span>CSS 长度单位</span>
+            </div>
+        </div>
+
+        <main>
+            <section id="he_works" aria-labelledby="he_works-title">
+                <div class="he_section-heading">
+                    <div>
+                        <p class="he_eyebrow he_section-eyebrow">WORK INDEX</p>
+                        <h2 id="he_works-title">实践作品导航</h2>
+                    </div>
+                    <p>点击卡片即可打开对应课堂网页，所有链接均指向当前目录中的本地文件。</p>
+                </div>
+
+                <div class="he_works-grid">
+                    <a class="he_work-card he_featured" href="4-1.html">
+                        <div>
+                            <span class="he_card-number">04 · CSS</span>
+                            <h3>CSS 那些事</h3>
+                            <p>群组选择器、后代选择器、层叠与继承的综合练习。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="2-1.html">
+                        <div>
+                            <span class="he_card-number">01 · HTML</span>
+                            <h3>第一个网页</h3>
+                            <p>从标题、段落、列表到文字颜色的 HTML 基础实践。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="2-2.html">
+                        <div>
+                            <span class="he_card-number">02 · MEDIA</span>
+                            <h3>超链接与图片</h3>
+                            <p>练习链接、图片、表格等常见网页元素的组合使用。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="3-1.html">
+                        <div>
+                            <span class="he_card-number">03 · FORM</span>
+                            <h3>表单实践</h3>
+                            <p>使用输入框、单选框、复选框和下拉菜单搭建表单。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="3-2.html">
+                        <div>
+                            <span class="he_card-number">03 · STYLE</span>
+                            <h3>CSS 选择器</h3>
+                            <p>通过颜色、背景和盒模型，观察 CSS 选择器的效果。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="5-1.html">
+                        <div>
+                            <span class="he_card-number">05 · LAYOUT</span>
+                            <h3>第五章实践一</h3>
+                            <p>第五章课堂网页设计与布局实践。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="5-2.html">
+                        <div>
+                            <span class="he_card-number">05 · LAYOUT</span>
+                            <h3>第五章实践二</h3>
+                            <p>第五章课堂网页设计的延伸练习。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="6-1.html">
+                        <div>
+                            <span class="he_card-number">06 · FLEX</span>
+                            <h3>第六章实践一</h3>
+                            <p>使用 Flex 布局完成页面结构与元素排列。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="6-1%20flex.html">
+                        <div>
+                            <span class="he_card-number">06 · FLEX</span>
+                            <h3>第六章 Flex 实践</h3>
+                            <p>通过 Flex 模型继续练习网页布局。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="6-2.html">
+                        <div>
+                            <span class="he_card-number">06 · FLEX</span>
+                            <h3>第六章实践二</h3>
+                            <p>第六章网页布局与样式综合实践。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="7-1上图下文.html">
+                        <div>
+                            <span class="he_card-number">07 · MEDIA</span>
+                            <h3>上图下文布局</h3>
+                            <p>练习图片位于上方、文字位于下方的内容布局。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="7-2左图右文.html">
+                        <div>
+                            <span class="he_card-number">07 · MEDIA</span>
+                            <h3>左图右文布局</h3>
+                            <p>练习图片与文字左右排列的网页布局。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="8-1.html">
+                        <div>
+                            <span class="he_card-number">08 · CSS3</span>
+                            <h3>悬停与过渡特效</h3>
+                            <p>13 个方块练习 :hover、transition、阴影、渐变与 2D 变形等效果。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="10-2.html">
+                        <div>
+                            <span class="he_card-number">10 · ANIMATION</span>
+                            <h3>CSS 动画幻灯片</h3>
+                            <p>用 @keyframes 驱动三帧图片幻灯片，配合黑底与淡入动画。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="10-3.html">
+                        <div>
+                            <span class="he_card-number">10 · MEDIA QUERY</span>
+                            <h3>视口与媒体查询</h3>
+                            <p>全屏盒子循环变色，视口变窄时用媒体查询与 rem 自适应缩放。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="11-1.html">
+                        <div>
+                            <span class="he_card-number">11 · CSS UNIT</span>
+                            <h3>CSS 长度单位</h3>
+                            <p>px、em、rem、vw、vh 等长度单位的对比展示与实时换算。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+
+                    <a class="he_work-card" href="11-2.html">
+                        <div>
+                            <span class="he_card-number">11 · 3D</span>
+                            <h3>CSS3 3D 动画</h3>
+                            <p>透视、翻转卡片、3D 立方体与旋转木马等立体动画效果。</p>
+                        </div>
+                        <span class="he_card-link">打开页面 →</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="he_about-grid" id="he_about" aria-label="页面说明">
+                <article class="he_profile-panel">
+                    <p class="he_profile-label">STUDENT PROFILE</p>
+                    <h2>何秦剑 · 学号 418</h2>
+                    <p>计算机24004<br>高级网页设计课程实践作品集</p>
+                </article>
+                <article class="he_prompt-panel">
+                    <p class="he_prompt-label">CURRENT PROMPT</p>
+                    <h2>本页面的创建要求</h2>
+                    <p>"创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为何秦剑的《高级网页设计》课堂实践，美化页面，页面中包括本提示词。"</p>
+                </article>
+            </section>
+        </main>
+
+        <footer>何秦剑的《高级网页设计》课堂实践 · 2026</footer>
+    </div>
+</body>
+</html>

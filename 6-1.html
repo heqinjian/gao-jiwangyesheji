@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>何秦剑flex</title>
+    <style>
+        *{
+            .flex{
+                display: flex;
+            }
+            .flex li{
+                border: 1px solid #000;
+                flex-grow: 1;
+                display: flex;
+                list-style: none;
+            }
+        }
+        .flex li:nth-child(1){
+            align-items: center;
+            justify-content: center;
+        }
+        .box{
+            width: 50%;
+            height:50%;
+            background: red;
+        }
+        .flex li:nth-child(1) .box{
+           bkground: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <li>
+            <div class="box">1</div>
+        </li>
+        <li>
+            <div class="box">1</div>
+        </li>
+    </div>
+</body>
+</html>

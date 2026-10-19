@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 3D 动画 | 11-2 何秦剑</title>
+    <style>
+        :root {
+            --he_bg: #f4f6fb;
+            --he_card: #ffffff;
+            --he_ink: #1e2330;
+            --he_muted: #667089;
+            --he_line: #e2e7f2;
+            --he_accent: #4f46e5;
+            --he_accent-2: #8b7cf6;
+            --he_orange: #d96831;
+            --he_soft: #f8faff;
+            --he_red: #e5484d;
+            --he_green: #30a46c;
+            --he_blue: #3e63dd;
+            --he_yellow: #f5a623;
+            --he_purple: #8e4ec6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+            padding: 36px 18px 72px;
+            background: var(--he_bg);
+            color: var(--he_ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.7;
+        }
+
+        .he_wrap {
+            max-width: 1020px;
+            margin: 0 auto;
+        }
+
+        .he_eyebrow {
+            margin: 0 0 6px;
+            color: var(--he_accent);
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+
+        .he_title {
+            margin: 0;
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.15;
+        }
+
+        .he_lead {
+            max-width: 760px;
+            margin: 12px 0 26px;
+            color: var(--he_muted);
+            font-size: 14px;
+        }
+
+        .he_card {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--he_card);
+            border: 1px solid var(--he_line);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(31, 41, 80, 0.06);
+        }
+
+        .he_card-head {
+            margin: 0 0 4px;
+            font-size: 19px;
+        }
+
+        .he_tag {
+            margin-left: 8px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #eef0ff;
+            color: var(--he_accent);
+            font-size: 11px;
+            font-weight: 400;
+            vertical-align: 3px;
+        }
+
+        .he_card-desc {
+            margin: 0 0 16px;
+            color: var(--he_muted);
+            font-size: 13px;
+        }
+
+        .he_stage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            min-height: 220px;
+            padding: 24px;
+            margin-top: 14px;
+            overflow: hidden;
+            background: var(--he_soft);
+            border: 1px dashed var(--he_line);
+            border-radius: 10px;
+        }
+
+        .he_note {
+            margin: 14px 0 0;
+            padding-left: 12px;
+            border-left: 3px solid var(--he_accent-2);
+            color: var(--he_muted);
+            font-size: 13px;
+        }
+
+        code {
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: #eef0ff;
+            color: #3b32c9;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        /* ========== Demo 1: perspective 透视对比 ========== */
+        .he_persp-box {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .he_persp-scene {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .he_persp-100 { perspective: 100px; }
+        .he_persp-400 { perspective: 400px; }
+        .he_persp-1000 { perspective: 1000px; }
+
+        .he_persp-cube {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--he_accent), var(--he_accent-2));
+            border-radius: 8px;
+            animation: he_spin-y 4s linear infinite;
+        }
+
+        .he_persp-label {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--he_muted);
+            text-align: center;
+        }
+
+        /* ========== Demo 2: hover 翻转卡片 ========== */
+        .he_flip-scene {
+            width: 200px;
+            height: 260px;
+            perspective: 1000px;
+        }
+
+        .he_flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .he_flip-scene:hover .he_flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .he_flip-face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 14px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            box-shadow: 0 12px 30px rgba(31, 41, 80, 0.18);
+        }
+
+        .he_flip-front {
+            background: linear-gradient(135deg, var(--he_accent), var(--he_accent-2));
+            color: #fff;
+        }
+
+        .he_flip-back {
+            background: linear-gradient(135deg, var(--he_orange), #e8a87c);
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+
+        .he_flip-emoji {
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .he_flip-text {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .he_flip-sub {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        /* ========== Demo 3: 3D 立方体 ========== */
+        .he_cube-scene {
+            width: 160px;
+            height: 160px;
+            perspective: 600px;
+        }
+
+        .he_cube {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: he_cube-spin 8s linear infinite;
+        }
+
+        .he_cube-face {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            opacity: 0.92;
+        }
+
+        .he_cube-front  { background: var(--he_red);    transform: translateZ(80px); }
+        .he_cube-back   { background: var(--he_orange);  transform: rotateY(180deg) translateZ(80px); }
+        .he_cube-right  { background: var(--he_yellow); transform: rotateY(90deg) translateZ(80px); }
+        .he_cube-left   { background: var(--he_green);  transform: rotateY(-90deg) translateZ(80px); }
+        .he_cube-top    { background: var(--he_blue);   transform: rotateX(90deg) translateZ(80px); }
+        .he_cube-bottom { background: var(--he_purple);  transform: rotateX(-90deg) translateZ(80px); }
+
+        /* ========== Demo 4: 3D 旋转木马 ========== */
+        .he_carousel-scene {
+            width: 220px;
+            height: 160px;
+            perspective: 800px;
+        }
+
+        .he_carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: he_carousel-spin 12s linear infinite;
+        }
+
+        .he_carousel-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 70px;
+            margin: -35px 0 0 -60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--he_accent), var(--he_accent-2));
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+        }
+
+        .he_carousel-item:nth-child(1) { transform: rotateY(0deg)  translateZ(110px); background: var(--he_red); }
+        .he_carousel-item:nth-child(2) { transform: rotateY(60deg) translateZ(110px); background: var(--he_orange); }
+        .he_carousel-item:nth-child(3) { transform: rotateY(120deg) translateZ(110px); background: var(--he_yellow); color: #5a4300; }
+        .he_carousel-item:nth-child(4) { transform: rotateY(180deg) translateZ(110px); background: var(--he_green); }
+        .he_carousel-item:nth-child(5) { transform: rotateY(240deg) translateZ(110px); background: var(--he_blue); }
+        .he_carousel-item:nth-child(6) { transform: rotateY(300deg) translateZ(110px); background: var(--he_purple); }
+
+        /* ========== Demo 5: 3D 倾斜弹跳球 ========== */
+        .he_ball-scene {
+            width: 200px;
+            height: 200px;
+            perspective: 500px;
+        }
+
+        .he_ball-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .he_ball {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 70px;
+            margin: -35px 0 0 -35px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #a5b4fc, var(--he_accent) 60%, #312e81);
+            box-shadow: inset -8px -8px 20px rgba(0, 0, 0, 0.35);
+            animation: he_ball-bounce 2s ease-in-out infinite;
+        }
+
+        .he_ball-shadow {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            width: 80px;
+            height: 18px;
+            margin-left: -40px;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35), transparent 70%);
+            border-radius: 50%;
+            animation: he_ball-shadow 2s ease-in-out infinite;
+        }
+
+        /* ========== Demo 6: 3D 翻牌墙（hover 倾斜） ========== */
+        .he_tile-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .he_tile-scene {
+            aspect-ratio: 1;
+            perspective: 600px;
+        }
+
+        .he_tile {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--he_accent), var(--he_accent-2));
+            transition: transform 0.45s ease, box-shadow 0.45s ease;
+            transform-style: preserve-3d;
+        }
+
+        .he_tile-scene:hover .he_tile {
+            transform: rotateY(25deg) rotateX(-12deg) translateZ(10px);
+            box-shadow: 20px 20px 30px rgba(31, 41, 80, 0.25);
+        }
+
+        .he_tile:nth-child(2) .he_tile { background: linear-gradient(135deg, var(--he_red), var(--he_orange)); }
+        .he_tile:nth-child(3) .he_tile { background: linear-gradient(135deg, var(--he_green), #16a34a); }
+        .he_tile:nth-child(4) .he_tile { background: linear-gradient(135deg, var(--he_blue), var(--he_purple)); }
+
+        /* ========== Keyframes ========== */
+        @keyframes he_spin-y {
+            from { transform: rotateY(0deg); }
+            to   { transform: rotateY(360deg); }
+        }
+
+        @keyframes he_cube-spin {
+            from { transform: rotateX(-20deg) rotateY(0deg); }
+            to   { transform: rotateX(-20deg) rotateY(360deg); }
+        }
+
+        @keyframes he_carousel-spin {
+            from { transform: rotateY(0deg); }
+            to   { transform: rotateY(360deg); }
+        }
+
+        @keyframes he_ball-bounce {
+            0%, 100% { transform: translateY(-60px) rotateX(15deg); }
+            50%      { transform: translateY(40px) rotateX(-10deg); }
+        }
+
+        @keyframes he_ball-shadow {
+            0%, 100% { transform: scale(0.6); opacity: 0.25; }
+            50%      { transform: scale(1.1); opacity: 0.5; }
+        }
+
+        /* ========== Footer ========== */
+        .he_footer {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--he_line);
+            color: var(--he_muted);
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="he_wrap">
+        <p class="he_eyebrow">CSS3 · 3D TRANSFORM</p>
+        <h1 class="he_title">CSS3 3D 动画演示</h1>
+        <p class="he_lead">
+            通过 perspective、rotateX/Y/Z、transform-style: preserve-3d、backface-visibility 等属性，
+            在二维屏幕上构建三维空间效果。以下六个示例覆盖了透视、翻转、立方体、旋转木马、弹跳与倾斜卡片等典型 3D 动画场景。
+        </p>
+
+        <!-- Demo 1: 透视对比 -->
+        <section class="he_card">
+            <h2 class="he_card-head">① perspective 透视距离对比 <span class="he_tag">perspective</span></h2>
+            <p class="he_card-desc">
+                同一个旋转方块，在不同 <code>perspective</code> 值下呈现不同的透视强度。值越小，近大远小越夸张；值越大，越接近平面。
+            </p>
+            <div class="he_stage">
+                <div>
+                    <div class="he_persp-scene he_persp-100">
+                        <div class="he_persp-cube"></div>
+                    </div>
+                    <p class="he_persp-label">perspective: 100px</p>
+                </div>
+                <div>
+                    <div class="he_persp-scene he_persp-400">
+                        <div class="he_persp-cube"></div>
+                    </div>
+                    <p class="he_persp-label">perspective: 400px</p>
+                </div>
+                <div>
+                    <div class="he_persp-scene he_persp-1000">
+                        <div class="he_persp-cube"></div>
+                    </div>
+                    <p class="he_persp-label">perspective: 1000px</p>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b><code>perspective</code> 写在<b>父元素</b>上，定义观察者到 z=0 平面的距离；写在子元素上则等价于 <code>transform: perspective()</code>。
+            </p>
+        </section>
+
+        <!-- Demo 2: 翻转卡片 -->
+        <section class="he_card">
+            <h2 class="he_card-head">② Hover 翻转卡片 <span class="he_tag">rotateY + backface-visibility</span></h2>
+            <p class="he_card-desc">
+                鼠标悬停时卡片绕 Y 轴翻转 180°，正面隐藏、背面显示。核心是 <code>transform-style: preserve-3d</code> 与 <code>backface-visibility: hidden</code>。
+            </p>
+            <div class="he_stage">
+                <div class="he_flip-scene">
+                    <div class="he_flip-inner">
+                        <div class="he_flip-face he_flip-front">
+                            <div class="he_flip-emoji">🎴</div>
+                            <div class="he_flip-text">FRONT</div>
+                            <div class="he_flip-sub">把鼠标放上来</div>
+                        </div>
+                        <div class="he_flip-face he_flip-back">
+                            <div class="he_flip-emoji">✨</div>
+                            <div class="he_flip-text">BACK</div>
+                            <div class="he_flip-sub">你看到了背面</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b>背面必须先 <code>rotateY(180deg)</code> 预翻转，否则翻转后会看到镜像；同时父级要开启 <code>perspective</code> 才有立体感。
+            </p>
+        </section>
+
+        <!-- Demo 3: 3D 立方体 -->
+        <section class="he_card">
+            <h2 class="he_card-head">③ 3D 立方体 <span class="he_tag">preserve-3d + translateZ</span></h2>
+            <p class="he_card-desc">
+                六个面通过 <code>translateZ(half)</code> 沿 Z 轴推出，再用 <code>rotateX/Y</code> 定位到立方体的六个方位，整体沿 Y 轴旋转。
+            </p>
+            <div class="he_stage">
+                <div class="he_cube-scene">
+                    <div class="he_cube">
+                        <div class="he_cube-face he_cube-front">前</div>
+                        <div class="he_cube-face he_cube-back">后</div>
+                        <div class="he_cube-face he_cube-right">右</div>
+                        <div class="he_cube-face he_cube-left">左</div>
+                        <div class="he_cube-face he_cube-top">上</div>
+                        <div class="he_cube-face he_cube-bottom">下</div>
+                    </div>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b>立方体边长 160px，每个面 <code>translateZ(80px)</code>（边长的一半）。父容器必须 <code>transform-style: preserve-3d</code>，否则所有面会被压平。
+            </p>
+        </section>
+
+        <!-- Demo 4: 3D 旋转木马 -->
+        <section class="he_card">
+            <h2 class="he_card-head">④ 3D 旋转木马 <span class="he_tag">rotateY(60°n) + translateZ</span></h2>
+            <p class="he_card-desc">
+                六个元素均匀分布在一个虚拟圆柱面上：先 <code>rotateY(n×60deg)</code> 再 <code>translateZ(110px)</code>，整体绕 Y 轴匀速旋转。
+            </p>
+            <div class="he_stage">
+                <div class="he_carousel-scene">
+                    <div class="he_carousel">
+                        <div class="he_carousel-item">HTML</div>
+                        <div class="he_carousel-item">CSS</div>
+                        <div class="he_carousel-item">JS</div>
+                        <div class="he_carousel-item">Vue</div>
+                        <div class="he_carousel-item">React</div>
+                        <div class="he_carousel-item">Node</div>
+                    </div>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b>变换顺序很关键——必须先旋转再平移，否则元素会被推到同一个方向而不是绕成一圈。
+            </p>
+        </section>
+
+        <!-- Demo 5: 3D 弹跳球 -->
+        <section class="he_card">
+            <h2 class="he_card-head">⑤ 3D 倾斜弹跳球 <span class="he_tag">rotateX + 阴影联动</span></h2>
+            <p class="he_card-desc">
+                小球在弹跳过程中带 <code>rotateX</code> 倾斜，底部阴影同步缩放与透明度变化，模拟光照下的立体感。
+            </p>
+            <div class="he_stage">
+                <div class="he_ball-scene">
+                    <div class="he_ball-stage">
+                        <div class="he_ball"></div>
+                        <div class="he_ball-shadow"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b>阴影不是真 3D，而是通过同步关键帧动画让阴影与球的位置、大小联动，视觉上更有真实感。
+            </p>
+        </section>
+
+        <!-- Demo 6: 3D 倾斜卡片墙 -->
+        <section class="he_card">
+            <h2 class="he_card-head">⑥ Hover 3D 倾斜卡片墙 <span class="he_tag">rotateX + rotateY + translateZ</span></h2>
+            <p class="he_card-desc">
+                鼠标悬停时卡片同时沿 X、Y 轴倾斜并沿 Z 轴抬升，配合位移阴影营造"抬起"的 3D 视差效果。
+            </p>
+            <div class="he_stage">
+                <div class="he_tile-grid">
+                    <div class="he_tile-scene"><div class="he_tile">A</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">B</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">C</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">D</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">E</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">F</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">G</div></div>
+                    <div class="he_tile-scene"><div class="he_tile">H</div></div>
+                </div>
+            </div>
+            <p class="he_note">
+                <b>要点：</b>父级 <code>perspective</code> 让倾斜有近大远小的透视感；<code>translateZ(10px)</code> 把卡片"拉出"屏幕，配合阴影偏移更像真实抬起。
+            </p>
+        </section>
+
+        <footer class="he_footer">
+            11-2 CSS3 3D 动画 · 何秦剑 · 2026
+        </footer>
+    </div>
+</body>
+</html>

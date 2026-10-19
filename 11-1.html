@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 长度单位 | 11-1 何秦剑</title>
+    <style>
+        :root {
+            --he_bg: #f4f6fb;
+            --he_card: #ffffff;
+            --he_ink: #1e2330;
+            --he_muted: #667089;
+            --he_line: #e2e7f2;
+            --he_accent: #4f46e5;
+            --he_accent-2: #8b7cf6;
+            --he_orange: #d96831;
+            --he_soft: #f8faff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+            padding: 36px 18px 72px;
+            background: var(--he_bg);
+            color: var(--he_ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.7;
+        }
+
+        .he_wrap {
+            max-width: 1020px;
+            margin: 0 auto;
+        }
+
+        .he_eyebrow {
+            margin: 0 0 6px;
+            color: var(--he_accent);
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.15;
+        }
+
+        .he_lead {
+            max-width: 760px;
+            margin: 12px 0 26px;
+            color: var(--he_muted);
+            font-size: 14px;
+        }
+
+        .he_card {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--he_card);
+            border: 1px solid var(--he_line);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(31, 41, 80, 0.06);
+        }
+
+        .he_card > h2 {
+            margin: 0 0 4px;
+            font-size: 19px;
+        }
+
+        .he_tag {
+            margin-left: 8px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #eef0ff;
+            color: var(--he_accent);
+            font-size: 11px;
+            font-weight: 400;
+            vertical-align: 3px;
+        }
+
+        .he_card > p {
+            margin: 0 0 16px;
+            color: var(--he_muted);
+            font-size: 13px;
+        }
+
+        .he_unit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .he_unit-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 7px 12px;
+            background: var(--he_soft);
+            border: 1px dashed var(--he_line);
+            border-radius: 9px;
+        }
+
+        .he_unit-name {
+            flex: 0 0 96px;
+            color: var(--he_accent);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .he_track {
+            display: flex;
+            flex: 1 1 auto;
+            overflow: hidden;
+        }
+
+        .he_bar {
+            display: block;
+            flex: none;
+            height: 18px;
+            background: linear-gradient(90deg, var(--he_accent), var(--he_accent-2));
+            border-radius: 4px;
+        }
+
+        .he_px {
+            flex: 0 0 92px;
+            margin-left: auto;
+            color: var(--he_muted);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .he_note {
+            margin: 14px 0 0;
+            padding-left: 12px;
+            border-left: 3px solid var(--he_accent-2);
+            color: var(--he_muted);
+            font-size: 13px;
+        }
+
+        .he_note.he_warn {
+            border-left-color: var(--he_orange);
+        }
+
+        code {
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: #eef0ff;
+            color: #3b32c9;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        .he_mono {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .he_vstage {
+            display: flex;
+            height: 230px;
+            gap: 18px;
+            padding: 12px;
+            margin-top: 14px;
+            overflow: hidden;
+            background: var(--he_soft);
+            border: 1px dashed var(--he_line);
+            border-radius: 9px;
+        }
+
+        .he_vitem {
+            display: flex;
+            flex: 0 0 92px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            gap: 5px;
+        }
+
+        .he_vbar {
+            display: block;
+            flex: none;
+            width: 52px;
+            background: linear-gradient(180deg, var(--he_accent-2), var(--he_accent));
+            border-radius: 6px 6px 0 0;
+        }
+
+        .he_vitem .he_unit-name,
+        .he_vitem .he_px {
+            flex: none;
+            width: 100%;
+            margin: 0;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .he_lab-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .he_lab-control label {
+            flex: 0 0 200px;
+            color: var(--he_muted);
+        }
+
+        .he_lab-control output {
+            flex: 0 0 64px;
+            color: var(--he_accent);
+            font-family: Consolas, "Courier New", monospace;
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            flex: 1 1 auto;
+            height: 4px;
+            accent-color: var(--he_accent);
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th,
+        td {
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--he_line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--he_soft);
+            color: var(--he_muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td:first-child {
+            color: var(--he_accent);
+            font-family: Consolas, "Courier New", monospace;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        footer {
+            margin-top: 26px;
+            color: var(--he_muted);
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="he_wrap">
+        <header>
+            <p class="he_eyebrow">WEB 前端基础 / 11-1</p>
+            <h1>CSS 长度单位</h1>
+            <p class="he_lead">
+                每一行色带都按它标注的单位真实渲染，右侧数字是浏览器算出的像素值。改变窗口大小或拖动下面的滑块，数字会实时刷新——这就是“绝对单位”和“相对单位”的区别。
+            </p>
+        </header>
+
+        <section class="he_card">
+            <h2>一、绝对单位<span class="he_tag">不随字体和窗口变化</span></h2>
+            <p>绝对单位基于固定的长度换算，缩放窗口、修改字体大小都不会改变它们渲染出来的长度。</p>
+            <div class="he_unit-list">
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">96px</span>
+                    <span class="he_track"><span class="he_bar" style="width: 96px"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">1in</span>
+                    <span class="he_track"><span class="he_bar" style="width: 1in"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">2.54cm</span>
+                    <span class="he_track"><span class="he_bar" style="width: 2.54cm"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">25.4mm</span>
+                    <span class="he_track"><span class="he_bar" style="width: 25.4mm"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">1pc</span>
+                    <span class="he_track"><span class="he_bar" style="width: 1pc"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">12pt</span>
+                    <span class="he_track"><span class="he_bar" style="width: 12pt"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">1Q</span>
+                    <span class="he_track"><span class="he_bar" style="width: 1Q"></span></span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+            <p class="he_note">
+                在 CSS 里 <code>1in = 2.54cm = 25.4mm = 96px</code>，所以前四行的长度完全一样；<code>1pc = 12pt = 16px</code>；
+                而 <code>1Q = 1/40cm ≈ 0.94px</code>，细到几乎看不见。网页开发中真正常用的只有 <code>px</code>。
+            </p>
+        </section>
+
+        <section class="he_card">
+            <h2>二、字体相对单位<span class="he_tag">跟着字体大小走</span></h2>
+            <p>
+                这一组的参照物是字体大小：<code>em</code> 看父元素，<code>rem</code> 看根元素（html）。
+                下面这块容器的 <code>font-size</code> 是 20px，根元素是 16px。
+            </p>
+            <div class="he_unit-list" id="he_emParent" style="font-size: 20px">
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">3em</span>
+                    <span class="he_track"><span class="he_bar" style="width: 3em"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">3rem</span>
+                    <span class="he_track"><span class="he_bar" style="width: 3rem"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">12ch</span>
+                    <span class="he_track"><span class="he_bar he_mono" style="width: 12ch"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">4ex</span>
+                    <span class="he_track"><span class="he_bar" style="width: 4ex"></span></span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+            <p class="he_note">
+                同样是 3 倍：<code>3em</code> = 20px × 3 = 60px，<code>3rem</code> = 16px × 3 = 48px，长度并不相等。
+                <code>ch</code> 是数字 “0” 的宽度，配合等宽字体可以精确控制“一行放几个字符”；<code>ex</code> 是小写字母 x 的高度，中文场景参考价值不高。
+            </p>
+        </section>
+
+        <section class="he_card">
+            <h2>三、视口单位<span class="he_tag">跟着窗口大小走</span></h2>
+            <p>
+                视口单位以浏览器可视区域为参照（当前视口：<span class="he_mono" id="he_viewportOut">--</span>）。
+                拖动窗口边缘，下面的色带和数字会立刻变化；超长的色带会被卡片裁切，但右侧像素值依然准确。
+            </p>
+            <div class="he_unit-list">
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">10vw</span>
+                    <span class="he_track"><span class="he_bar" style="width: 10vw"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">25vw</span>
+                    <span class="he_track"><span class="he_bar" style="width: 25vw"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">50vw</span>
+                    <span class="he_track"><span class="he_bar" style="width: 50vw"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">10vmin</span>
+                    <span class="he_track"><span class="he_bar" style="width: 10vmin"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">10vmax</span>
+                    <span class="he_track"><span class="he_bar" style="width: 10vmax"></span></span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+
+            <div class="he_vstage">
+                <div class="he_vitem" data-measure data-axis="y">
+                    <span class="he_vbar" style="height: 6vh"></span>
+                    <span class="he_unit-name">6vh</span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_vitem" data-measure data-axis="y">
+                    <span class="he_vbar" style="height: 12vh"></span>
+                    <span class="he_unit-name">12vh</span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_vitem" data-measure data-axis="y">
+                    <span class="he_vbar" style="height: 18vh"></span>
+                    <span class="he_unit-name">18vh</span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_vitem" data-measure data-axis="y">
+                    <span class="he_vbar" style="height: 10vmin"></span>
+                    <span class="he_unit-name">10vmin</span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+            <p class="he_note">
+                <code>1vw</code> 是视口宽度的 1%，<code>1vh</code> 是视口高度的 1%；<code>vmin</code> 取两者中较小的那个，
+                <code>vmax</code> 取较大的，所以 <code>10vmin</code> 永远“塞得进屏幕”。移动端地址栏收缩会让 <code>vh</code> 跳动，
+                这时可以改用 <code>dvh / svh / lvh</code>。
+            </p>
+        </section>
+
+        <section class="he_card">
+            <h2>四、百分比<span class="he_tag">看参照物是谁</span></h2>
+            <p>百分比没有固定长度，它永远相对于“某个父级属性”换算，所以必须先弄清楚参照物是谁。</p>
+            <div class="he_unit-list">
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">100%</span>
+                    <span class="he_track"><span class="he_bar" style="width: 100%"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">60%</span>
+                    <span class="he_track"><span class="he_bar" style="width: 60%"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">30%</span>
+                    <span class="he_track"><span class="he_bar" style="width: 30%"></span></span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+            <p class="he_note he_warn">
+                常见坑：<code>width</code> 的百分比相对父元素宽度；<code>height</code> 的百分比要求父元素有确定高度，否则失效；
+                而 <code>padding</code> / <code>margin</code> 的上下百分比也是按父元素“宽度”计算，不是高度。
+            </p>
+        </section>
+
+        <section class="he_card">
+            <h2>五、实验台<span class="he_tag">rem / em / px 对照</span></h2>
+            <p>拖动滑块改变根元素和父元素的字体大小，观察三条色带谁在变、谁不变。</p>
+            <div class="he_lab-control">
+                <label for="he_rootSize">根元素 font-size（html）</label>
+                <input type="range" id="he_rootSize" min="10" max="28" step="1" value="16">
+                <output id="he_rootOut">16px</output>
+            </div>
+            <div class="he_lab-control">
+                <label for="he_emSize">父元素 font-size（#he_emParent）</label>
+                <input type="range" id="he_emSize" min="10" max="32" step="1" value="20">
+                <output id="he_emOut">20px</output>
+            </div>
+            <div class="he_unit-list">
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">2rem</span>
+                    <span class="he_track"><span class="he_bar" style="width: 2rem"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">2em</span>
+                    <span class="he_track"><span class="he_bar" style="width: 2em"></span></span>
+                    <span class="he_px"></span>
+                </div>
+                <div class="he_unit-row" data-measure>
+                    <span class="he_unit-name">40px</span>
+                    <span class="he_track"><span class="he_bar" style="width: 40px"></span></span>
+                    <span class="he_px"></span>
+                </div>
+            </div>
+            <p class="he_note">
+                结论：<code>px</code> 始终不变；<code>rem</code> 只跟根元素走，适合做整站缩放；<code>em</code> 跟当前元素继承来的字体大小走，
+                适合组件内部按比例缩放，但嵌套多了容易“层层相乘”。
+            </p>
+        </section>
+
+        <section class="he_card">
+            <h2>六、单位速查表</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>单位</th>
+                        <th>参照对象</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>px</td>
+                        <td>屏幕像素</td>
+                        <td>绝对单位，最常用；在高分屏上由浏览器统一缩放适配。</td>
+                    </tr>
+                    <tr>
+                        <td>in / cm / mm / Q</td>
+                        <td>物理长度</td>
+                        <td>屏幕上仍按 <code>1in = 96px</code> 换算，<code>1Q = 1/40cm</code>。</td>
+                    </tr>
+                    <tr>
+                        <td>pt / pc</td>
+                        <td>印刷单位</td>
+                        <td><code>1pt = 1/72in</code>，<code>1pc = 12pt = 16px</code>。</td>
+                    </tr>
+                    <tr>
+                        <td>em</td>
+                        <td>当前元素 font-size</td>
+                        <td>组件内部等比例缩放常用，嵌套时注意数值累乘。</td>
+                    </tr>
+                    <tr>
+                        <td>rem</td>
+                        <td>根元素 font-size</td>
+                        <td>推荐的整体缩放方案，改 html 字体大小即可全局生效。</td>
+                    </tr>
+                    <tr>
+                        <td>ch</td>
+                        <td>“0” 的宽度</td>
+                        <td>等宽字体下按字符数控制宽度，如 <code>60ch</code>。</td>
+                    </tr>
+                    <tr>
+                        <td>ex</td>
+                        <td>小写 x 的高度</td>
+                        <td>约等于 0.5em，中文环境下很少使用。</td>
+                    </tr>
+                    <tr>
+                        <td>lh / rlh</td>
+                        <td>行高</td>
+                        <td><code>1lh</code> = 当前元素一行的高度，做纵向节奏很好用。</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td>父元素的同类属性</td>
+                        <td>width 看父宽、height 需父高确定，padding 上下也按父宽算。</td>
+                    </tr>
+                    <tr>
+                        <td>vw / vh</td>
+                        <td>视口宽 / 高</td>
+                        <td><code>1vw</code> = 视口宽度的 1%，常用于占满一屏的区块。</td>
+                    </tr>
+                    <tr>
+                        <td>vmin / vmax</td>
+                        <td>视口较小 / 较大边</td>
+                        <td>做自适应正方形、居中大标题时可避免溢出。</td>
+                    </tr>
+                    <tr>
+                        <td>dvh / svh / lvh</td>
+                        <td>移动端视口高度</td>
+                        <td>动态 / 最小 / 最大高度，解决地址栏伸缩导致的跳动。</td>
+                    </tr>
+                    <tr>
+                        <td>fr</td>
+                        <td>网格剩余空间</td>
+                        <td>只能用在 Grid 的 <code>grid-template-*</code> 属性里。</td>
+                    </tr>
+                    <tr>
+                        <td>cqw / cqh / cqi</td>
+                        <td>容器尺寸</td>
+                        <td>配合 <code>container-type</code> 实现真正的“组件级”响应式。</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="he_note he_warn">
+                书写提醒：只有数字 <code>0</code> 可以省略单位（<code>margin: 0</code>），非零值必须带单位；
+                混合单位运算要用 <code>calc()</code> 或 <code>min() / max() / clamp()</code>，例如 <code>calc(100% - 2rem)</code>；
+                <code>line-height</code> 建议写无单位数字（如 1.5），它会随各自的字体大小自动换算。
+            </p>
+        </section>
+
+        <footer>何秦剑 · 11-1 CSS 长度单位 · 缩放浏览器窗口可查看视口单位的实时变化</footer>
+    </div>
+
+    <script>
+        const he_rootRange = document.getElementById('he_rootSize');
+        const he_emRange = document.getElementById('he_emSize');
+        const he_rootOut = document.getElementById('he_rootOut');
+        const he_emOut = document.getElementById('he_emOut');
+        const he_emParent = document.getElementById('he_emParent');
+        const he_viewportOut = document.getElementById('he_viewportOut');
+
+        function he_measureAll() {
+            document.querySelectorAll('[data-measure]').forEach(function (he_row) {
+                const he_bar = he_row.querySelector('.he_bar, .he_vbar');
+                const he_out = he_row.querySelector('.he_px');
+                if (!he_bar || !he_out) {
+                    return;
+                }
+                const he_rect = he_bar.getBoundingClientRect();
+                const he_value = he_row.dataset.axis === 'y' ? he_rect.height : he_rect.width;
+                he_out.textContent = he_value.toFixed(2) + 'px';
+            });
+            he_viewportOut.textContent = window.innerWidth + ' × ' + window.innerHeight;
+        }
+
+        function he_applyFontSize() {
+            document.documentElement.style.fontSize = he_rootRange.value + 'px';
+            he_emParent.style.fontSize = he_emRange.value + 'px';
+            he_rootOut.textContent = he_rootRange.value + 'px';
+            he_emOut.textContent = he_emRange.value + 'px';
+            he_measureAll();
+        }
+
+        he_rootRange.addEventListener('input', he_applyFontSize);
+        he_emRange.addEventListener('input', he_applyFontSize);
+        window.addEventListener('resize', he_measureAll);
+
+        he_applyFontSize();
+    </script>
+</body>
+</html>

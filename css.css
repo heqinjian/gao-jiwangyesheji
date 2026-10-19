@@ -1,0 +1,15 @@
+p{
+    color:blue 
+}
+#text{
+    color: aquamarine;
+}
+.text{
+    color: burlywood;
+}
+#box #text{
+    color: orange;
+}
+.box{
+    color:cyan
+}

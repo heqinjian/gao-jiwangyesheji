@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="何秦剑的视口响应式 CSS animation 页面">
+    <title>10-3 视口变化 | 何秦剑</title>
+    <style>
+        :root {
+            font-size: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            color: #fff;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        .viewport-box {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            text-align: center;
+            background: #e85d75;
+            animation: four-colors 12s infinite ease-in-out;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            animation: content-enter 1.2s both ease-out;
+        }
+
+        .label {
+            margin: 0 0 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.3rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 4rem;
+            line-height: 1.1;
+        }
+
+        .description {
+            max-width: 34rem;
+            margin: 1.25rem auto 0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .orbit,
+        .orbit::before,
+        .orbit::after {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.42);
+            border-radius: 50%;
+        }
+
+        .orbit {
+            width: 34rem;
+            height: 34rem;
+            animation: orbit-spin 18s linear infinite;
+        }
+
+        .orbit::before,
+        .orbit::after {
+            content: "";
+            inset: 3rem;
+        }
+
+        .orbit::after {
+            inset: 7rem;
+            border-style: dashed;
+        }
+
+        @keyframes four-colors {
+            0%, 100% { background-color: #e85d75; }
+            25% { background-color: #e59f45; }
+            50% { background-color: #2a9d8f; }
+            75% { background-color: #3d6cb4; }
+        }
+
+        @keyframes content-enter {
+            from { opacity: 0; transform: translateY(2rem); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes orbit-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 48rem) {
+            :root {
+                font-size: 14px;
+            }
+
+            .viewport-box {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .description {
+                font-size: 1rem;
+            }
+
+            .orbit {
+                width: 24rem;
+                height: 24rem;
+            }
+        }
+
+        @media (max-width: 30rem) {
+            :root {
+                font-size: 12px;
+            }
+
+            h1 {
+                font-size: 2.6rem;
+            }
+
+            .orbit {
+                width: 19rem;
+                height: 19rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .viewport-box,
+            .content,
+            .orbit {
+                animation-play-state: paused;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="viewport-box">
+        <div class="orbit" aria-hidden="true"></div>
+        <section class="content">
+            <p class="label">10-3 / MEDIA QUERY</p>
+            <h1>何秦剑</h1>
+            <p class="description">全屏盒子的背景会随着时间经过四种颜色，视口变窄时，文字也会使用 rem 自适应缩小。</p>
+        </section>
+    </main>
+</body>
+</html>
