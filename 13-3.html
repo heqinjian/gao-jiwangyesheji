@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>移动端底部导航 · 浅色版 | 13-3 何秦剑</title>
-    <link rel="stylesheet" href="cdn/font_5244711_9uvaap8xw1/iconfont.css">
+    <title>移动端底部导航 · PNG图标浅色版 | 13-3 何秦剑</title>
     <style>
         :root {
             --he-bg: #ececf3;
@@ -13,14 +12,12 @@
             --he-ink: #1c2233;
             --he-muted: #9aa0b4;
             --he-line: #eceef5;
-            --he-accent: #3b6cff;
+            --he-accent: #0b93f6;
             --he-badge: #ff3b30;
-            --he-shadow: 0 8px 24px rgba(20, 30, 70, 0.12);
             --he-radius: 16px;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         html, body { margin: 0; padding: 0; }
 
         body {
@@ -29,7 +26,6 @@
             font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
         }
 
-        /* ===== 手机外框：自适应宽度，最大 480px ===== */
         .he-phone {
             position: relative;
             width: 100%;
@@ -40,7 +36,6 @@
             box-shadow: 0 0 40px rgba(20, 30, 70, 0.14);
         }
 
-        /* ===== 顶部标题栏 ===== */
         .he-topbar {
             position: sticky;
             top: 0;
@@ -55,18 +50,29 @@
             font-weight: 700;
         }
 
-        /* ===== 内容区 ===== */
-        .he-content {
-            padding: 14px 14px 96px;
-        }
-
+        .he-content { padding: 14px 14px 96px; }
         .he-panel { display: none; }
         .he-panel.he-active { display: block; }
+
+        .he-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 38px;
+            padding: 0 14px;
+            background: var(--he-bar);
+            border: 1px solid var(--he-line);
+            border-radius: 999px;
+            color: var(--he-muted);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+        .he-search img { width: 17px; height: 17px; }
 
         .he-banner {
             height: 130px;
             border-radius: var(--he-radius);
-            background: linear-gradient(135deg, #5e85ff, #3b6cff);
+            background: linear-gradient(135deg, #42b3ff, #0b93f6);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -89,36 +95,19 @@
             padding: 12px;
             box-shadow: 0 2px 10px rgba(20, 30, 70, 0.05);
         }
-
         .he-card .he-thumb {
             height: 96px;
             border-radius: 8px;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #dde4ff, #c9d5ff);
+            background: linear-gradient(135deg, #e2f2ff, #cfe9ff);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
-            color: var(--he-accent);
         }
+        .he-card .he-thumb img { width: 42px; height: 42px; }
         .he-card h4 { margin: 0 0 3px; font-size: 13px; }
         .he-card p { margin: 0; font-size: 12px; color: var(--he-muted); }
         .he-card .he-price { margin-top: 6px; color: var(--he-badge); font-size: 14px; font-weight: 700; }
-
-        .he-search {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            height: 38px;
-            padding: 0 14px;
-            background: var(--he-bar);
-            border: 1px solid var(--he-line);
-            border-radius: 999px;
-            color: var(--he-muted);
-            font-size: 13px;
-            margin-bottom: 14px;
-        }
-        .he-search .iconfont { font-size: 16px; }
 
         .he-list { display: flex; flex-direction: column; gap: 10px; }
         .he-row {
@@ -133,10 +122,10 @@
             width: 40px; height: 40px;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: #fff;
-            background: linear-gradient(135deg, #5e85ff, #3b6cff);
+            background: linear-gradient(135deg, #42b3ff, #0b93f6);
             flex: none;
         }
+        .he-row .he-ico img { width: 22px; height: 22px; }
         .he-row h4 { margin: 0; font-size: 14px; }
         .he-row p { margin: 2px 0 0; font-size: 12px; color: var(--he-muted); }
 
@@ -144,7 +133,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            background: linear-gradient(135deg, #5e85ff, #3b6cff);
+            background: linear-gradient(135deg, #42b3ff, #0b93f6);
             color: #fff;
             border-radius: var(--he-radius);
             padding: 18px;
@@ -155,8 +144,8 @@
             border-radius: 50%;
             background: rgba(255,255,255,0.25);
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px;
         }
+        .he-avatar img { width: 34px; height: 34px; }
         .he-profile h4 { margin: 0 0 4px; font-size: 17px; }
         .he-profile p { margin: 0; font-size: 12px; opacity: 0.9; }
 
@@ -185,20 +174,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 4px;
             padding: 8px 0 9px;
             border: none;
             background: transparent;
             color: var(--he-muted);
             font-family: inherit;
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        .he-tab .iconfont {
-            font-size: 22px;
-            line-height: 1;
-            transition: transform 0.18s ease;
+        .he-tab img {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            /* 未选中：灰度弱化，PNG 原色变灰 */
+            filter: grayscale(1) opacity(0.45);
         }
 
         .he-tab .he-tab-text {
@@ -211,11 +201,11 @@
             font-weight: 700;
         }
 
-        .he-tab.he-active .iconfont {
-            transform: translateY(-2px) scale(1.08);
+        .he-tab.he-active img {
+            transform: translateY(-2px) scale(1.12);
+            filter: none;
         }
 
-        /* 顶部指示横条 */
         .he-tab .he-tab-line {
             position: absolute;
             top: 0;
@@ -229,7 +219,7 @@
         }
         .he-tab.he-active .he-tab-line { width: 26px; }
 
-        /* 数字徽章（右上角） */
+        /* 数字徽章 */
         .he-badge-num {
             position: absolute;
             top: 2px;
@@ -251,7 +241,7 @@
             box-sizing: content-box;
         }
 
-        /* 红点（右上角） */
+        /* 红点 */
         .he-badge-dot {
             position: absolute;
             top: 6px;
@@ -281,7 +271,7 @@
             <!-- 首页 -->
             <section class="he-panel he-active" data-panel="home">
                 <div class="he-search">
-                    <i class="iconfont icon-sousuo"></i>
+                    <img src="cdn/icon_utdzicv0fnf/icon-test_12.png" alt="搜索">
                     <span>搜索你想要的商品</span>
                 </div>
                 <div class="he-banner">
@@ -290,28 +280,28 @@
                 </div>
                 <div class="he-grid2">
                     <div class="he-card">
-                        <div class="he-thumb"><i class="iconfont icon-pingguo"></i></div>
-                        <h4>苹果数码专区</h4>
-                        <p>官方正品 分期免息</p>
-                        <div class="he-price">¥ 5999 起</div>
+                        <div class="he-thumb"><img src="cdn/icon_utdzicv0fnf/icon-test_10.png" alt="购物车"></div>
+                        <h4>购物专区</h4>
+                        <p>每日好物 超值低价</p>
+                        <div class="he-price">低至 1 折</div>
                     </div>
                     <div class="he-card">
-                        <div class="he-thumb"><i class="iconfont icon-shipin"></i></div>
-                        <h4>视频会员</h4>
+                        <div class="he-thumb"><img src="cdn/icon_utdzicv0fnf/icon-test_19.png" alt="播放"></div>
+                        <h4>视频娱乐</h4>
                         <p>高清大片 随心看</p>
                         <div class="he-price">¥ 15/月</div>
                     </div>
                     <div class="he-card">
-                        <div class="he-thumb"><i class="iconfont icon-shoucang"></i></div>
+                        <div class="he-thumb"><img src="cdn/icon_utdzicv0fnf/icon-test_56.png" alt="收藏"></div>
                         <h4>我的收藏</h4>
                         <p>收藏的好物都在这</p>
                         <div class="he-price">128 件</div>
                     </div>
                     <div class="he-card">
-                        <div class="he-thumb"><i class="iconfont icon-huangguanhuiyuan"></i></div>
-                        <h4>皇冠会员</h4>
-                        <p>尊享 12 项特权</p>
-                        <div class="he-price">立即开通</div>
+                        <div class="he-thumb"><img src="cdn/icon_utdzicv0fnf/icon-test_22.png" alt="通知"></div>
+                        <h4>消息中心</h4>
+                        <p>优惠与订单通知</p>
+                        <div class="he-price">3 条新消息</div>
                     </div>
                 </div>
             </section>
@@ -320,20 +310,20 @@
             <section class="he-panel" data-panel="find">
                 <div class="he-list">
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-faxian"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_21.png" alt="发现"></div>
                         <div><h4>每日推荐</h4><p>根据你的喜好精选好物</p></div>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-shipin"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_19.png" alt="视频"></div>
                         <div><h4>热门视频</h4><p>大家都在看的开箱评测</p></div>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-weixin"></i></div>
-                        <div><h4>好友在买</h4><p>微信好友近期购入</p></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_37.png" alt="好友"></div>
+                        <div><h4>好友在买</h4><p>好友近期购入的好物</p></div>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-dengji"></i></div>
-                        <div><h4>等级任务</h4><p>完成任务提升会员等级</p></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_39.png" alt="分类"></div>
+                        <div><h4>全部分类</h4><p>按分类浏览全部商品</p></div>
                     </div>
                 </div>
             </section>
@@ -342,18 +332,18 @@
             <section class="he-panel" data-panel="cart">
                 <div class="he-list">
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-pingguo"></i></div>
-                        <div style="flex:1"><h4>苹果 15 Pro</h4><p>原色钛金属 · 256GB</p></div>
-                        <b style="color:#ff3b30">¥8999</b>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_16.png" alt="数码"></div>
+                        <div style="flex:1"><h4>数码产品套装</h4><p>配件齐全 · 含一年质保</p></div>
+                        <b style="color:#ff3b30">¥899</b>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-shipin"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_19.png" alt="会员"></div>
                         <div style="flex:1"><h4>视频会员年卡</h4><p>12 个月 · 自动续费</p></div>
                         <b style="color:#ff3b30">¥158</b>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-shoucang"></i></div>
-                        <div style="flex:1"><h4>收藏夹精选</h4><p>3 件商品已加入购物车</p></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_32.png" alt="图片"></div>
+                        <div style="flex:1"><h4>定制周边</h4><p>3 件商品已加入购物车</p></div>
                         <b style="color:#ff3b30">¥329</b>
                     </div>
                 </div>
@@ -363,51 +353,51 @@
             <!-- 我的 -->
             <section class="he-panel" data-panel="mine">
                 <div class="he-profile">
-                    <div class="he-avatar"><i class="iconfont icon-mine"></i></div>
+                    <div class="he-avatar"><img src="cdn/icon_utdzicv0fnf/icon-test_35.png" alt="我的"></div>
                     <div>
                         <h4>何同学</h4>
-                        <p>皇冠会员 · Lv.6</p>
+                        <p>金牌会员 · Lv.6</p>
                     </div>
                 </div>
                 <div class="he-list">
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-dizhi"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_20.png" alt="地址"></div>
                         <div><h4>收货地址</h4><p>管理 3 个收货地址</p></div>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-shezhi"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_16.png" alt="设置"></div>
                         <div><h4>设置</h4><p>账号、通知与隐私</p></div>
                     </div>
                     <div class="he-row">
-                        <div class="he-ico"><i class="iconfont icon-gengduo"></i></div>
+                        <div class="he-ico"><img src="cdn/icon_utdzicv0fnf/icon-test_39.png" alt="更多"></div>
                         <div><h4>更多服务</h4><p>客服、发票与帮助中心</p></div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- 固定底部导航：4 项，等分自适应宽度 -->
+        <!-- 固定底部导航：4 项，等分自适应宽度，PNG 图标 -->
         <nav class="he-tabbar">
             <button class="he-tab he-active" data-tab="home">
                 <span class="he-tab-line"></span>
-                <i class="iconfont icon-shouye"></i>
+                <img src="cdn/icon_utdzicv0fnf/icon-test_31.png" alt="首页">
                 <span class="he-tab-text">首页</span>
             </button>
             <button class="he-tab" data-tab="find">
                 <span class="he-tab-line"></span>
-                <i class="iconfont icon-faxian"></i>
+                <img src="cdn/icon_utdzicv0fnf/icon-test_21.png" alt="发现">
                 <span class="he-tab-text">发现</span>
                 <span class="he-badge-dot"></span>
             </button>
             <button class="he-tab" data-tab="cart">
                 <span class="he-tab-line"></span>
-                <i class="iconfont icon-gouwucheman"></i>
+                <img src="cdn/icon_utdzicv0fnf/icon-test_10.png" alt="购物车">
                 <span class="he-tab-text">购物车</span>
                 <span class="he-badge-num">3</span>
             </button>
             <button class="he-tab" data-tab="mine">
                 <span class="he-tab-line"></span>
-                <i class="iconfont icon-mine"></i>
+                <img src="cdn/icon_utdzicv0fnf/icon-test_35.png" alt="我的">
                 <span class="he-tab-text">我的</span>
                 <span class="he-badge-dot"></span>
             </button>
