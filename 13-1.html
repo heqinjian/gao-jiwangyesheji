@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Awesome 字体图标 | 13-1 何秦剑</title>
+    <link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+    <style>
+        :root {
+            --he-bg: #f4f6fb;
+            --he-card: #ffffff;
+            --he-ink: #1e2330;
+            --he-muted: #667089;
+            --he-line: #e2e7f2;
+            --he-accent: #4f46e5;
+            --he-accent-2: #8b7cf6;
+            --he-orange: #d96831;
+            --he-soft: #f8faff;
+            --he-red: #e5484d;
+            --he-green: #30a46c;
+            --he-blue: #3e63dd;
+            --he-yellow: #f5a623;
+            --he-purple: #8e4ec6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 36px 18px 72px;
+            background: var(--he-bg);
+            color: var(--he-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.7;
+        }
+
+        .he-wrap { max-width: 1020px; margin: 0 auto; }
+
+        .he-eyebrow {
+            margin: 0 0 6px;
+            color: var(--he-accent);
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+
+        .he-title {
+            margin: 0;
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.15;
+        }
+
+        .he-lead {
+            max-width: 760px;
+            margin: 12px 0 26px;
+            color: var(--he-muted);
+            font-size: 14px;
+        }
+
+        .he-card {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--he-card);
+            border: 1px solid var(--he-line);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(31, 41, 80, 0.06);
+        }
+
+        .he-card-head { margin: 0 0 4px; font-size: 19px; }
+
+        .he-tag {
+            margin-left: 8px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #eef0ff;
+            color: var(--he-accent);
+            font-size: 11px;
+            font-weight: 400;
+            vertical-align: 3px;
+        }
+
+        .he-card-desc { margin: 0 0 16px; color: var(--he-muted); font-size: 13px; }
+
+        .he-stage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            min-height: 150px;
+            padding: 26px;
+            margin-top: 14px;
+            background: var(--he-soft);
+            border: 1px dashed var(--he-line);
+            border-radius: 10px;
+        }
+
+        .he-stage.col { flex-direction: column; gap: 12px; }
+
+        .he-demo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-width: 96px;
+        }
+
+        .he-demo-label {
+            font-size: 12px;
+            color: var(--he-muted);
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .he-note {
+            margin: 14px 0 0;
+            padding-left: 12px;
+            border-left: 3px solid var(--he-accent-2);
+            color: var(--he-muted);
+            font-size: 13px;
+        }
+
+        code {
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: #eef0ff;
+            color: #3b32c9;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        /* ===== 三种风格 ===== */
+        .he-style-solid { color: var(--he-red); }
+        .he-style-regular { color: var(--he-orange); }
+        .he-style-brand { color: var(--he-ink); }
+
+        /* ===== 尺寸 ===== */
+        .he-size-row { display: flex; align-items: flex-end; gap: 26px; }
+        .he-size-row i { color: var(--he-accent); }
+
+        /* ===== 颜色 ===== */
+        .he-color-row .he-demo-item i { font-size: 28px; }
+        .he-c-red { color: var(--he-red); }
+        .he-c-orange { color: var(--he-orange); }
+        .he-c-yellow { color: var(--he-yellow); }
+        .he-c-green { color: var(--he-green); }
+        .he-c-blue { color: var(--he-blue); }
+        .he-c-purple { color: var(--he-purple); }
+
+        /* ===== 旋转 ===== */
+        .he-rotate-row i { font-size: 30px; color: var(--he-blue); }
+
+        /* ===== 动画 ===== */
+        .he-anim-row i { font-size: 30px; }
+        .he-anim-spin { color: var(--he-accent); }
+        .he-anim-pulse { color: var(--he-blue); }
+        .he-anim-beat { color: var(--he-red); }
+        .he-anim-bounce { color: var(--he-orange); }
+        .he-anim-shake { color: var(--he-yellow); }
+        .he-anim-fade { color: var(--he-green); }
+
+        /* ===== 堆叠 ===== */
+        .he-stack-demo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            font-size: 2.2em;
+        }
+        .he-stack-circle { color: var(--he-accent); }
+        .he-stack-flag { color: #fff; }
+
+        /* ===== 图标按钮 ===== */
+        .he-btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+
+        .he-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .he-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(31, 41, 80, 0.2); }
+        .he-btn-primary { background: var(--he-accent); }
+        .he-btn-danger { background: var(--he-red); }
+        .he-btn-success { background: var(--he-green); }
+        .he-btn-ghost {
+            background: #fff;
+            color: var(--he-accent);
+            border: 1px solid var(--he-line);
+        }
+
+        .he-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: #eef0ff;
+            color: var(--he-accent);
+            font-size: 12px;
+        }
+
+        .he-badge .he-dot {
+            position: relative;
+            width: 14px;
+            height: 14px;
+        }
+        .he-badge .he-dot i { font-size: 14px; }
+        .he-badge .he-dot::after {
+            content: "";
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--he-red);
+            border: 1.5px solid #fff;
+        }
+
+        /* ===== 图标总览 ===== */
+        .he-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .he-icon-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 8px;
+            background: var(--he-soft);
+            border: 1px solid var(--he-line);
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .he-icon-cell:hover {
+            background: #eef0ff;
+            transform: translateY(-2px);
+        }
+
+        .he-icon-cell i { font-size: 22px; color: var(--he-accent); }
+        .he-icon-cell span { font-size: 11px; color: var(--he-muted); font-family: Consolas, monospace; }
+
+        .he-footer {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--he-line);
+            color: var(--he-muted);
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="he-wrap">
+        <p class="he-eyebrow">FONT AWESOME · 字体图标</p>
+        <h1 class="he-title">Font Awesome 图标演示</h1>
+        <p class="he-lead">
+            Font Awesome 是典型的<strong>字体图标</strong>方案：图标被打包成 woff2 字体文件，通过 <code>@font-face</code> 加载，
+            HTML 中用 <code>&lt;i class="fa-solid fa-xxx"&gt;</code> 引用，本质是一个字符，可像文字一样设置颜色、大小、行高。
+            本页所有资源均本地化于 <code>cdn/fontawesome/</code>（css + woff2）。
+        </p>
+
+        <!-- ① 三种风格 -->
+        <section class="he-card">
+            <h2 class="he-card-head">① 三种字体风格 <span class="he-tag">fa-solid / fa-regular / fa-brands</span></h2>
+            <p class="he-card-desc">
+                Font Awesome Free 提供三套字体：实心（solid）、线框（regular）、品牌（brands）。三者是不同字体文件，靠类名切换。
+            </p>
+            <div class="he-stage">
+                <div class="he-demo-item">
+                    <i class="fa-solid fa-heart fa-3x he-style-solid"></i>
+                    <span class="he-demo-label">fa-solid 实心</span>
+                </div>
+                <div class="he-demo-item">
+                    <i class="fa-regular fa-heart fa-3x he-style-regular"></i>
+                    <span class="he-demo-label">fa-regular 线框</span>
+                </div>
+                <div class="he-demo-item">
+                    <i class="fa-brands fa-github fa-3x he-style-brand"></i>
+                    <span class="he-demo-label">fa-brands 品牌</span>
+                </div>
+            </div>
+            <p class="he-note">
+                <b>要点：</b>同一图标的 solid 与 regular 共用名字 <code>fa-heart</code>，但风格类不同；品牌图标只有 brands 一套。
+            </p>
+        </section>
+
+        <!-- ② 尺寸 -->
+        <section class="he-card">
+            <h2 class="he-card-head">② 尺寸缩放 <span class="he-tag">fa-2x ~ fa-5x</span></h2>
+            <p class="he-card-desc">
+                字体图标是字符，直接用 <code>font-size</code> 控制大小，FA 也提供 <code>fa-2x</code>…<code>fa-5x</code> 倍数类，<code>fa-fw</code> 固定等宽对齐。
+            </p>
+            <div class="he-stage">
+                <div class="he-size-row">
+                    <div class="he-demo-item"><i class="fa-solid fa-fish"></i><span class="he-demo-label">1x</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-fish fa-2x"></i><span class="he-demo-label">2x</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-fish fa-3x"></i><span class="he-demo-label">3x</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-fish fa-4x"></i><span class="he-demo-label">4x</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-fish fa-5x"></i><span class="he-demo-label">5x</span></div>
+                </div>
+            </div>
+            <p class="he-note">
+                <b>要点：</b>矢量字体任意缩放不失真；列表中混用不同图标时加 <code>fa-fw</code>（fixed width）可保证文字对齐。
+            </p>
+        </section>
+
+        <!-- ③ 颜色 -->
+        <section class="he-card">
+            <h2 class="he-card-head">③ 颜色控制 <span class="he-tag">color</span></h2>
+            <p class="he-card-desc">字体图标没有"填充色"概念，直接用 CSS <code>color</code> 改色，也可继承父元素颜色。</p>
+            <div class="he-stage">
+                <div class="he-color-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><i class="fa-solid fa-circle"></i><span class="he-demo-label">red</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle he-c-orange"></i><span class="he-demo-label">orange</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle he-c-yellow"></i><span class="he-demo-label">yellow</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle he-c-green"></i><span class="he-demo-label">green</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle he-c-blue"></i><span class="he-demo-label">blue</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle he-c-purple"></i><span class="he-demo-label">purple</span></div>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>图标颜色走 <code>currentColor</code>，父级设 <code>color</code> 即可整体变色，与文字主题天然统一。</p>
+        </section>
+
+        <!-- ④ 旋转翻转 -->
+        <section class="he-card">
+            <h2 class="he-card-head">④ 旋转与翻转 <span class="he-tag">fa-rotate / fa-flip</span></h2>
+            <p class="he-card-desc">工具类可直接对字符做旋转、镜像：<code>fa-rotate-90/180/270</code>、<code>fa-flip-horizontal/vertical</code>。</p>
+            <div class="he-stage">
+                <div class="he-rotate-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><i class="fa-solid fa-hand-point-up"></i><span class="he-demo-label">原始</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-hand-point-up fa-rotate-90"></i><span class="he-demo-label">rotate-90</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-hand-point-up fa-rotate-180"></i><span class="he-demo-label">rotate-180</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-hand-point-up fa-flip-horizontal"></i><span class="he-demo-label">flip-h</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-hand-point-up fa-flip-vertical"></i><span class="he-demo-label">flip-v</span></div>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>需要任意角度时用 <code>transform: rotate(35deg)</code>；工具类只提供固定档位。</p>
+        </section>
+
+        <!-- ⑤ 动画 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑤ 内置动画 <span class="he-tag">fa-spin / fa-pulse / fa-beat</span></h2>
+            <p class="he-card-desc">FA 6 内置旋转、脉冲、心跳、弹跳、抖动、淡入六种动画类，纯 CSS 实现，加载与下载场景最常用。</p>
+            <div class="he-stage">
+                <div class="he-anim-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><i class="fa-solid fa-spinner fa-spin he-anim-spin"></i><span class="he-demo-label">fa-spin 加载</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-circle-notch fa-spin-pulse he-anim-pulse"></i><span class="he-demo-label">fa-pulse 步进</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-heart fa-beat he-anim-beat"></i><span class="he-demo-label">fa-beat 心跳</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-bell fa-bounce he-anim-bounce"></i><span class="he-demo-label">fa-bounce 弹跳</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-wifi fa-shake he-anim-shake"></i><span class="he-demo-label">fa-shake 抖动</span></div>
+                    <div class="he-demo-item"><i class="fa-solid fa-bullhorn fa-fade he-anim-fade"></i><span class="he-demo-label">fa-fade 淡入</span></div>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>旋转动画等价于 <code>animation: fa-spin 2s linear infinite</code>；尊重系统「减少动态效果」设置时可用 <code>@media (prefers-reduced-motion)</code> 关闭。</p>
+        </section>
+
+        <!-- ⑥ 堆叠 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑥ 图标堆叠 <span class="he-tag">fa-stack</span></h2>
+            <p class="he-card-desc">
+                用 <code>fa-stack</code> 容器 + <code>fa-stack-1x/2x</code> 把两个字符叠放，可组合出"角标"、"禁止"等复合图标。
+            </p>
+            <div class="he-stage">
+                <div class="he-demo-item">
+                    <span class="he-stack-demo fa-stack fa-2x">
+                        <i class="fa-solid fa-circle fa-stack-2x he-stack-circle"></i>
+                        <i class="fa-solid fa-flag fa-stack-1x he-stack-flag"></i>
+                    </span>
+                    <span class="he-demo-label">circle + flag</span>
+                </div>
+                <div class="he-demo-item">
+                    <span class="he-stack-demo fa-stack fa-2x">
+                        <i class="fa-solid fa-comment fa-stack-2x he-c-blue"></i>
+                        <i class="fa-solid fa-ban fa-stack-2x he-c-red"></i>
+                    </span>
+                    <span class="he-demo-label">comment + ban</span>
+                </div>
+                <div class="he-demo-item">
+                    <span class="he-stack-demo fa-stack fa-2x">
+                        <i class="fa-solid fa-square fa-stack-2x he-c-green"></i>
+                        <i class="fa-solid fa-terminal fa-stack-1x" style="color:#fff;"></i>
+                    </span>
+                    <span class="he-demo-label">square + terminal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ⑦ 实战：按钮、徽章 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑦ 实战：按钮与徽章 <span class="he-tag">UI 组合</span></h2>
+            <p class="he-card-desc">字体图标作为文字流的一部分，天然可以和文字、按钮、徽章对齐。</p>
+            <div class="he-stage col">
+                <div class="he-btn-row">
+                    <button class="he-btn he-btn-primary"><i class="fa-solid fa-download"></i> 下载文件</button>
+                    <button class="he-btn he-btn-success"><i class="fa-solid fa-check"></i> 提交成功</button>
+                    <button class="he-btn he-btn-danger"><i class="fa-solid fa-trash-can"></i> 删除</button>
+                    <button class="he-btn he-btn-ghost"><i class="fa-brands fa-github"></i> GitHub</button>
+                </div>
+                <div class="he-btn-row">
+                    <span class="he-badge"><span class="he-dot"><i class="fa-solid fa-bell"></i></span> 3 条新消息</span>
+                    <span class="he-badge"><i class="fa-solid fa-circle-exclamation" style="color:var(--he-red);"></i> 待处理</span>
+                    <span class="he-badge"><i class="fa-solid fa-wifi" style="color:var(--he-green);"></i> 已连接</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ⑧ 图标总览 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑧ 常用图标总览 <span class="he-tag">fa-solid 精选</span></h2>
+            <p class="he-card-desc">悬停有高亮效果，全部来自本地 woff2 字体。</p>
+            <div class="he-icon-grid">
+                <div class="he-icon-cell"><i class="fa-solid fa-house"></i><span>house</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-magnifying-glass"></i><span>magnifying-glass</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-user"></i><span>user</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-users"></i><span>users</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-gear"></i><span>gear</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-bell"></i><span>bell</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-heart"></i><span>heart</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-star"></i><span>star</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-bookmark"></i><span>bookmark</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-folder"></i><span>folder</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-file"></i><span>file</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-cloud"></i><span>cloud</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-cloud-arrow-down"></i><span>cloud-arrow-down</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-download"></i><span>download</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-upload"></i><span>upload</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-envelope"></i><span>envelope</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-phone"></i><span>phone</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-location-dot"></i><span>location-dot</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-calendar"></i><span>calendar</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-camera"></i><span>camera</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-image"></i><span>image</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-music"></i><span>music</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-video"></i><span>video</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-play"></i><span>play</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-pause"></i><span>pause</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-code"></i><span>code</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-terminal"></i><span>terminal</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-microchip"></i><span>microchip</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-database"></i><span>database</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-layer-group"></i><span>layer-group</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-palette"></i><span>palette</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-pen-to-square"></i><span>pen-to-square</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-trash-can"></i><span>trash-can</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-lock"></i><span>lock</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-eye"></i><span>eye</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-cart-shopping"></i><span>cart-shopping</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-gift"></i><span>gift</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-mug-hot"></i><span>mug-hot</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-rocket"></i><span>rocket</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-bolt"></i><span>bolt</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-sun"></i><span>sun</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-moon"></i><span>moon</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-wifi"></i><span>wifi</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-globe"></i><span>globe</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-thumbs-up"></i><span>thumbs-up</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-comment"></i><span>comment</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-circle-check"></i><span>circle-check</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-circle-xmark"></i><span>circle-xmark</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-plus"></i><span>plus</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-arrow-right"></i><span>arrow-right</span></div>
+                <div class="he-icon-cell"><i class="fa-solid fa-bars"></i><span>bars</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-github"></i><span>github</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-html5"></i><span>html5</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-css3-alt"></i><span>css3-alt</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-js"></i><span>js</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-vuejs"></i><span>vuejs</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-react"></i><span>react</span></div>
+                <div class="he-icon-cell"><i class="fa-brands fa-node-js"></i><span>node-js</span></div>
+            </div>
+            <p class="he-note">
+                <b>字体图标方案的局限：</b>只能单色（字体本身不含多色）、加载整套字体文件、不同字体间图标字形对齐偶尔有差异；
+                需要多色或随 SVG 精细控制时请看下一页 13-2 的 Lucide SVG 方案。
+            </p>
+        </section>
+
+        <footer class="he-footer">
+            13-1 Font Awesome 字体图标（本地化 6.5.2）· 何秦剑 · 2026
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucide SVG 图标 | 13-2 何秦剑</title>
+    <style>
+        :root {
+            --he-bg: #f4f6fb;
+            --he-card: #ffffff;
+            --he-ink: #1e2330;
+            --he-muted: #667089;
+            --he-line: #e2e7f2;
+            --he-accent: #0d9488;
+            --he-accent-2: #5eead4;
+            --he-orange: #d96831;
+            --he-soft: #f3faf9;
+            --he-red: #e5484d;
+            --he-green: #30a46c;
+            --he-blue: #3e63dd;
+            --he-yellow: #f5a623;
+            --he-purple: #8e4ec6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 36px 18px 72px;
+            background: var(--he-bg);
+            color: var(--he-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.7;
+        }
+
+        .he-wrap { max-width: 1020px; margin: 0 auto; }
+
+        .he-eyebrow { margin: 0 0 6px; color: var(--he-accent); font-size: 12px; letter-spacing: 3px; }
+        .he-title { margin: 0; font-size: clamp(30px, 5vw, 46px); line-height: 1.15; }
+        .he-lead { max-width: 780px; margin: 12px 0 26px; color: var(--he-muted); font-size: 14px; }
+
+        .he-card {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--he-card);
+            border: 1px solid var(--he-line);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(31, 41, 80, 0.06);
+        }
+
+        .he-card-head { margin: 0 0 4px; font-size: 19px; }
+        .he-tag {
+            margin-left: 8px; padding: 2px 9px; border-radius: 999px;
+            background: #e6faf6; color: var(--he-accent); font-size: 11px;
+            font-weight: 400; vertical-align: 3px;
+        }
+        .he-card-desc { margin: 0 0 16px; color: var(--he-muted); font-size: 13px; }
+
+        .he-stage {
+            display: flex; align-items: center; justify-content: center;
+            gap: 28px; flex-wrap: wrap; min-height: 150px; padding: 26px;
+            margin-top: 14px; background: var(--he-soft);
+            border: 1px dashed var(--he-line); border-radius: 10px;
+        }
+        .he-stage.col { flex-direction: column; gap: 12px; }
+
+        .he-demo-item { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 96px; }
+        .he-demo-label { font-size: 12px; color: var(--he-muted); font-family: Consolas, monospace; }
+
+        .he-note { margin: 14px 0 0; padding-left: 12px; border-left: 3px solid var(--he-accent-2); color: var(--he-muted); font-size: 13px; }
+
+        code {
+            padding: 1px 5px; border-radius: 4px; background: #e6faf6;
+            color: #0b6b63; font-family: Consolas, monospace; font-size: 12px;
+        }
+
+        /* 内联 SVG 基准：宽高随 font-size，颜色继承 currentColor */
+        .he_svg {
+            width: 1em; height: 1em; vertical-align: -0.125em;
+            flex: none;
+        }
+
+        /* 尺寸演示 */
+        .he-size-row { display: flex; align-items: flex-end; gap: 26px; }
+        .he-size-row .he-demo-item { color: var(--he-accent); }
+        .he-s1 { font-size: 16px; }
+        .he-s2 { font-size: 24px; }
+        .he-s3 { font-size: 32px; }
+        .he-s4 { font-size: 48px; }
+
+        /* 描边粗细 */
+        .he-sw-1 { stroke-width: 1; }
+        .he-sw-2 { stroke-width: 2; }
+        .he-sw-3 { stroke-width: 3; }
+        .he-sw-row .he-demo-item { font-size: 40px; color: var(--he-blue); }
+
+        /* 颜色 */
+        .he-c-red { color: var(--he-red); }
+        .he-c-orange { color: var(--he-orange); }
+        .he-c-yellow { color: var(--he-yellow); }
+        .he-c-green { color: var(--he-green); }
+        .he-c-blue { color: var(--he-blue); }
+        .he-c-purple { color: var(--he-purple); }
+        .he-color-row .he-demo-item { font-size: 30px; }
+
+        /* 动画 */
+        .he-anim-row { font-size: 30px; }
+        .he-anim-spin { color: var(--he-accent); animation: he-spin 2.5s linear infinite; }
+        .he-anim-swing { color: var(--he-orange); animation: he-swing 1.4s ease-in-out infinite; transform-origin: 50% 10%; }
+        .he-anim-beat { color: var(--he-red); animation: he-beat 1.2s ease-in-out infinite; }
+        .he-anim-float { color: var(--he-blue); animation: he-float 2.2s ease-in-out infinite; }
+        .he-anim-shake { color: var(--he-yellow); animation: he-shake 1.6s ease-in-out infinite; }
+
+        @keyframes he-spin { to { transform: rotate(360deg); } }
+        @keyframes he-swing { 0%,100% { transform: rotate(0); } 20% { transform: rotate(14deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(6deg); } 80% { transform: rotate(-3deg); } }
+        @keyframes he-beat { 0%,100% { transform: scale(1); } 25% { transform: scale(1.18); } 40% { transform: scale(1); } 60% { transform: scale(1.12); } }
+        @keyframes he-float { 0%,100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-12px) rotate(8deg); } }
+        @keyframes he-shake { 0%,90%,100% { transform: rotate(0); } 92% { transform: rotate(-8deg); } 94% { transform: rotate(8deg); } 96% { transform: rotate(-6deg); } 98% { transform: rotate(6deg); } }
+
+        /* 描边绘制动效 */
+        .he-draw { width: 96px; height: 96px; color: var(--he-green); }
+        .he-draw circle, .he-draw path {
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            animation: he-draw 1.8s ease-in-out infinite alternate;
+        }
+        @keyframes he-draw { to { stroke-dashoffset: 0; } }
+
+        /* 悬停填充 */
+        .he-hover-heart { font-size: 48px; color: var(--he-red); }
+        .he-hover-heart svg {
+            fill: transparent;
+            transform: scale(1);
+            transition: fill 0.3s ease, transform 0.3s ease;
+        }
+        .he-hover-heart:hover svg { fill: var(--he-red); transform: scale(1.2); }
+
+        /* 图标按钮 */
+        .he-btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .he-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 18px; border: none; border-radius: 8px;
+            color: #fff; font-size: 14px; font-family: inherit; cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .he-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(31, 41, 80, 0.2); }
+        .he-btn-primary { background: var(--he-accent); }
+        .he-btn-danger { background: var(--he-red); }
+        .he-btn-dark { background: var(--he-ink); }
+        .he-btn-ghost { background: #fff; color: var(--he-accent); border: 1px solid var(--he-line); }
+
+        /* 图标网格 */
+        .he-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .he-icon-cell {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            padding: 14px 6px; background: var(--he-soft);
+            border: 1px solid var(--he-line); border-radius: 8px;
+            font-size: 22px; color: var(--he-accent);
+            transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+        .he-icon-cell:hover { background: #e6faf6; transform: translateY(-2px); color: var(--he-ink); }
+        .he-icon-cell span { font-size: 10.5px; color: var(--he-muted); font-family: Consolas, monospace; }
+
+        .he-footer {
+            margin-top: 30px; padding-top: 18px;
+            border-top: 1px solid var(--he-line);
+            color: var(--he-muted); font-size: 12px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="he-wrap">
+        <p class="he-eyebrow">LUCIDE · INLINE SVG 图标</p>
+        <h1 class="he-title">Lucide SVG 图标演示</h1>
+        <p class="he-lead">
+            Lucide 是<strong>SVG 图标</strong>方案：每个图标是一段 <code>&lt;svg&gt;</code> 矢量代码，直接内联到 HTML 中。
+            线条用 <code>stroke="currentColor"</code> 绘制，颜色、粗细、描边动画都可以用 CSS 精确控制，且不需要加载任何字体文件。
+            原始 SVG 文件存放于 <code>cdn/lucide/icons/</code>（lucide-static v0.469.0）。
+        </p>
+
+        <!-- ① 尺寸 -->
+        <section class="he-card">
+            <h2 class="he-card-head">① 尺寸控制 <span class="he-tag">width/height 或 1em</span></h2>
+            <p class="he-card-desc">
+                给 SVG 设 <code>width:1em; height:1em</code> 后，图标大小就跟随 <code>font-size</code>，与字体图标用法一致；也可以直接给像素值。
+            </p>
+            <div class="he-stage">
+                <div class="he-size-row">
+                    <div class="he-demo-item he-s1"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /> </svg><span class="he-demo-label">16px</span></div>
+                    <div class="he-demo-item he-s2"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /> </svg><span class="he-demo-label">24px</span></div>
+                    <div class="he-demo-item he-s3"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /> </svg><span class="he-demo-label">32px</span></div>
+                    <div class="he-demo-item he-s4"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /> </svg><span class="he-demo-label">48px</span></div>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>所有 Lucide 图标都基于 <code>viewBox="0 0 24 24"</code>，等比缩放不会变形，也不会像字体那样出现基线偏移。</p>
+        </section>
+
+        <!-- ② 描边粗细 -->
+        <section class="he-card">
+            <h2 class="he-card-head">② 描边粗细 <span class="he-tag">stroke-width</span></h2>
+            <p class="he-card-desc">
+                图标是线条画，可用 CSS <code>stroke-width</code> 调节线宽（1 / 2 / 3），这是字体图标完全做不到的能力。
+            </p>
+            <div class="he-stage">
+                <div class="he-sw-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><span class="he-s2"><svg class="he_svg he-sw-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /> </svg></span><span class="he-demo-label">stroke-width: 1</span></div>
+                    <div class="he-demo-item"><span class="he-s2"><svg class="he_svg he-sw-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /> </svg></span><span class="he-demo-label">stroke-width: 2（默认）</span></div>
+                    <div class="he-demo-item"><span class="he-s2"><svg class="he_svg he-sw-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /> </svg></span><span class="he-demo-label">stroke-width: 3</span></div>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>端点样式由 <code>stroke-linecap="round"</code>、拐角由 <code>stroke-linejoin="round"</code> 控制，Lucide 已内置。</p>
+        </section>
+
+        <!-- ③ 颜色 -->
+        <section class="he-card">
+            <h2 class="he-card-head">③ 颜色控制 <span class="he-tag">currentColor</span></h2>
+            <p class="he-card-desc">线条默认 <code>stroke="currentColor"</code>，给父级或 SVG 设 <code>color</code> 即可变色；需要实心时再改 <code>fill</code>。</p>
+            <div class="he-stage">
+                <div class="he-color-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><svg class="he_svg he-c-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">red</span></div>
+                    <div class="he-demo-item"><svg class="he_svg he-c-orange" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">orange</span></div>
+                    <div class="he-demo-item"><svg class="he_svg he-c-yellow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">yellow</span></div>
+                    <div class="he-demo-item"><svg class="he_svg he-c-green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">green</span></div>
+                    <div class="he-demo-item"><svg class="he_svg he-c-blue" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">blue</span></div>
+                    <div class="he-demo-item"><svg class="he_svg he-c-purple" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span class="he-demo-label">purple</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ④ 动画 -->
+        <section class="he-card">
+            <h2 class="he-card-head">④ CSS 动画 <span class="he-tag">transform / stroke-dasharray</span></h2>
+            <p class="he-card-desc">SVG 元素本身可直接参与 CSS transform 动画；利用 <code>stroke-dasharray</code> 还能做「线条描边生长」效果。</p>
+            <div class="he-stage">
+                <div class="he-anim-row he-stage" style="border:none; padding:0; margin:0; min-height:0;">
+                    <div class="he-demo-item"><span class="he-s3"><svg class="he_svg he-anim-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /> </svg></span><span class="he-demo-label">旋转</span></div>
+                    <div class="he-demo-item"><span class="he-s3"><svg class="he_svg he-anim-swing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.268 21a2 2 0 0 0 3.464 0" /> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /> </svg></span><span class="he-demo-label">摇摆</span></div>
+                    <div class="he-demo-item"><span class="he-s3"><svg class="he_svg he-anim-beat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg></span><span class="he-demo-label">心跳</span></div>
+                    <div class="he-demo-item"><span class="he-s3"><svg class="he_svg he-anim-float" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /> <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /> <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /> <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /> </svg></span><span class="he-demo-label">漂浮</span></div>
+                    <div class="he-demo-item"><span class="he-s3"><svg class="he_svg he-anim-shake" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 20h.01" /> <path d="M2 8.82a15 15 0 0 1 20 0" /> <path d="M5 12.859a10 10 0 0 1 14 0" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /> </svg></span><span class="he-demo-label">断网抖动</span></div>
+                </div>
+                <div class="he-demo-item">
+                    <span class="he-draw"><svg class="he_svg he-draw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="m9 12 2 2 4-4" /> </svg></span>
+                    <span class="he-demo-label">描边生长 dasharray</span>
+                </div>
+            </div>
+            <p class="he-note"><b>要点：</b>旋转/摇摆要设 <code>transform-origin</code>（如铃铛顶部）；描边生长的 dasharray 长度需按路径周长调整。</p>
+        </section>
+
+        <!-- ⑤ 交互 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑤ 交互：悬停填充与按钮 <span class="he-tag">fill + transition</span></h2>
+            <p class="he-card-desc">悬停时把心形从描边切换为实心，以及与文字组合的图标按钮，都是 SVG 最常见的 UI 用法。</p>
+            <div class="he-stage col">
+                <div class="he-demo-item he-hover-heart">
+                    <svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg>
+                    <span class="he-demo-label">鼠标悬停试试</span>
+                </div>
+                <div class="he-btn-row">
+                    <button class="he-btn he-btn-primary"><span class="he-s2"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <polyline points="7 10 12 15 17 10" /> <line x1="12" x2="12" y1="15" y2="3" /> </svg></span> 下载文件</button>
+                    <button class="he-btn he-btn-danger"><span class="he-s2"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 6h18" /> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /> <line x1="10" x2="10" y1="11" y2="17" /> <line x1="14" x2="14" y1="11" y2="17" /> </svg></span> 删除</button>
+                    <button class="he-btn he-btn-dark"><span class="he-s2"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /> <path d="M9 18c-4.51 2-5-2-7-2" /> </svg></span> GitHub</button>
+                    <button class="he-btn he-btn-ghost">下一步 <span class="he-s2"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ⑥ 图标总览 -->
+        <section class="he-card">
+            <h2 class="he-card-head">⑥ 图标总览 <span class="he-tag">全部内联 SVG，共 53 个</span></h2>
+            <p class="he-card-desc">鼠标悬停高亮。每个图标在页面中都是一段真实的 <code>&lt;svg&gt;</code> 代码，可在浏览器 F12 中查看。</p>
+            <div class="he-icon-grid">
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg><span>arrow-right</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /> <circle cx="12" cy="8" r="6" /> </svg><span>award</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.268 21a2 2 0 0 0 3.464 0" /> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /> </svg><span>bell</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" /> </svg><span>book</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" /> </svg><span>bookmark</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /> </svg><span>calendar</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /> <circle cx="12" cy="13" r="3" /> </svg><span>camera</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="m9 12 2 2 4-4" /> </svg><span>circle-check</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="m15 9-6 6" /> <path d="m9 9 6 6" /> </svg><span>circle-x</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <polyline points="12 6 12 12 16 14" /> </svg><span>clock</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /> </svg><span>cloud</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <polyline points="16 18 22 12 16 6" /> <polyline points="8 6 2 12 8 18" /> </svg><span>code</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 2v2" /> <path d="M14 2v2" /> <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" /> <path d="M6 2v2" /> </svg><span>coffee</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="16" height="16" x="4" y="4" rx="2" /> <rect width="6" height="6" x="9" y="9" rx="1" /> <path d="M15 2v2" /> <path d="M15 20v2" /> <path d="M2 15h2" /> <path d="M2 9h2" /> <path d="M20 15h2" /> <path d="M20 9h2" /> <path d="M9 2v2" /> <path d="M9 20v2" /> </svg><span>cpu</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <polyline points="7 10 12 15 17 10" /> <line x1="12" x2="12" y1="15" y2="3" /> </svg><span>download</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /> <circle cx="12" cy="12" r="3" /> </svg><span>eye</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z" /> <path d="M16 8 2 22" /> <path d="M17.5 15H9" /> </svg><span>feather</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" /> </svg><span>folder</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect x="3" y="8" width="18" height="4" rx="1" /> <path d="M12 8v13" /> <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" /> <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" /> </svg><span>gift</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /> <path d="M9 18c-4.51 2-5-2-7-2" /> </svg><span>github</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /> </svg><span>globe</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /> </svg><span>headphones</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /> </svg><span>heart</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> </svg><span>house</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /> </svg><span>image</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /> </svg><span>layers</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /> </svg><span>lock</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="20" height="16" x="2" y="4" rx="2" /> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /> </svg><span>mail</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /> </svg><span>map-pin</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <line x1="4" x2="20" y1="12" y2="12" /> <line x1="4" x2="20" y1="6" y2="6" /> <line x1="4" x2="20" y1="18" y2="18" /> </svg><span>menu</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /> </svg><span>message-circle</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /> </svg><span>moon</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 18V5l12-2v13" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="16" r="3" /> </svg><span>music</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /> <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /> </svg><span>palette</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /> </svg><span>pencil</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /> </svg><span>phone</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <polygon points="6 3 20 12 6 21 6 3" /> </svg><span>play</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="M12 5v14" /> </svg><span>plus</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /> <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /> <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /> <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /> </svg><span>rocket</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /> </svg><span>search</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /> <circle cx="12" cy="12" r="3" /> </svg><span>settings</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="8" cy="21" r="1" /> <circle cx="19" cy="21" r="1" /> <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /> </svg><span>shopping-cart</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M8 14s1.5 2 4 2 4-2 4-2" /> <line x1="9" x2="9.01" y1="9" y2="9" /> <line x1="15" x2="15.01" y1="9" y2="9" /> </svg><span>smile</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /> </svg><span>star</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /> </svg><span>sun</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <polyline points="4 17 10 11 4 5" /> <line x1="12" x2="20" y1="19" y2="19" /> </svg><span>terminal</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M7 10v12" /> <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /> </svg><span>thumbs-up</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 6h18" /> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /> <line x1="10" x2="10" y1="11" y2="17" /> <line x1="14" x2="14" y1="11" y2="17" /> </svg><span>trash-2</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <polyline points="17 8 12 3 7 8" /> <line x1="12" x2="12" y1="3" y2="15" /> </svg><span>upload</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /> </svg><span>user</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /> </svg><span>users</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 20h.01" /> <path d="M2 8.82a15 15 0 0 1 20 0" /> <path d="M5 12.859a10 10 0 0 1 14 0" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /> </svg><span>wifi</span></div>
+                <div class="he_icon-cell"><svg class="he_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /> </svg><span>zap</span></div>
+            </div>
+            <p class="he-note">
+                <b>SVG 方案的优缺点：</b>多色、描边、fill、独立动画都可控，按图标加载无冗余；缺点是内联图标会增加 HTML 体积、不利于整图缓存，
+                超大图标库（数百个）通常配合 SVG sprite（<code>&lt;use href="#id"&gt;</code>）或 JS 动态注入使用。
+            </p>
+        </section>
+
+        <footer class="he-footer">
+            13-2 Lucide SVG 图标（lucide-static v0.469.0，本地内联）· 何秦剑 · 2026
+        </footer>
+    </div>
+</body>
+</html>
