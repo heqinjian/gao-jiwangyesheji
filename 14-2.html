@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!-- 姓名：何秦剑  日期：2026-10-22  功能：演示 JavaScript 基本的六种数据类型（String / Number / Boolean / Undefined / Null / Symbol） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 六种基本数据类型 | 14-2 何秦剑</title>
+    <style>
+        :root {
+            --hqj-bg: #0f1420;
+            --hqj-panel: #171e2e;
+            --hqj-card: #1c2538;
+            --hqj-ink: #e8edf7;
+            --hqj-muted: #8a94ad;
+            --hqj-line: #2a3550;
+            --hqj-green: #35e08a;
+            --hqj-blue: #4aa8ff;
+            --hqj-yellow: #ffd166;
+            --hqj-red: #ff6b6b;
+            --hqj-purple: #b78bff;
+            --hqj-radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(90% 50% at 50% -10%, rgba(53, 224, 138, 0.12), transparent 60%),
+                var(--hqj-bg);
+            color: var(--hqj-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .hqj-wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 34px 18px 60px;
+        }
+
+        .hqj-header { text-align: center; margin-bottom: 26px; }
+        .hqj-header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+        .hqj-header h1 .hqj-hl { color: var(--hqj-green); }
+        .hqj-header p { margin: 0; color: var(--hqj-muted); font-size: 14px; }
+
+        .hqj-toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .hqj-btn {
+            padding: 9px 22px;
+            border: 1px solid var(--hqj-green);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--hqj-green);
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .hqj-btn:hover { background: var(--hqj-green); color: #0b1018; }
+
+        .hqj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .hqj-card {
+            background: var(--hqj-card);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+        .hqj-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--hqj-card-color, var(--hqj-green));
+        }
+
+        .hqj-card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hqj-num {
+            width: 34px; height: 34px;
+            flex: none;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            background: var(--hqj-card-color, var(--hqj-green));
+            color: #0b1018;
+        }
+        .hqj-card-head h2 { margin: 0; font-size: 17px; }
+        .hqj-card-head span { color: var(--hqj-muted); font-size: 12px; }
+
+        .hqj-typeof {
+            align-self: flex-start;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-family: Consolas, monospace;
+            background: rgba(74, 168, 255, 0.15);
+            color: var(--hqj-blue);
+            border: 1px solid rgba(74, 168, 255, 0.35);
+        }
+
+        .hqj-code {
+            margin: 0;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: var(--hqj-bg);
+            border: 1px solid var(--hqj-line);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            color: var(--hqj-ink);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .hqj-code .hqj-kw { color: var(--hqj-purple); }
+        .hqj-code .hqj-str { color: var(--hqj-green); }
+        .hqj-code .hqj-num-t { color: var(--hqj-yellow); }
+        .hqj-code .hqj-com { color: var(--hqj-muted); }
+
+        .hqj-live {
+            border-radius: 10px;
+            border: 1px dashed var(--hqj-line);
+            padding: 10px 14px;
+            font-size: 13px;
+        }
+        .hqj-live b { color: var(--hqj-muted); font-weight: normal; }
+        .hqj-live .hqj-val { color: var(--hqj-green); font-family: Consolas, monospace; }
+        .hqj-live .hqj-tf { color: var(--hqj-blue); font-family: Consolas, monospace; }
+
+        .hqj-note {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 13px;
+            color: var(--hqj-muted);
+        }
+        .hqj-note li { margin-bottom: 3px; }
+        .hqj-note strong { color: var(--hqj-ink); font-weight: 600; }
+
+        .hqj-section {
+            margin-top: 30px;
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 20px 22px;
+        }
+        .hqj-section h3 {
+            margin: 0 0 12px;
+            font-size: 17px;
+            color: var(--hqj-yellow);
+        }
+        .hqj-console {
+            margin: 0;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: var(--hqj-bg);
+            border: 1px solid var(--hqj-line);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            min-height: 60px;
+        }
+        .hqj-console .hqj-ok { color: var(--hqj-green); }
+        .hqj-console .hqj-warn { color: var(--hqj-yellow); }
+        .hqj-console .hqj-err { color: var(--hqj-red); }
+
+        .hqj-back {
+            display: inline-block;
+            margin-top: 26px;
+            color: var(--hqj-muted);
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .hqj-back:hover { color: var(--hqj-green); }
+
+        @media (max-width: 560px) {
+            .hqj-wrap { padding: 24px 12px 40px; }
+            .hqj-header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hqj-wrap">
+        <header class="hqj-header">
+            <h1>JavaScript <span class="hqj-hl">六种基本数据类型</span></h1>
+            <p>原始类型（Primitive）按值传递 · 下方结果均为浏览器实时 typeof 检测</p>
+        </header>
+
+        <div class="hqj-toolbar">
+            <button class="hqj-btn" id="hqj_runBtn">重新运行检测</button>
+        </div>
+
+        <main class="hqj-grid" id="hqj_cardGrid"></main>
+
+        <section class="hqj-section">
+            <h3>控制台实时检测输出</h3>
+            <pre class="hqj-console" id="hqj_console"></pre>
+        </section>
+
+        <section class="hqj-section">
+            <h3>易踩坑与补充</h3>
+            <ul class="hqj-note">
+                <li><strong>typeof null === "object"</strong>：这是 JavaScript 的历史遗留 Bug，null 本身仍是基本类型，判空请用 <code>x === null</code>。</li>
+                <li><strong>undefined vs null</strong>：undefined 表示「声明了但未赋值」，由系统产生；null 表示「人为置空」，需要主动赋值。</li>
+                <li><strong>NaN</strong>：属于 number 类型，且 NaN 不等于任何值（包括它自己），用 <code>isNaN()</code> / <code>Number.isNaN()</code> 判断。</li>
+                <li><strong>Symbol</strong>：ES6 新增，每个 Symbol 值都独一无二，常用作对象的唯一属性名，防止键名冲突。</li>
+                <li><strong>BigInt</strong>：ES2020 新增的第 7 种原始类型（数字后加 <code>n</code>，如 <code>123n</code>），用于安全表示任意大整数。</li>
+                <li>除基本类型外，<strong>Object（对象）</strong>为引用类型，Array、Function 本质上也都是对象。</li>
+            </ul>
+        </section>
+
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：何秦剑  功能：实时演示 JS 六种基本数据类型
+        // 所有变量均以 hqj 开头
+        // ============================================================
+        (function () {
+            // 六种基本数据类型的演示数据（值在每次运行时真实生成）
+            function hqj_getSamples() {
+                var hqj_sym = Symbol('hqj_id');
+                var hqj_un;                       // 只声明不赋值 → undefined
+                return [
+                    {
+                        hqj_key: 'string',
+                        hqj_name: '字符串 String',
+                        hqj_color: '#35e08a',
+                        hqj_code: 'var hqj_str = "何秦剑";\nvar hqj_tpl = `年龄${20}`;',
+                        hqj_value: function () {
+                            var hqj_str = '何秦剑';
+                            var hqj_tpl = '年龄' + 20;
+                            return '"' + hqj_str + '"，模板字符串: "' + hqj_tpl + '"';
+                        },
+                        hqj_note: ['用引号包裹：单引号、双引号、反引号', '模板字符串（反引号）支持 ${} 插值与换行']
+                    },
+                    {
+                        hqj_key: 'number',
+                        hqj_name: '数字 Number',
+                        hqj_color: '#ffd166',
+                        hqj_code: 'var hqj_num = 20;\nvar hqj_pi = 3.14;\nvar hqj_nan = NaN;',
+                        hqj_value: function () {
+                            var hqj_num = 20;
+                            var hqj_pi = 3.14;
+                            return hqj_num + '、' + hqj_pi + '，typeof NaN = "' + typeof NaN + '"';
+                        },
+                        hqj_note: ['不区分整数与浮点数，统一为 number', 'NaN（非数字）、Infinity（无穷大）也属于 number']
+                    },
+                    {
+                        hqj_key: 'boolean',
+                        hqj_name: '布尔 Boolean',
+                        hqj_color: '#4aa8ff',
+                        hqj_code: 'var hqj_ok = true;\nvar hqj_no = false;\nvar hqj_cmp = (1 < 2);',
+                        hqj_value: function () {
+                            var hqj_ok = true;
+                            var hqj_cmp = (1 < 2);
+                            return hqj_ok + '，比较 1 < 2 结果为 ' + hqj_cmp;
+                        },
+                        hqj_note: ['只有两个值：true（真）与 false（假）', '比较运算、条件判断的结果都是布尔值']
+                    },
+                    {
+                        hqj_key: 'undefined',
+                        hqj_name: '未定义 Undefined',
+                        hqj_color: '#b78bff',
+                        hqj_code: 'var hqj_un;\n// 未赋值，默认就是 undefined',
+                        hqj_value: function () {
+                            var hqj_un;
+                            return String(hqj_un);
+                        },
+                        hqj_note: ['变量声明后未赋值，默认值为 undefined', '函数没有 return 时，返回值也是 undefined']
+                    },
+                    {
+                        hqj_key: 'null',
+                        hqj_name: '空 Null',
+                        hqj_color: '#ff6b6b',
+                        hqj_code: 'var hqj_empty = null;\n// 主动赋空值',
+                        hqj_value: function () {
+                            var hqj_empty = null;
+                            return String(hqj_empty);
+                        },
+                        hqj_note: ['表示「刻意为空」，必须手动赋值', '注意：typeof null 历史遗留返回 "object"']
+                    },
+                    {
+                        hqj_key: 'symbol',
+                        hqj_name: '符号 Symbol',
+                        hqj_color: '#6fc7ff',
+                        hqj_code: 'var hqj_sym = Symbol("hqj_id");\nSymbol("x") === Symbol("x") // false',
+                        hqj_value: function () {
+                            return hqj_sym.toString();
+                        },
+                        hqj_note: ['ES6 新增，每个 Symbol 都全局唯一', '常用作对象的唯一属性名，避免键冲突']
+                    }
+                ];
+            }
+
+            var hqj_grid = document.getElementById('hqj_cardGrid');
+            var hqj_console = document.getElementById('hqj_console');
+            var hqj_runBtn = document.getElementById('hqj_runBtn');
+
+            // 代码高亮：极简处理
+            function hqj_highlight(hqj_code) {
+                return hqj_code
+                    .replace(/(\/\/[^\n]*)/g, '<span class="hqj-com">$1</span>')
+                    .replace(/\b(var|let|const|true|false|null|new)\b/g, '<span class="hqj-kw">$1</span>')
+                    .replace(/("[^"]*"|`[^`]*`)/g, '<span class="hqj-str">$1</span>')
+                    .replace(/\b(\d+\.?\d*)\b/g, '<span class="hqj-num-t">$1</span>');
+            }
+
+            function hqj_render() {
+                var hqj_samples = hqj_getSamples();
+                var hqj_logs = [];
+                hqj_grid.innerHTML = '';
+
+                hqj_samples.forEach(function (hqj_item, hqj_i) {
+                    var hqj_realValue = hqj_item.hqj_value();
+
+                    // 对真实变量取 typeof
+                    var hqj_tf;
+                    try {
+                        if (hqj_item.hqj_key === 'string') { hqj_tf = typeof '何秦剑'; }
+                        else if (hqj_item.hqj_key === 'number') { hqj_tf = typeof 20; }
+                        else if (hqj_item.hqj_key === 'boolean') { hqj_tf = typeof true; }
+                        else if (hqj_item.hqj_key === 'undefined') { var hqj_u; hqj_tf = typeof hqj_u; }
+                        else if (hqj_item.hqj_key === 'null') { hqj_tf = typeof null; }
+                        else if (hqj_item.hqj_key === 'symbol') { hqj_tf = typeof Symbol('x'); }
+                    } catch (hqj_e) { hqj_tf = '检测失败'; }
+
+                    var hqj_card = document.createElement('article');
+                    hqj_card.className = 'hqj-card';
+                    hqj_card.style.setProperty('--hqj-card-color', hqj_item.hqj_color);
+
+                    hqj_card.innerHTML =
+                        '<div class="hqj-card-head">' +
+                            '<div class="hqj-num">' + (hqj_i + 1) + '</div>' +
+                            '<div><h2>' + hqj_item.hqj_name + '</h2><span>原始类型 Primitive</span></div>' +
+                        '</div>' +
+                        '<span class="hqj-typeof">typeof → "' + hqj_tf + '"</span>' +
+                        '<pre class="hqj-code">' + hqj_highlight(hqj_item.hqj_code) + '</pre>' +
+                        '<div class="hqj-live"><b>实时值：</b><span class="hqj-val">' + hqj_realValue + '</span><br>' +
+                        '<b>typeof：</b><span class="hqj-tf">"' + hqj_tf + '"</span></div>' +
+                        '<ul class="hqj-note">' +
+                            hqj_item.hqj_note.map(function (hqj_n) { return '<li><strong>' + hqj_n.split('，')[0] + '</strong>' +
+                                (hqj_n.indexOf('，') > -1 ? '，' + hqj_n.split('，').slice(1).join('，') : '') + '</li>'; }).join('') +
+                        '</ul>';
+
+                    hqj_grid.appendChild(hqj_card);
+
+                    // 控制台日志
+                    var hqj_warn = hqj_item.hqj_key === 'null'
+                        ? '  <span class="hqj-warn">⚠ 历史遗留：null 本身是基本类型</span>' : '';
+                    hqj_logs.push('<span class="hqj-ok">✓</span> ' + hqj_item.hqj_name +
+                        '  typeof = <span class="hqj-tf">"' + hqj_tf + '"</span>  值 = ' + hqj_realValue + hqj_warn);
+                });
+
+                // 补充 BigInt 检测（浏览器支持时）
+                if (typeof BigInt !== 'undefined') {
+                    hqj_logs.push('<span class="hqj-ok">✓</span> 补充 BigInt  typeof = <span class="hqj-tf">"' +
+                        typeof BigInt(123) + '"</span>  值 = ' + BigInt(123).toString());
+                } else {
+                    hqj_logs.push('<span class="hqj-err">✗</span> 当前浏览器不支持 BigInt');
+                }
+
+                hqj_console.innerHTML = hqj_logs.join('\n');
+            }
+
+            hqj_runBtn.addEventListener('click', function () {
+                hqj_render();
+                hqj_runBtn.textContent = '检测完成 ✓';
+                setTimeout(function () { hqj_runBtn.textContent = '重新运行检测'; }, 1200);
+            });
+
+            hqj_render();
+        })();
+    </script>
+</body>
+</html>
