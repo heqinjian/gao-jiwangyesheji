@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-10-26  大模型：GPT-6-luna  功能：展示 JavaScript 程序结构——条件语句与循环语句 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 程序结构：条件与循环 | 15-2 何秦剑</title>
+    <style>
+        :root {
+            --hqj-bg: #f3f5fa;
+            --hqj-panel: #ffffff;
+            --hqj-ink: #1f2738;
+            --hqj-muted: #7c869e;
+            --hqj-line: #e3e8f2;
+            --hqj-accent: #2f7cf6;
+            --hqj-green: #16a34a;
+            --hqj-orange: #f59e0b;
+            --hqj-red: #ef4444;
+            --hqj-code-bg: #151b2b;
+            --hqj-code-ink: #d6e0f5;
+            --hqj-radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--hqj-bg);
+            color: var(--hqj-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.65;
+        }
+
+        .hqj-wrap {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 32px 16px 60px;
+        }
+
+        .hqj-header { text-align: center; margin-bottom: 26px; }
+        .hqj-header h1 { margin: 0 0 8px; font-size: 27px; }
+        .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+        .hqj-header p { margin: 0; color: var(--hqj-muted); font-size: 14px; }
+
+        .hqj-block {
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+        .hqj-block > h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 16px;
+            font-size: 19px;
+        }
+        .hqj-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            background: var(--hqj-accent);
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .hqj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .hqj-demo {
+            border: 1px solid var(--hqj-line);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .hqj-demo-head {
+            padding: 10px 14px;
+            background: var(--hqj-bg);
+            border-bottom: 1px solid var(--hqj-line);
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .hqj-demo-head span { color: var(--hqj-muted); font-weight: 400; font-size: 12px; }
+
+        pre.hqj-code {
+            margin: 0;
+            padding: 14px 16px;
+            background: var(--hqj-code-bg);
+            color: var(--hqj-code-ink);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .hqj-code .hqj-kw { color: #c792ea; }
+        .hqj-code .hqj-str { color: #a5e075; }
+        .hqj-code .hqj-com { color: #6b7794; }
+        .hqj-code .hqj-num { color: #ffb86c; }
+        .hqj-code .hqj-fn { color: #82aaff; }
+
+        .hqj-output {
+            padding: 10px 14px;
+            font-size: 13px;
+            border-top: 1px dashed var(--hqj-line);
+            background: #fbfcff;
+        }
+        .hqj-output b { color: var(--hqj-muted); font-weight: 400; }
+        .hqj-output .hqj-res { font-family: Consolas, monospace; color: var(--hqj-accent); }
+
+        .hqj-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 14px 0 16px;
+        }
+        .hqj-input {
+            width: 110px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--hqj-line);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .hqj-input:focus { border-color: var(--hqj-accent); }
+
+        .hqj-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--hqj-accent);
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .hqj-btn:hover { opacity: 0.9; }
+
+        .hqj-grade {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .hqj-grade.hqj-g-a { background: #dcfce7; color: var(--hqj-green); }
+        .hqj-grade.hqj-g-b { background: #dbeafe; color: var(--hqj-accent); }
+        .hqj-grade.hqj-g-c { background: #fef3c7; color: #b45309; }
+        .hqj-grade.hqj-g-d { background: #fee2e2; color: var(--hqj-red); }
+
+        .hqj-fizz {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .hqj-fizz span {
+            text-align: center;
+            padding: 6px 0;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            background: var(--hqj-bg);
+            border: 1px solid var(--hqj-line);
+        }
+        .hqj-fizz .hqj-f { background: #dbeafe; color: var(--hqj-accent); font-weight: 700; }
+        .hqj-fizz .hqj-b { background: #fef3c7; color: #b45309; font-weight: 700; }
+        .hqj-fizz .hqj-fb { background: #dcfce7; color: var(--hqj-green); font-weight: 700; }
+
+        .hqj-note {
+            margin: 12px 0 0;
+            padding-left: 20px;
+            font-size: 13px;
+            color: var(--hqj-muted);
+        }
+        .hqj-note strong { color: var(--hqj-ink); }
+
+        .hqj-back {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--hqj-muted);
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .hqj-back:hover { color: var(--hqj-accent); }
+    </style>
+</head>
+<body>
+    <div class="hqj-wrap">
+        <header class="hqj-header">
+            <h1>JavaScript 程序结构：<span class="hqj-hl">条件与循环</span></h1>
+            <p>顺序、选择（条件）、循环是程序的三大基本结构 · 下方结果均为浏览器实时运行</p>
+        </header>
+
+        <!-- ============ 一、条件语句 ============ -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">if</span> 一、条件语句（选择结构）</h2>
+
+            <div class="hqj-tools">
+                <input class="hqj-input" id="hqj_scoreInput" type="number" min="0" max="100" placeholder="输入成绩 0-100">
+                <button class="hqj-btn" id="hqj_scoreBtn">评级（if / else if）</button>
+                <span id="hqj_gradeOut"></span>
+            </div>
+
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">if … else if … else <span>多分支判断</span></div>
+                    <pre class="hqj-code" id="hqj_codeIf"></pre>
+                    <div class="hqj-output" id="hqj_outIf"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">switch <span>多值匹配，注意 break</span></div>
+                    <pre class="hqj-code" id="hqj_codeSwitch"></pre>
+                    <div class="hqj-output" id="hqj_outSwitch"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">三元运算符 ? : <span>简写条件</span></div>
+                    <pre class="hqj-code" id="hqj_codeTernary"></pre>
+                    <div class="hqj-output" id="hqj_outTernary"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 二、循环语句 ============ -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">for</span> 二、循环语句（循环结构）</h2>
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">for 循环 <span>已知次数</span></div>
+                    <pre class="hqj-code" id="hqj_codeFor"></pre>
+                    <div class="hqj-output" id="hqj_outFor"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">while 循环 <span>先判断后执行</span></div>
+                    <pre class="hqj-code" id="hqj_codeWhile"></pre>
+                    <div class="hqj-output" id="hqj_outWhile"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">do…while <span>至少执行一次</span></div>
+                    <pre class="hqj-code" id="hqj_codeDoWhile"></pre>
+                    <div class="hqj-output" id="hqj_outDoWhile"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">for…of <span>遍历数组/字符串</span></div>
+                    <pre class="hqj-code" id="hqj_codeOf"></pre>
+                    <div class="hqj-output" id="hqj_outOf"></div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">break / continue <span>跳出与跳过</span></div>
+                    <pre class="hqj-code" id="hqj_codeBreak"></pre>
+                    <div class="hqj-output" id="hqj_outBreak"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 三、综合实战 ============ -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">★</span> 三、综合实战：FizzBuzz（循环 + 条件）</h2>
+            <pre class="hqj-code" id="hqj_codeFizz"></pre>
+            <div class="hqj-fizz" id="hqj_fizzBoard"></div>
+            <ul class="hqj-note">
+                <li><strong>规则：</strong>1–30 中，3 的倍数输出 Fizz，5 的倍数输出 Buzz，同时是 3 和 5 的倍数输出 FizzBuzz。</li>
+                <li>这是最经典的「循环里嵌套条件」练习，先判断最严格的条件（同时整除 15）。</li>
+            </ul>
+        </section>
+
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ============================================================
+        // 何秦剑  功能：演示 JS 条件与循环结构，全部结果实时运行
+        // ============================================================
+        (function () {
+            // 代码片段（同时用于展示，保证与实际运行逻辑一致）
+            var hqj_code = {
+                if: 'var hqj_score = 86;\nif (hqj_score >= 90)      hqj_g = "优秀";\nelse if (hqj_score >= 80) hqj_g = "良好";\nelse if (hqj_score >= 60) hqj_g = "及格";\nelse                     hqj_g = "不及格";',
+                switch: 'var hqj_day = 3;\nswitch (hqj_day) {\n  case 1: hqj_s = "周一"; break;\n  case 2: hqj_s = "周二"; break;\n  case 3: hqj_s = "周三"; break;\n  default: hqj_s = "其他";\n}',
+                ternary: 'var hqj_age = 20;\nvar hqj_can = hqj_age >= 18 ? "成年" : "未成年";',
+                for: 'var hqj_sum = 0;\nfor (var hqj_i = 1; hqj_i <= 5; hqj_i++) {\n  hqj_sum += hqj_i;   // 累加 1~5\n}',
+                while: 'var hqj_n = 1024, hqj_c = 0;\nwhile (hqj_n > 1) {\n  hqj_n = hqj_n / 2;\n  hqj_c++;\n}',
+                dowhile: 'var hqj_k = 0;\ndo {\n  hqj_k++;\n} while (hqj_k < 1);\n// 条件不成立也执行一次',
+                of: 'var hqj_arr = ["何", "秦", "剑"];\nvar hqj_str = "";\nfor (var hqj_ch of hqj_arr) {\n  hqj_str += hqj_ch;\n}',
+                break: 'var hqj_odds = [];\nfor (var hqj_i = 1; hqj_i <= 10; hqj_i++) {\n  if (hqj_i % 2 === 0) continue; // 跳过偶数\n  if (hqj_i > 7) break;          // 到 9 前跳出\n  hqj_odds.push(hqj_i);\n}',
+                fizz: 'for (var hqj_i = 1; hqj_i <= 30; hqj_i++) {\n  if (hqj_i % 15 === 0)      console.log("FizzBuzz");\n  else if (hqj_i % 3 === 0)  console.log("Fizz");\n  else if (hqj_i % 5 === 0)  console.log("Buzz");\n  else                      console.log(hqj_i);\n}'
+            };
+
+            // 极简代码高亮
+            function hqj_hl(hqj_t) {
+                return hqj_t
+                    .replace(/(\/\/[^\n]*)/g, '<span class="hqj-com">$1</span>')
+                    .replace(/\b(var|if|else|switch|case|default|break|continue|for|while|do|of|new)\b/g, '<span class="hqj-kw">$1</span>')
+                    .replace(/("[^"]*")/g, '<span class="hqj-str">$1</span>')
+                    .replace(/\b(\d+)\b/g, '<span class="hqj-num">$1</span>');
+            }
+
+            // 写入代码展示
+            document.getElementById('hqj_codeIf').textContent = hqj_code.if;
+            document.getElementById('hqj_codeSwitch').textContent = hqj_code.switch;
+            document.getElementById('hqj_codeTernary').textContent = hqj_code.ternary;
+            document.getElementById('hqj_codeFor').textContent = hqj_code.for;
+            document.getElementById('hqj_codeWhile').textContent = hqj_code.while;
+            document.getElementById('hqj_codeDoWhile').textContent = hqj_code.dowhile;
+            document.getElementById('hqj_codeOf').textContent = hqj_code.of;
+            document.getElementById('hqj_codeBreak').textContent = hqj_code.break;
+            document.getElementById('hqj_codeFizz').textContent = hqj_code.fizz;
+            document.querySelectorAll('pre.hqj-code').forEach(function (el) {
+                el.innerHTML = hqj_hl(el.textContent);
+            });
+
+            // ===== 实时运行各示例 =====
+            // 1) if / else if
+            var hqj_score = 86, hqj_g;
+            if (hqj_score >= 90) hqj_g = '优秀';
+            else if (hqj_score >= 80) hqj_g = '良好';
+            else if (hqj_score >= 60) hqj_g = '及格';
+            else hqj_g = '不及格';
+            document.getElementById('hqj_outIf').innerHTML =
+                '<b>成绩 86 评级：</b><span class="hqj-res">' + hqj_g + '</span>';
+
+            // 2) switch
+            var hqj_day = 3, hqj_s;
+            switch (hqj_day) {
+                case 1: hqj_s = '周一'; break;
+                case 2: hqj_s = '周二'; break;
+                case 3: hqj_s = '周三'; break;
+                default: hqj_s = '其他';
+            }
+            document.getElementById('hqj_outSwitch').innerHTML =
+                '<b>day = 3：</b><span class="hqj-res">' + hqj_s + '</span>';
+
+            // 3) 三元
+            var hqj_age = 20;
+            var hqj_can = hqj_age >= 18 ? '成年' : '未成年';
+            document.getElementById('hqj_outTernary').innerHTML =
+                '<b>20 岁：</b><span class="hqj-res">' + hqj_can + '</span>';
+
+            // 4) for
+            var hqj_sum = 0;
+            for (var hqj_i = 1; hqj_i <= 5; hqj_i++) { hqj_sum += hqj_i; }
+            document.getElementById('hqj_outFor').innerHTML =
+                '<b>1 + 2 + … + 5 =</b> <span class="hqj-res">' + hqj_sum + '</span>';
+
+            // 5) while
+            var hqj_n = 1024, hqj_c = 0;
+            while (hqj_n > 1) { hqj_n = hqj_n / 2; hqj_c++; }
+            document.getElementById('hqj_outWhile').innerHTML =
+                '<b>1024 除到 1 需要：</b><span class="hqj-res">' + hqj_c + ' 次</span>';
+
+            // 6) do…while
+            var hqj_k = 0;
+            do { hqj_k++; } while (hqj_k < 1);
+            document.getElementById('hqj_outDoWhile').innerHTML =
+                '<b>k 最终为：</b><span class="hqj-res">' + hqj_k + '</span>（即使 k<1 不成立）';
+
+            // 7) for…of
+            var hqj_arr = ['何', '秦', '剑'], hqj_str = '';
+            for (var hqj_ch of hqj_arr) { hqj_str += hqj_ch; }
+            document.getElementById('hqj_outOf').innerHTML =
+                '<b>拼字结果：</b><span class="hqj-res">' + hqj_str + '</span>';
+
+            // 8) break / continue
+            var hqj_odds = [];
+            for (var hqj_j = 1; hqj_j <= 10; hqj_j++) {
+                if (hqj_j % 2 === 0) continue;
+                if (hqj_j > 7) break;
+                hqj_odds.push(hqj_j);
+            }
+            document.getElementById('hqj_outBreak').innerHTML =
+                '<b>保留的奇数：</b><span class="hqj-res">[' + hqj_odds.join(', ') + ']</span>';
+
+            // 9) FizzBuzz
+            var hqj_board = document.getElementById('hqj_fizzBoard');
+            for (var hqj_x = 1; hqj_x <= 30; hqj_x++) {
+                var hqj_v, hqj_cls = '';
+                if (hqj_x % 15 === 0) { hqj_v = 'FizzBuzz'; hqj_cls = 'hqj-fb'; }
+                else if (hqj_x % 3 === 0) { hqj_v = 'Fizz'; hqj_cls = 'hqj-f'; }
+                else if (hqj_x % 5 === 0) { hqj_v = 'Buzz'; hqj_cls = 'hqj-b'; }
+                else { hqj_v = hqj_x; }
+                var hqj_cell = document.createElement('span');
+                hqj_cell.className = hqj_cls;
+                hqj_cell.textContent = hqj_v;
+                hqj_board.appendChild(hqj_cell);
+            }
+
+            // ===== 交互：成绩评级 =====
+            var hqj_scoreInput = document.getElementById('hqj_scoreInput');
+            var hqj_gradeOut = document.getElementById('hqj_gradeOut');
+            document.getElementById('hqj_scoreBtn').addEventListener('click', function () {
+                var hqj_v = Number(hqj_scoreInput.value);
+                if (hqj_scoreInput.value === '' || hqj_v < 0 || hqj_v > 100) {
+                    hqj_gradeOut.innerHTML = '<span style="color:var(--hqj-red)">请输入 0–100 的成绩</span>';
+                    return;
+                }
+                var hqj_gr, hqj_cl;
+                if (hqj_v >= 90) { hqj_gr = '优秀'; hqj_cl = 'hqj-g-a'; }
+                else if (hqj_v >= 80) { hqj_gr = '良好'; hqj_cl = 'hqj-g-b'; }
+                else if (hqj_v >= 60) { hqj_gr = '及格'; hqj_cl = 'hqj-g-c'; }
+                else { hqj_gr = '不及格'; hqj_cl = 'hqj-g-d'; }
+                hqj_gradeOut.innerHTML = '<span class="hqj-grade ' + hqj_cl + '">' + hqj_gr + '</span>';
+            });
+        })();
+    </script>
+</body>
+</html>
