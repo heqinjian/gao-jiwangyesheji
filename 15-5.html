@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!-- 姓名：何秦剑  日期：2026-10-26  功能：100 个数字盒子，7 的倍数或个位为 7 的数字显示为空盒子 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>逢七过 · 一百个数字盒子 | 15-5 何秦剑</title>
+    <style>
+        :root {
+            --hqj-bg: #f4f6fb;
+            --hqj-panel: #ffffff;
+            --hqj-ink: #1f2738;
+            --hqj-muted: #7c869e;
+            --hqj-line: #e3e8f2;
+            --hqj-accent: #2f7cf6;
+            --hqj-skip: #ef4444;
+            --hqj-skip-bg: #fef2f2;
+            --hqj-radius: 12px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--hqj-bg);
+            color: var(--hqj-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+        }
+
+        .hqj-wrap {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 32px 16px 56px;
+        }
+
+        .hqj-header { text-align: center; margin-bottom: 22px; }
+        .hqj-header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+        .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+        .hqj-header p {
+            margin: 0 auto;
+            max-width: 720px;
+            font-size: 14px;
+            color: var(--hqj-muted);
+            line-height: 1.7;
+        }
+        .hqj-rule {
+            display: inline-block;
+            margin: 10px 4px 0;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            background: var(--hqj-skip-bg);
+            color: var(--hqj-skip);
+            border: 1px solid #fecaca;
+        }
+        .hqj-rule code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .hqj-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 18px 0 20px;
+        }
+
+        .hqj-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--hqj-accent);
+            border-radius: 999px;
+            background: var(--hqj-accent);
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+        .hqj-btn:hover { opacity: 0.88; }
+
+        .hqj-btn.hqj-ghost {
+            background: transparent;
+            color: var(--hqj-accent);
+        }
+
+        .hqj-stat {
+            font-size: 13px;
+            color: var(--hqj-muted);
+        }
+        .hqj-stat b { color: var(--hqj-ink); font-size: 15px; }
+        .hqj-stat .hqj-skip-num { color: var(--hqj-skip); }
+
+        .hqj-board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 14px;
+        }
+
+        .hqj-box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: Consolas, "Courier New", monospace;
+            background: var(--hqj-bg);
+            border: 1px solid var(--hqj-line);
+            color: var(--hqj-ink);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .hqj-box:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 14px rgba(31, 39, 56, 0.14);
+            z-index: 2;
+        }
+
+        /* 满足规则：空盒子（不显示数字） */
+        .hqj-box.hqj-empty {
+            background: var(--hqj-skip-bg);
+            border: 2px dashed var(--hqj-skip);
+            color: transparent;
+            cursor: help;
+        }
+
+        /* 切换：显示被隐藏的数字 */
+        .hqj-board.hqj-reveal .hqj-box.hqj-empty {
+            color: var(--hqj-skip);
+            border-style: solid;
+        }
+
+        .hqj-multi { box-shadow: inset 0 0 0 2px rgba(239, 68, 68, 0.18); }
+
+        .hqj-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--hqj-muted);
+        }
+        .hqj-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .hqj-dot {
+            width: 16px; height: 16px;
+            border-radius: 4px;
+            display: inline-block;
+            background: var(--hqj-bg);
+            border: 1px solid var(--hqj-line);
+        }
+        .hqj-dot.hqj-dot-empty {
+            background: var(--hqj-skip-bg);
+            border: 2px dashed var(--hqj-skip);
+        }
+
+        .hqj-skip-list {
+            margin-top: 22px;
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 16px 18px;
+        }
+        .hqj-skip-list h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            color: var(--hqj-skip);
+        }
+        .hqj-skip-list p {
+            margin: 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 2;
+            color: var(--hqj-ink);
+        }
+        .hqj-skip-list p .hqj-tag {
+            display: inline-block;
+            margin: 0 6px 0 0;
+            padding: 0 8px;
+            border-radius: 6px;
+            background: var(--hqj-skip-bg);
+            color: var(--hqj-skip);
+        }
+
+        .hqj-back {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--hqj-muted);
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .hqj-back:hover { color: var(--hqj-accent); }
+
+        @media (max-width: 600px) {
+            .hqj-board { gap: 5px; padding: 8px; }
+            .hqj-box { font-size: 13px; border-radius: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hqj-wrap">
+        <header class="hqj-header">
+            <h1>逢七过 · <span class="hqj-hl">一百个数字盒子</span></h1>
+            <p>
+                从 1 到 100，每个数字一个盒子。遇到下列数字时盒子留空（不显示数字），其余正常显示：
+                <br>
+                <span class="hqj-rule">① 7 的倍数：<code>n % 7 === 0</code></span>
+                <span class="hqj-rule">② 个位是 7：<code>n % 10 === 7</code></span>
+            </p>
+        </header>
+
+        <div class="hqj-toolbar">
+            <button class="hqj-btn hqj-ghost" id="hqj_toggleBtn">显示被隐藏的数字</button>
+            <span class="hqj-stat" id="hqj_stat"></span>
+        </div>
+
+        <main class="hqj-board" id="hqj_board" aria-label="100 个数字盒子"></main>
+
+        <div class="hqj-legend">
+            <span><i class="hqj-dot"></i>正常数字</span>
+            <span><i class="hqj-dot hqj-dot-empty"></i>空盒子（7 的倍数或个位为 7）</span>
+            <span>鼠标悬停空盒子可查看被隐藏的数字</span>
+        </div>
+
+        <section class="hqj-skip-list">
+            <h3>本盘被清空的数字（共 <span id="hqj_skipCount">0</span> 个）</h3>
+            <p id="hqj_skipList"></p>
+        </section>
+
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：何秦剑  功能：生成 100 个盒子，7 的倍数 / 个位为 7 显示空盒子
+        // ============================================================
+        (function () {
+            var hqj_total = 100;
+            var hqj_board = document.getElementById('hqj_board');
+            var hqj_stat = document.getElementById('hqj_stat');
+            var hqj_skipCountEl = document.getElementById('hqj_skipCount');
+            var hqj_skipListEl = document.getElementById('hqj_skipList');
+            var hqj_toggleBtn = document.getElementById('hqj_toggleBtn');
+
+            var hqj_skipped = [];
+
+            // 判断是否需要清空：7 的倍数 或 个位为 7
+            function hqj_isEmpty(hqj_n) {
+                return hqj_n % 7 === 0 || hqj_n % 10 === 7;
+            }
+
+            // 生成 100 个盒子
+            for (var hqj_i = 1; hqj_i <= hqj_total; hqj_i++) {
+                var hqj_box = document.createElement('div');
+                hqj_box.className = 'hqj-box';
+                hqj_box.textContent = hqj_i;
+
+                if (hqj_isEmpty(hqj_i)) {
+                    hqj_box.classList.add('hqj-empty');
+                    hqj_box.title = '被隐藏的数字：' + hqj_i;
+                    hqj_box.setAttribute('aria-label', '空盒子，原数字为 ' + hqj_i);
+                    hqj_skipped.push(hqj_i);
+                }
+                hqj_board.appendChild(hqj_box);
+            }
+
+            // 统计信息
+            var hqj_shown = hqj_total - hqj_skipped.length;
+            hqj_stat.innerHTML =
+                '共 <b>100</b> 个盒子，空盒子 <b class="hqj-skip-num">' + hqj_skipped.length +
+                '</b> 个，显示数字 <b>' + hqj_shown + '</b> 个';
+            hqj_skipCountEl.textContent = hqj_skipped.length;
+
+            // 列出被清空的数字
+            hqj_skipListEl.innerHTML = hqj_skipped.map(function (hqj_n) {
+                return '<span class="hqj-tag">' + hqj_n + '</span>';
+            }).join('');
+
+            // 切换：显示 / 隐藏被清空的数字
+            var hqj_revealed = false;
+            hqj_toggleBtn.addEventListener('click', function () {
+                hqj_revealed = !hqj_revealed;
+                hqj_board.classList.toggle('hqj-reveal', hqj_revealed);
+                hqj_toggleBtn.textContent = hqj_revealed ? '重新隐藏数字' : '显示被隐藏的数字';
+            });
+        })();
+    </script>
+</body>
+</html>
