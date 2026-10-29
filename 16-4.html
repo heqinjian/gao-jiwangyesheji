@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-10-29  大模型：GPT-6-luna  功能：音乐手机新闻 TAB 选项卡（行情/导购/新品/评测，点击切换） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>音乐手机 TAB 选项卡 | 16-4 何秦剑</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: "Microsoft YaHei", "SimSun", sans-serif;
+        background: #f0f2f5;
+        padding: 40px 16px;
+    }
+    .hqj-box {
+        width: 440px;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #cfd6e0;
+    }
+
+    /* 头部：标题 + 选项卡 */
+    .hqj-hd {
+        display: flex;
+        align-items: flex-end;
+        height: 40px;
+        background: #f2f4f7;
+        border-bottom: 1px solid #cfd6e0;
+        padding-left: 14px;
+    }
+    .hqj-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e63c8;
+        margin-right: 18px;
+        padding-bottom: 7px;
+    }
+    .hqj-tabs {
+        display: flex;
+        height: 30px;
+    }
+    .hqj-tabs li {
+        width: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-bottom: none;
+        position: relative;
+        top: 1px;
+    }
+    .hqj-tabs li.hqj-on {
+        background: #fff;
+        border-color: #cfd6e0;
+        color: #1e63c8;
+        font-weight: 700;
+    }
+
+    /* 内容区 */
+    .hqj-bd { padding: 10px 12px 8px; }
+    .hqj-panel { display: none; }
+    .hqj-panel.hqj-on { display: block; }
+
+    .hqj-panel li {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        line-height: 1.4;
+        padding: 5px 0;
+        border-bottom: 1px dotted #e6e9ee;
+    }
+    .hqj-panel li:last-child { border-bottom: none; }
+
+    .hqj-dot {
+        width: 5px; height: 5px;
+        background: #1e63c8;
+        border-radius: 50%;
+        flex: none;
+        margin-right: 8px;
+    }
+    .hqj-news {
+        flex: 1;
+        color: #1e63c8;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .hqj-news:hover { text-decoration: underline; }
+    .hqj-red { color: #e03329; }
+    .hqj-date {
+        flex: none;
+        color: #888;
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .hqj-back {
+        display: block;
+        width: 440px;
+        margin: 18px auto 0;
+        color: #888;
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .hqj-back:hover { color: #1e63c8; }
+</style>
+</head>
+<body>
+    <div class="hqj-box">
+        <div class="hqj-hd">
+            <span class="hqj-title">音乐手机</span>
+            <ul class="hqj-tabs" id="hqj_tabs">
+                <li class="hqj-on">行情</li>
+                <li>导购</li>
+                <li>新品</li>
+                <li>评测</li>
+            </ul>
+        </div>
+        <div class="hqj-bd" id="hqj_panels"></div>
+    </div>
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+
+<script>
+(function () {
+    // 四个选项卡的新闻数据，hqj_r 标记为红色（产品名/重点条目）
+    var hqj_data = [
+        {
+            tab: '行情',
+            list: [
+                { t: '音乐强机苹果iPhone 5s价格稳定', r: '苹果iPhone 5s', d: '12/19' },
+                { t: '高性能四核音乐机 魅族MX3低价热卖', r: '魅族MX3', d: '12/19' },
+                { t: '音乐品质最出色 vivo X3促销2199', r: 'vivo X3', d: '12/12' },
+                { t: '时尚音乐手机 vivo Xplay济南2798元', r: 'vivo Xplay', d: '11/27' },
+                { t: '好音乐好拍照 OPPO Find5今报价2580元', r: 'OPPO Find5', d: '08/21' },
+                { t: '1.5GHz四核1080p OPPO Find 5降价热卖', r: 'OPPO Find 5', d: '07/30' },
+                { t: '彩色呼吸带双核机 索尼M35h促销2299', r: '索尼M35h', d: '06/08' },
+                { t: '1.7GHz四核1080p屏 vivo Xplay热卖中', r: 'vivo Xplay', d: '06/07' }
+            ]
+        },
+        {
+            tab: '导购',
+            list: [
+                { t: '优秀音效漂亮外观 市售音乐手机盘点', r: '音乐手机', d: '09/13' },
+                { t: '不要虐待耳朵 8款独特音效的音乐机', r: '音乐机', d: '09/06' },
+                { t: '最低只要799 9款高性能音乐手机推荐', r: '音乐手机', d: '07/22' },
+                { t: '长假主导后高考时代 奖励孩子的智能手机全攻略', r: '智能手机', d: '06/13' },
+                { t: '降价不限时 端午后值得关注降价四核机推荐', r: '四核机', d: '06/13' },
+                { t: '高考之后尽情狂欢！学生超强手机推荐', r: '手机', d: '06/13' },
+                { t: '上半年看这里 最热1080p四核旗舰手机', r: '旗舰手机', d: '06/13' },
+                { t: '最薄不过7.99毫米 热门超薄智能机大搜罗', r: '智能机', d: '06/08' }
+            ]
+        },
+        {
+            tab: '新品',
+            list: [
+                { t: '无限接近完美！vivo Xplay3S现场体验', r: 'vivo Xplay3S', d: '12/19' },
+                { t: '入门音乐机 诺基亚Lumia 525现身工信部', r: '诺基亚Lumia 525', d: '11/05' },
+                { t: '传诺基亚下月将推首款WP音乐手机Glee', r: 'WP音乐手机Glee', d: '09/23' },
+                { t: '软硬兼施 vivo Xtudio Hi-Fi音乐圈讲解', r: 'vivo Xtudio', d: '08/23' },
+                { t: '没有中国 谷歌All Android音乐服务登陆欧洲', r: '没有中国 谷歌All Android音乐服务登陆欧洲', d: '08/09' },
+                { t: 'Hi-Fi不够vivo又玩录音棚 X3音乐处理方案曝光', r: 'Hi-Fi不够vivo又玩录音棚 X3音乐处理方案曝光', d: '07/06' },
+                { t: '小伙伴都惊呆了 薄至6mm以下vivo X3终露面', r: 'vivo X3', d: '07/11' }
+            ]
+        },
+        {
+            tab: '评测',
+            list: [
+                { t: '音乐历久弥新 TD版魅族MX3评测', r: 'TD版魅族MX3', d: '12/19' },
+                { t: '极致影音完美音质 步步高vivo Xplay移动版图赏', r: 'vivo Xplay', d: '07/24' },
+                { t: '都是大屏何不同？三星S4/Mega静态评测', r: '三星S4/Mega', d: '06/20' },
+                { t: '超值四核智能机 HTC Desire 608t评测', r: 'HTC Desire 608t', d: '06/16' },
+                { t: '完美融合微博 魅族MX2 Flyme 2.2体验', r: '魅族MX2 Flyme 2.2', d: '06/13' },
+                { t: '1080p屏Hi-Fi旗舰 vivo Xplay娱乐体验', r: 'vivo Xplay', d: '06/13' },
+                { t: '5.7英寸高清巨屏 酷派9070+XO影音体验', r: '酷派9070+XO', d: '06/06' },
+                { t: '悬浮窗口播放 vivo Xplay视频功能体验', r: 'vivo Xplay', d: '06/03' }
+            ]
+        }
+    ];
+
+    var hqj_panels = document.getElementById('hqj_panels');
+    var hqj_tabs = document.querySelectorAll('#hqj_tabs li');
+
+    // 生成面板
+    hqj_data.forEach(function (group, gi) {
+        var panel = document.createElement('ul');
+        panel.className = 'hqj-panel';
+        if (gi === 0) panel.classList.add('hqj-on');
+
+        group.list.forEach(function (item) {
+            var li = document.createElement('li');
+            var newsHtml = item.t;
+            if (item.r) {
+                newsHtml = item.t.split(item.r).join('<span class="hqj-red">' + item.r + '</span>');
+            }
+            li.innerHTML = '<span class="hqj-dot"></span>' +
+                '<span class="hqj-news">' + newsHtml + '</span>' +
+                '<span class="hqj-date">(' + item.d + ')</span>';
+            panel.appendChild(li);
+        });
+        hqj_panels.appendChild(panel);
+    });
+
+    // 点击切换
+    var hqj_panelList = hqj_panels.querySelectorAll('.hqj-panel');
+    hqj_tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () {
+            hqj_tabs.forEach(function (t) { t.classList.remove('hqj-on'); });
+            hqj_panelList.forEach(function (p) { p.classList.remove('hqj-on'); });
+            tab.classList.add('hqj-on');
+            hqj_panelList[i].classList.add('hqj-on');
+        });
+    });
+})();
+</script>
+</body>
+</html>
