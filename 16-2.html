@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-10-29  大模型：GPT-6-luna  功能：展示 JavaScript 对象（创建、属性增删改查、遍历、方法与 this） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 对象图鉴 | 16-2 何秦剑</title>
+    <style>
+        :root {
+            --hqj-bg: #f3f5fa;
+            --hqj-panel: #ffffff;
+            --hqj-ink: #1f2738;
+            --hqj-muted: #7c869e;
+            --hqj-line: #e3e8f2;
+            --hqj-accent: #2f7cf6;
+            --hqj-green: #16a34a;
+            --hqj-orange: #f59e0b;
+            --hqj-red: #ef4444;
+            --hqj-purple: #8b5cf6;
+            --hqj-radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--hqj-bg);
+            color: var(--hqj-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .hqj-wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 60px; }
+
+        .hqj-header { text-align: center; margin-bottom: 24px; }
+        .hqj-header h1 { margin: 0 0 8px; font-size: 27px; }
+        .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+        .hqj-header p { margin: 0; color: var(--hqj-muted); font-size: 14px; }
+
+        .hqj-block {
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+        .hqj-block > h2 {
+            display: flex; align-items: center; gap: 10px;
+            margin: 0 0 16px; font-size: 19px;
+        }
+        .hqj-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 8px;
+            background: var(--hqj-accent); color: #fff; font-size: 14px;
+        }
+
+        /* 对象卡片：键值对的可视化 */
+        .hqj-obj-card {
+            border-radius: 12px;
+            border: 1.5px solid var(--hqj-accent);
+            overflow: hidden;
+        }
+        .hqj-obj-title {
+            padding: 8px 14px;
+            background: var(--hqj-accent);
+            color: #fff;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+        }
+        .hqj-obj-body { padding: 6px 0; }
+        .hqj-kv {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 14px;
+            border-bottom: 1px solid var(--hqj-line);
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            animation: hqj-slide 0.25s ease;
+        }
+        .hqj-kv:last-child { border-bottom: none; }
+        .hqj-kv .hqj-key {
+            color: var(--hqj-purple);
+            min-width: 78px;
+            font-weight: 700;
+        }
+        .hqj-kv .hqj-colon { color: var(--hqj-muted); }
+        .hqj-kv .hqj-val { color: var(--hqj-green); }
+        .hqj-kv.hqj-new { background: #f0fdf4; }
+        .hqj-kv.hqj-deleted {
+            background: #fef2f2;
+            color: var(--hqj-red);
+            text-decoration: line-through;
+        }
+
+        @keyframes hqj-slide {
+            from { transform: translateX(-10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hqj-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+        .hqj-btn {
+            padding: 7px 15px;
+            border: 1px solid var(--hqj-accent);
+            border-radius: 8px;
+            background: var(--hqj-panel);
+            color: var(--hqj-accent);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .hqj-btn:hover { background: var(--hqj-accent); color: #fff; }
+        .hqj-btn.hqj-danger { border-color: var(--hqj-red); color: var(--hqj-red); }
+        .hqj-btn.hqj-danger:hover { background: var(--hqj-red); color: #fff; }
+
+        .hqj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 16px;
+        }
+
+        .hqj-demo {
+            border: 1px solid var(--hqj-line);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .hqj-demo-head {
+            padding: 10px 14px;
+            background: var(--hqj-bg);
+            border-bottom: 1px solid var(--hqj-line);
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .hqj-demo-head span { color: var(--hqj-muted); font-weight: 400; font-size: 12px; }
+
+        pre.hqj-code {
+            margin: 0;
+            padding: 12px 14px;
+            background: #151b2b;
+            color: #d6e0f5;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .hqj-code .hqj-kw { color: #c792ea; }
+        .hqj-code .hqj-str { color: #a5e075; }
+        .hqj-code .hqj-com { color: #6b7794; }
+        .hqj-code .hqj-num { color: #ffb86c; }
+
+        .hqj-demo-body { padding: 12px 14px; }
+        .hqj-demo-result {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: var(--hqj-accent);
+        }
+        .hqj-demo-result .hqj-green { color: var(--hqj-green); }
+
+        .hqj-note {
+            margin: 12px 0 0; padding-left: 20px;
+            font-size: 13px; color: var(--hqj-muted);
+        }
+        .hqj-note strong { color: var(--hqj-ink); }
+
+        .hqj-back {
+            display: inline-block; margin-top: 18px;
+            color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+        }
+        .hqj-back:hover { color: var(--hqj-accent); }
+    </style>
+</head>
+<body>
+    <div class="hqj-wrap">
+        <header class="hqj-header">
+            <h1>JavaScript <span class="hqj-hl">对象图鉴</span></h1>
+            <p>对象是「键值对」的无序集合，像一张人物档案卡 · 动手改改属性</p>
+        </header>
+
+        <!-- 互动对象卡 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">▶</span> 对象操场：属性增删改</h2>
+            <div class="hqj-obj-card">
+                <div class="hqj-obj-title">var hqj_hero = { … }</div>
+                <div class="hqj-obj-body" id="hqj_objBody"></div>
+            </div>
+            <div class="hqj-controls">
+                <button class="hqj-btn" id="hqj_addBtn">加属性 hqj_hero.city</button>
+                <button class="hqj-btn" id="hqj_updBtn">改 hqj_hero.level</button>
+                <button class="hqj-btn hqj-danger" id="hqj_delBtn">删除 hqj_hero.city</button>
+                <button class="hqj-btn" id="hqj_callBtn">调用方法 hqj_hero.sayHi()</button>
+            </div>
+            <div class="hqj-demo-result" id="hqj_log" style="margin-top:10px"></div>
+        </section>
+
+        <!-- 创建与访问 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">✎</span> 创建与访问</h2>
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">对象字面量 <span>最常用的创建方式</span></div>
+                    <pre class="hqj-code" id="hqj_c_lit"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_lit"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">点访问 vs 方括号访问 <span>动态键名用方括号</span></div>
+                    <pre class="hqj-code" id="hqj_c_acc"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_acc"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">对象方法与 this <span>this 指向调用者</span></div>
+                    <pre class="hqj-code" id="hqj_c_method"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_method"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 遍历与转换 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">⟳</span> 遍历对象与嵌套对象</h2>
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">for…in <span>遍历键</span></div>
+                    <pre class="hqj-code" id="hqj_c_in"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_in"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">Object.keys / values / entries <span>转成数组</span></div>
+                    <pre class="hqj-code" id="hqj_c_keys"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_keys"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">嵌套对象 <span>对象里放对象</span></div>
+                    <pre class="hqj-code" id="hqj_c_nest"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-demo-result" id="hqj_r_nest"></div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="hqj-note">
+                <li><strong>对象是引用类型：</strong>变量里存的是地址，两个变量指向同一对象，改一个另一个也变。</li>
+                <li>判断属性是否存在：<code>"name" in hqj_obj</code> 或 <code>hqj_obj.hasOwnProperty("name")</code>。</li>
+                <li>对象与数组的区别：数组按下标有序排列，对象按键名无序存放。</li>
+            </ul>
+        </section>
+
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ============================================================
+        // 何秦剑  功能：对象方法可视化
+        // ============================================================
+        (function () {
+            var hqj_code = {
+                lit: 'var hqj_stu = {\n  name: "何秦剑",\n  age: 20,\n  isVip: true,\n  skills: ["HTML", "JS"]\n};',
+                acc: 'var hqj_s = { name: "何秦剑", age: 20 };\nhqj_s.name;        // 点访问 → "何秦剑"\nhqj_s["age"];      // 方括号 → 20\nvar hqj_k = "name";\nhqj_s[hqj_k];      // 动态键名 → "何秦剑"',
+                method: 'var hqj_p = {\n  name: "何秦剑",\n  sayHi: function () {\n    return "你好，我是" + this.name;\n  }\n};\nhqj_p.sayHi(); // this 指向 hqj_p',
+                in: 'var hqj_s = { name: "何秦剑", age: 20 };\nfor (var hqj_k in hqj_s) {\n  console.log(hqj_k, hqj_s[hqj_k]);\n}',
+                keys: 'var hqj_s = { name: "何秦剑", age: 20 };\nObject.keys(hqj_s);   // ["name","age"]\nObject.values(hqj_s); // ["何秦剑",20]\nObject.entries(hqj_s); // [["name","何秦剑"],…]',
+                nest: 'var hqj_team = {\n  leader: { name: "何秦剑", age: 20 },\n  members: 3\n};\nhqj_team.leader.name; // "何秦剑"'
+            };
+
+            function hqj_hl(hqj_t) {
+                return hqj_t
+                    .replace(/(\/\/[^\n]*)/g, '<span class="hqj-com">$1</span>')
+                    .replace(/\b(var|function|return|true|new)\b/g, '<span class="hqj-kw">$1</span>')
+                    .replace(/("[^"]*")/g, '<span class="hqj-str">$1</span>')
+                    .replace(/\b(\d+)\b/g, '<span class="hqj-num">$1</span>');
+            }
+
+            var hqj_map = {
+                'hqj_c_lit': hqj_code.lit, 'hqj_c_acc': hqj_code.acc,
+                'hqj_c_method': hqj_code.method, 'hqj_c_in': hqj_code.in,
+                'hqj_c_keys': hqj_code.keys, 'hqj_c_nest': hqj_code.nest
+            };
+            Object.keys(hqj_map).forEach(function (id) {
+                var el = document.getElementById(id);
+                el.textContent = hqj_map[id];
+                el.innerHTML = hqj_hl(el.textContent);
+            });
+
+            // ===== 操场对象 =====
+            var hqj_hero = {
+                name: '何秦剑',
+                level: 6,
+                isVip: true,
+                sayHi: function () { return '你好，我是' + this.name + '，Lv.' + this.level; }
+            };
+            var hqj_body = document.getElementById('hqj_objBody');
+            var hqj_log = document.getElementById('hqj_log');
+
+            function hqj_fmt(v) {
+                if (typeof v === 'string') return '"' + v + '"';
+                if (typeof v === 'function') return 'ƒ () { … }';
+                return String(v);
+            }
+
+            function hqj_render(hqj_mark, hqj_markCls) {
+                hqj_body.innerHTML = '';
+                Object.keys(hqj_hero).forEach(function (k) {
+                    var row = document.createElement('div');
+                    row.className = 'hqj-kv';
+                    if (k === hqj_mark) row.classList.add(hqj_markCls);
+                    row.innerHTML = '<span class="hqj-key">' + k + '</span><span class="hqj-colon">:</span>' +
+                        '<span class="hqj-val">' + hqj_fmt(hqj_hero[k]) + '</span>';
+                    hqj_body.appendChild(row);
+                });
+            }
+            hqj_render();
+
+            document.getElementById('hqj_addBtn').onclick = function () {
+                hqj_hero.city = '大连';
+                hqj_render('city', 'hqj-new');
+                hqj_log.textContent = 'hqj_hero.city = "大连"：新属性直接加进对象';
+            };
+            document.getElementById('hqj_updBtn').onclick = function () {
+                hqj_hero.level = 7;
+                hqj_render('level', 'hqj-new');
+                hqj_log.textContent = 'hqj_hero.level = 7：已存在的键会被覆盖';
+            };
+            document.getElementById('hqj_delBtn').onclick = function () {
+                if (!('city' in hqj_hero)) {
+                    hqj_log.textContent = '没有 city 属性，先点「加属性」再删除';
+                    return;
+                }
+                hqj_render('city', 'hqj-deleted');
+                delete hqj_hero.city;
+                hqj_log.textContent = 'delete hqj_hero.city：属性从对象中移除';
+                setTimeout(hqj_render, 500);
+            };
+            document.getElementById('hqj_callBtn').onclick = function () {
+                hqj_log.textContent = 'hqj_hero.sayHi() → "' + hqj_hero.sayHi() + '"';
+            };
+
+            // ===== 静态演示真实运行 =====
+            var hqj_stu = { name: '何秦剑', age: 20, isVip: true, skills: ['HTML', 'JS'] };
+            document.getElementById('hqj_r_lit').textContent = JSON.stringify(hqj_stu);
+            document.getElementById('hqj_r_acc').textContent =
+                '点: ' + hqj_stu.name + '，方括号: ' + hqj_stu['age'];
+            var hqj_p = { name: '何秦剑', sayHi: function () { return '你好，我是' + this.name; } };
+            document.getElementById('hqj_r_method').textContent = '→ "' + hqj_p.sayHi() + '"';
+
+            var hqj_s = { name: '何秦剑', age: 20 };
+            var hqj_lines = [];
+            for (var hqj_k in hqj_s) { hqj_lines.push(hqj_k + '=' + hqj_s[hqj_k]); }
+            document.getElementById('hqj_r_in').textContent = hqj_lines.join('，');
+            document.getElementById('hqj_r_keys').innerHTML =
+                'keys: [' + Object.keys(hqj_s) + ']<br>values: [' + Object.values(hqj_s) + ']';
+            var hqj_team = { leader: { name: '何秦剑', age: 20 }, members: 3 };
+            document.getElementById('hqj_r_nest').textContent =
+                'hqj_team.leader.name = "' + hqj_team.leader.name + '"';
+        })();
+    </script>
+</body>
+</html>

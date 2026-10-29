@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-10-29  大模型：GPT-6-luna  功能：形象展示 JavaScript 数组的主要方法（增删改查、排序、迭代方法） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数组方法图鉴 | 16-1 何秦剑</title>
+    <style>
+        :root {
+            --hqj-bg: #f3f5fa;
+            --hqj-panel: #ffffff;
+            --hqj-ink: #1f2738;
+            --hqj-muted: #7c869e;
+            --hqj-line: #e3e8f2;
+            --hqj-accent: #2f7cf6;
+            --hqj-green: #16a34a;
+            --hqj-orange: #f59e0b;
+            --hqj-red: #ef4444;
+            --hqj-purple: #8b5cf6;
+            --hqj-radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--hqj-bg);
+            color: var(--hqj-ink);
+            font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .hqj-wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 60px; }
+
+        .hqj-header { text-align: center; margin-bottom: 24px; }
+        .hqj-header h1 { margin: 0 0 8px; font-size: 27px; }
+        .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+        .hqj-header p { margin: 0; color: var(--hqj-muted); font-size: 14px; }
+
+        .hqj-block {
+            background: var(--hqj-panel);
+            border: 1px solid var(--hqj-line);
+            border-radius: var(--hqj-radius);
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+        .hqj-block > h2 {
+            display: flex; align-items: center; gap: 10px;
+            margin: 0 0 16px; font-size: 19px;
+        }
+        .hqj-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 8px;
+            background: var(--hqj-accent); color: #fff; font-size: 14px;
+        }
+
+        /* 数组可视化：一串格子 */
+        .hqj-array {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 12px;
+            background: var(--hqj-bg);
+            border-radius: 10px;
+            border: 1px dashed var(--hqj-line);
+        }
+        .hqj-cell {
+            display: flex; align-items: center; justify-content: center;
+            min-width: 42px; height: 42px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: var(--hqj-panel);
+            border: 1.5px solid var(--hqj-accent);
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--hqj-accent);
+            animation: hqj-pop 0.25s ease;
+        }
+        .hqj-cell.hqj-new {
+            background: var(--hqj-green);
+            border-color: var(--hqj-green);
+            color: #fff;
+        }
+        .hqj-cell.hqj-out {
+            background: var(--hqj-red);
+            border-color: var(--hqj-red);
+            color: #fff;
+            animation: hqj-shake 0.3s ease;
+        }
+        .hqj-cell.hqj-map {
+            background: var(--hqj-purple);
+            border-color: var(--hqj-purple);
+            color: #fff;
+        }
+        .hqj-cell.hqj-filter {
+            background: var(--hqj-orange);
+            border-color: var(--hqj-orange);
+            color: #fff;
+        }
+
+        @keyframes hqj-pop {
+            from { transform: scale(0.4); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes hqj-shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .hqj-empty-tip {
+            display: flex; align-items: center;
+            color: var(--hqj-muted); font-size: 13px;
+            font-style: italic;
+        }
+
+        .hqj-controls {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin: 14px 0 4px;
+        }
+        .hqj-btn {
+            padding: 7px 15px;
+            border: 1px solid var(--hqj-accent);
+            border-radius: 8px;
+            background: var(--hqj-panel);
+            color: var(--hqj-accent);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.12s ease;
+        }
+        .hqj-btn:hover { background: var(--hqj-accent); color: #fff; }
+        .hqj-btn.hqj-danger { border-color: var(--hqj-red); color: var(--hqj-red); }
+        .hqj-btn.hqj-danger:hover { background: var(--hqj-red); color: #fff; }
+        .hqj-btn.hqj-ok { border-color: var(--hqj-green); color: var(--hqj-green); }
+        .hqj-btn.hqj-ok:hover { background: var(--hqj-green); color: #fff; }
+
+        .hqj-log {
+            margin-top: 10px;
+            font-size: 13px;
+            font-family: Consolas, monospace;
+            color: var(--hqj-muted);
+            min-height: 20px;
+        }
+        .hqj-log b { color: var(--hqj-red); }
+
+        .hqj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 16px;
+        }
+
+        .hqj-demo {
+            border: 1px solid var(--hqj-line);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .hqj-demo-head {
+            padding: 10px 14px;
+            background: var(--hqj-bg);
+            border-bottom: 1px solid var(--hqj-line);
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .hqj-demo-head span { color: var(--hqj-muted); font-weight: 400; font-size: 12px; }
+
+        pre.hqj-code {
+            margin: 0;
+            padding: 12px 14px;
+            background: #151b2b;
+            color: #d6e0f5;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .hqj-code .hqj-kw { color: #c792ea; }
+        .hqj-code .hqj-str { color: #a5e075; }
+        .hqj-code .hqj-com { color: #6b7794; }
+        .hqj-code .hqj-num { color: #ffb86c; }
+
+        .hqj-demo-body { padding: 12px 14px; }
+        .hqj-demo-body .hqj-label { font-size: 12px; color: var(--hqj-muted); margin: 8px 0 4px; }
+        .hqj-demo-result {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: var(--hqj-accent);
+        }
+
+        .hqj-note {
+            margin: 12px 0 0; padding-left: 20px;
+            font-size: 13px; color: var(--hqj-muted);
+        }
+        .hqj-note strong { color: var(--hqj-ink); }
+
+        .hqj-back {
+            display: inline-block; margin-top: 18px;
+            color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+        }
+        .hqj-back:hover { color: var(--hqj-accent); }
+    </style>
+</head>
+<body>
+    <div class="hqj-wrap">
+        <header class="hqj-header">
+            <h1>JavaScript <span class="hqj-hl">数组方法图鉴</span></h1>
+            <p>数组是有序的数据集合 · 每格是一个元素，动手点按钮看元素进出</p>
+        </header>
+
+        <!-- 互动操场 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">▶</span> 数组操场：动手增删元素</h2>
+            <div class="hqj-array" id="hqj_board"></div>
+            <div class="hqj-controls">
+                <button class="hqj-btn hqj-ok" id="hqj_pushBtn">push 末尾加</button>
+                <button class="hqj-btn hqj-danger" id="hqj_popBtn">pop 末尾删</button>
+                <button class="hqj-btn hqj-ok" id="hqj_unshiftBtn">unshift 开头加</button>
+                <button class="hqj-btn hqj-danger" id="hqj_shiftBtn">shift 开头删</button>
+                <button class="hqj-btn" id="hqj_reverseBtn">reverse 翻转</button>
+                <button class="hqj-btn" id="hqj_sortBtn">sort 排序</button>
+                <button class="hqj-btn" id="hqj_resetBtn">重置</button>
+            </div>
+            <div class="hqj-log" id="hqj_log">点击按钮试试，被删除的元素会变红提示。</div>
+        </section>
+
+        <!-- 增删改查 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">✎</span> 增删改查方法</h2>
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">splice <span>万能手术刀：增/删/改</span></div>
+                    <pre class="hqj-code" id="hqj_c_splice"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">原数组 [10,20,30,40]：</div>
+                        <div class="hqj-demo-result" id="hqj_r_splice1"></div>
+                        <div class="hqj-label">splice(1,2) 删掉下标1起2个：</div>
+                        <div class="hqj-demo-result" id="hqj_r_splice2"></div>
+                        <div class="hqj-label">splice(1,0,99) 下标1处插入99：</div>
+                        <div class="hqj-demo-result" id="hqj_r_splice3"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">slice / concat <span>截取 / 合并（不改原数组）</span></div>
+                    <pre class="hqj-code" id="hqj_c_slice"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">slice(1,3) 截取 [10,20,30,40]：</div>
+                        <div class="hqj-demo-result" id="hqj_r_slice"></div>
+                        <div class="hqj-label">concat 合并：</div>
+                        <div class="hqj-demo-result" id="hqj_r_concat"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">join / indexOf / includes <span>拼接 / 查找</span></div>
+                    <pre class="hqj-code" id="hqj_c_join"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">join("-")：</div>
+                        <div class="hqj-demo-result" id="hqj_r_join"></div>
+                        <div class="hqj-label">indexOf(30) / includes(99)：</div>
+                        <div class="hqj-demo-result" id="hqj_r_find"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 迭代方法 -->
+        <section class="hqj-block">
+            <h2><span class="hqj-badge">⟳</span> 迭代方法（遍历处理，原数组 [1,2,3,4,5]）</h2>
+            <div class="hqj-grid">
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">map <span>逐个变形，返回新数组</span></div>
+                    <pre class="hqj-code" id="hqj_c_map"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">每个元素 ×2：</div>
+                        <div class="hqj-array" id="hqj_r_map"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">filter <span>筛选，留下符合的</span></div>
+                    <pre class="hqj-code" id="hqj_c_filter"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">只留大于 3 的：</div>
+                        <div class="hqj-array" id="hqj_r_filter"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">reduce <span>归并成一个值</span></div>
+                    <pre class="hqj-code" id="hqj_c_reduce"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">全部元素求和：</div>
+                        <div class="hqj-demo-result" id="hqj_r_reduce"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">find / some / every <span>找一个 / 存在 / 全部</span></div>
+                    <pre class="hqj-code" id="hqj_c_more"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">find 第一个 > 3：</div>
+                        <div class="hqj-demo-result" id="hqj_r_find2"></div>
+                        <div class="hqj-label">some 有偶数？every 都 >0？</div>
+                        <div class="hqj-demo-result" id="hqj_r_some"></div>
+                    </div>
+                </div>
+
+                <div class="hqj-demo">
+                    <div class="hqj-demo-head">forEach <span>逐个遍历，无返回</span></div>
+                    <pre class="hqj-code" id="hqj_c_foreach"></pre>
+                    <div class="hqj-demo-body">
+                        <div class="hqj-label">逐个打印：</div>
+                        <div class="hqj-demo-result" id="hqj_r_foreach"></div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="hqj-note">
+                <li><strong>改变原数组：</strong>push、pop、shift、unshift、splice、reverse、sort。</li>
+                <li><strong>不改变原数组：</strong>slice、concat、map、filter、reduce（返回新数组/新值）。</li>
+                <li>sort 默认按字符串排序，数字排序要传比较函数：<code>sort((a,b)=>a-b)</code>。</li>
+            </ul>
+        </section>
+
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+
+    <script>
+        // ============================================================
+        // 何秦剑  功能：数组方法可视化
+        // ============================================================
+        (function () {
+            var hqj_code = {
+                splice: 'var hqj_a = [10,20,30,40];\nhqj_a.splice(1, 2);      // 删：下标1起删2个\nhqj_a.splice(1, 0, 99); // 增：下标1插入99\nhqj_a.splice(1, 1, 88); // 改：替换下标1',
+                slice: 'var hqj_a = [10,20,30,40];\nvar hqj_b = hqj_a.slice(1, 3); // [20,30]\nvar hqj_c = hqj_a.concat([50,60]); // 合并',
+                join: 'var hqj_a = [10,20,30];\nhqj_a.join("-");      // "10-20-30"\nhqj_a.indexOf(30);   // 2\nhqj_a.includes(99);  // false',
+                map: 'var hqj_a = [1,2,3,4,5];\nvar hqj_b = hqj_a.map(function (x) {\n  return x * 2;\n}); // [2,4,6,8,10]',
+                filter: 'var hqj_a = [1,2,3,4,5];\nvar hqj_b = hqj_a.filter(function (x) {\n  return x > 3;\n}); // [4,5]',
+                reduce: 'var hqj_a = [1,2,3,4,5];\nvar hqj_sum = hqj_a.reduce(\n  function (s, x) { return s + x; }, 0); // 15',
+                more: 'var hqj_a = [1,2,3,4,5];\nhqj_a.find(x => x > 3);   // 4\nhqj_a.some(x => x % 2 === 0); // true\nhqj_a.every(x => x > 0); // true',
+                foreach: 'var hqj_a = [1,2,3];\nhqj_a.forEach(function (x, i) {\n  console.log(i + ":" + x);\n});'
+            };
+
+            function hqj_hl(hqj_t) {
+                return hqj_t
+                    .replace(/(\/\/[^\n]*)/g, '<span class="hqj-com">$1</span>')
+                    .replace(/\b(var|function|return|new)\b/g, '<span class="hqj-kw">$1</span>')
+                    .replace(/("[^"]*")/g, '<span class="hqj-str">$1</span>')
+                    .replace(/\b(\d+)\b/g, '<span class="hqj-num">$1</span>');
+            }
+
+            var hqj_codeMap = {
+                'hqj_c_splice': hqj_code.splice, 'hqj_c_slice': hqj_code.slice,
+                'hqj_c_join': hqj_code.join, 'hqj_c_map': hqj_code.map,
+                'hqj_c_filter': hqj_code.filter, 'hqj_c_reduce': hqj_code.reduce,
+                'hqj_c_more': hqj_code.more, 'hqj_c_foreach': hqj_code.foreach
+            };
+            Object.keys(hqj_codeMap).forEach(function (id) {
+                var el = document.getElementById(id);
+                el.textContent = hqj_codeMap[id];
+                el.innerHTML = hqj_hl(el.textContent);
+            });
+
+            // ===== 操场 =====
+            var hqj_arr = [3, 1, 4, 1, 5];
+            var hqj_board = document.getElementById('hqj_board');
+            var hqj_log = document.getElementById('hqj_log');
+            var hqj_counter = 6;
+
+            function hqj_render(hqj_newIdx, hqj_outIdx) {
+                hqj_board.innerHTML = '';
+                if (hqj_arr.length === 0) {
+                    hqj_board.innerHTML = '<span class="hqj-empty-tip">数组空了，push 或 unshift 加元素进来</span>';
+                    return;
+                }
+                hqj_arr.forEach(function (v, i) {
+                    var c = document.createElement('div');
+                    c.className = 'hqj-cell';
+                    if (hqj_newIdx === i) c.classList.add('hqj-new');
+                    if (hqj_outIdx === i) c.classList.add('hqj-out');
+                    c.textContent = v;
+                    hqj_board.appendChild(c);
+                });
+            }
+
+            document.getElementById('hqj_pushBtn').onclick = function () {
+                var v = hqj_counter++;
+                hqj_arr.push(v);
+                hqj_render(hqj_arr.length - 1);
+                hqj_log.innerHTML = 'push(' + v + ')：末尾加，返回新长度 <b>' + hqj_arr.length + '</b>';
+            };
+            document.getElementById('hqj_popBtn').onclick = function () {
+                if (!hqj_arr.length) { hqj_log.innerHTML = '数组已空，没有可删的元素'; return; }
+                var v = hqj_arr.pop();
+                hqj_render(null, hqj_arr.length);
+                hqj_log.innerHTML = 'pop()：删掉末尾的 <b>' + v + '</b>，并返回它';
+            };
+            document.getElementById('hqj_unshiftBtn').onclick = function () {
+                var v = hqj_counter++;
+                hqj_arr.unshift(v);
+                hqj_render(0);
+                hqj_log.innerHTML = 'unshift(' + v + ')：开头加，其余元素下标后移';
+            };
+            document.getElementById('hqj_shiftBtn').onclick = function () {
+                if (!hqj_arr.length) { hqj_log.innerHTML = '数组已空，没有可删的元素'; return; }
+                var v = hqj_arr.shift();
+                hqj_render(null, 0);
+                hqj_log.innerHTML = 'shift()：删掉开头的 <b>' + v + '</b>，其余元素下标前移';
+            };
+            document.getElementById('hqj_reverseBtn').onclick = function () {
+                hqj_arr.reverse();
+                hqj_render();
+                hqj_log.innerHTML = 'reverse()：元素顺序整体翻转';
+            };
+            document.getElementById('hqj_sortBtn').onclick = function () {
+                hqj_arr.sort(function (a, b) { return a - b; });
+                hqj_render();
+                hqj_log.innerHTML = 'sort((a,b)=>a-b)：数字从小到大排序';
+            };
+            document.getElementById('hqj_resetBtn').onclick = function () {
+                hqj_arr = [3, 1, 4, 1, 5];
+                hqj_render();
+                hqj_log.textContent = '已重置为 [3,1,4,1,5]';
+            };
+            hqj_render();
+
+            // ===== 静态演示真实运行 =====
+            var hqj_a1 = [10, 20, 30, 40];
+            var hqj_s1 = hqj_a1.splice(1, 2);
+            document.getElementById('hqj_r_splice1').textContent = '[' + hqj_a1 + ']，被删的是 [' + hqj_s1 + ']';
+            var hqj_a2 = [10, 20, 30, 40];
+            hqj_a2.splice(1, 0, 99);
+            document.getElementById('hqj_r_splice2').textContent = '[' + hqj_a2 + ']';
+            var hqj_a3 = [10, 20, 30, 40];
+            hqj_a3.splice(1, 1, 88);
+            document.getElementById('hqj_r_splice3').textContent = '[' + hqj_a3 + ']';
+
+            document.getElementById('hqj_r_slice').textContent = '[' + [10, 20, 30, 40].slice(1, 3) + ']';
+            document.getElementById('hqj_r_concat').textContent = '[' + [10, 20].concat([30, 40]) + ']';
+            document.getElementById('hqj_r_join').textContent = '"' + [10, 20, 30].join('-') + '"';
+            document.getElementById('hqj_r_find').textContent = 'indexOf(30) = 2，includes(99) = false';
+
+            function hqj_smallArray(id, arr, cls) {
+                var box = document.getElementById(id);
+                arr.forEach(function (v) {
+                    var c = document.createElement('div');
+                    c.className = 'hqj-cell ' + cls;
+                    c.textContent = v;
+                    box.appendChild(c);
+                });
+            }
+            var hqj_src = [1, 2, 3, 4, 5];
+            hqj_smallArray('hqj_r_map', hqj_src.map(function (x) { return x * 2; }), 'hqj-map');
+            hqj_smallArray('hqj_r_filter', hqj_src.filter(function (x) { return x > 3; }), 'hqj-filter');
+            document.getElementById('hqj_r_reduce').textContent = hqj_src.reduce(function (s, x) { return s + x; }, 0);
+            document.getElementById('hqj_r_find2').textContent = hqj_src.find(function (x) { return x > 3; });
+            document.getElementById('hqj_r_some').textContent =
+                'some = ' + hqj_src.some(function (x) { return x % 2 === 0; }) +
+                '，every = ' + hqj_src.every(function (x) { return x > 0; });
+            var hqj_fe = [];
+            hqj_src.forEach(function (x, i) { hqj_fe.push(i + ':' + x); });
+            document.getElementById('hqj_r_foreach').textContent = hqj_fe.join('  ');
+        })();
+    </script>
+</body>
+</html>
