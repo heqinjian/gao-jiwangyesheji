@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-10-29  大模型：GPT-6-luna  功能：仿中国铁路12306首页（车票查询、轮播、便捷服务、业务推广） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仿中国铁路12306首页 | 16-3 何秦剑</title>
+<style>
+    :root {
+        --hqj-blue: #3b99fc;
+        --hqj-blue-dark: #2676e3;
+        --hqj-orange: #ff8000;
+        --hqj-ink: #333;
+        --hqj-muted: #888;
+        --hqj-line: #e5e5e5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        color: var(--hqj-ink);
+        background: #fff;
+    }
+    .hqj-wrapper { width: 1200px; margin: 0 auto; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ===== 顶部 ===== */
+    .hqj-header {
+        height: 70px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .hqj-logo { height: 46px; }
+    .hqj-header-right { display: flex; align-items: center; gap: 18px; }
+    .hqj-search {
+        display: flex;
+        width: 360px;
+        height: 34px;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .hqj-search input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+    .hqj-search-btn {
+        width: 44px;
+        background: var(--hqj-blue);
+        display: flex; align-items: center; justify-content: center;
+        border: none; cursor: pointer;
+    }
+    .hqj-search-btn svg { width: 18px; height: 18px; }
+    .hqj-top-menu { display: flex; gap: 14px; font-size: 13px; color: var(--hqj-blue); }
+    .hqj-top-menu .hqj-gray { color: var(--hqj-muted); }
+
+    /* ===== 主导航 ===== */
+    .hqj-nav-box { background: var(--hqj-blue); }
+    .hqj-nav { display: flex; height: 44px; }
+    .hqj-nav li {
+        flex: 1;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 15px; cursor: pointer;
+    }
+    .hqj-nav li.hqj-on { background: var(--hqj-blue-dark); font-weight: 700; }
+    .hqj-nav li svg { width: 12px; height: 12px; margin-left: 4px; }
+
+    /* ===== 首屏 ===== */
+    .hqj-first { position: relative; height: 420px; overflow: hidden; }
+    .hqj-slide { position: absolute; inset: 0; }
+    .hqj-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .hqj-slide li {
+        position: absolute; inset: 0;
+        opacity: 0; transition: opacity 0.6s ease;
+    }
+    .hqj-slide li.hqj-on { opacity: 1; }
+
+    .hqj-dots {
+        position: absolute;
+        bottom: 16px; left: 50%; transform: translateX(-50%);
+        display: flex; gap: 8px; z-index: 5;
+    }
+    .hqj-dots i {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: rgba(255,255,255,0.5); cursor: pointer;
+    }
+    .hqj-dots i.hqj-on { background: #fff; }
+
+    /* 查询面板 */
+    .hqj-ticket-panel {
+        position: absolute;
+        top: 40px; left: 50%;
+        margin-left: -360px;
+        width: 480px;
+        background: #fff;
+        z-index: 6;
+        display: flex;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    }
+    .hqj-side {
+        width: 86px;
+        background: var(--hqj-blue);
+        display: flex; flex-direction: column;
+    }
+    .hqj-side li {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.85);
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    .hqj-side li:last-child { border-bottom: none; }
+    .hqj-side li.hqj-on { background: var(--hqj-blue-dark); color: #fff; }
+    .hqj-side svg { width: 20px; height: 20px; margin-bottom: 5px; }
+
+    .hqj-main { flex: 1; padding: 14px 18px 12px; }
+
+    .hqj-ticket-tabs {
+        display: flex; gap: 18px;
+        border-bottom: 1px solid var(--hqj-line);
+        padding-bottom: 8px;
+        font-size: 13px; color: var(--hqj-muted);
+    }
+    .hqj-ticket-tabs li {
+        display: flex; align-items: center; cursor: pointer;
+    }
+    .hqj-ticket-tabs li.hqj-on { color: var(--hqj-blue); font-weight: 700; }
+    .hqj-ticket-tabs svg { width: 14px; height: 14px; margin-right: 3px; }
+
+    .hqj-form { padding-top: 12px; }
+    .hqj-form-row {
+        display: flex; align-items: center;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    .hqj-form-row label {
+        width: 62px;
+        font-size: 13px;
+        color: var(--hqj-ink);
+    }
+    .hqj-input-box {
+        flex: 1;
+        height: 34px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        display: flex; align-items: center;
+        padding: 0 8px;
+    }
+    .hqj-input-box input {
+        flex: 1; border: none; outline: none;
+        font-size: 13px;
+    }
+    .hqj-input-box svg { width: 16px; height: 16px; color: #bbb; cursor: pointer; }
+    .hqj-swap {
+        position: absolute;
+        right: -16px; top: 3px;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: var(--hqj-orange);
+        display: flex; align-items: center; justify-content: center;
+        border: none; cursor: pointer; z-index: 2;
+    }
+    .hqj-swap svg { width: 15px; height: 15px; }
+    .hqj-checks { display: flex; gap: 26px; padding: 2px 0 10px 62px; font-size: 13px; }
+    .hqj-checks label { display: flex; align-items: center; gap: 5px; }
+    .hqj-query-btn {
+        width: 100%;
+        height: 38px;
+        background: var(--hqj-orange);
+        color: #fff;
+        border: none;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 8px;
+        cursor: pointer;
+        border-radius: 2px;
+    }
+    .hqj-history {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin-top: 10px;
+        font-size: 12px; color: var(--hqj-muted);
+    }
+    .hqj-history span {
+        display: inline-flex; align-items: center; gap: 3px;
+    }
+    .hqj-history svg { width: 11px; height: 11px; }
+
+    /* ===== 便捷服务 ===== */
+    .hqj-services {
+        display: flex;
+        padding: 26px 0;
+    }
+    .hqj-services li {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        border-right: 1px solid #e0e0e0;
+    }
+    .hqj-services li:last-child { border-right: none; }
+    .hqj-services svg { width: 40px; height: 40px; color: var(--hqj-blue); margin-bottom: 8px; }
+    .hqj-services li:hover svg { color: var(--hqj-blue-dark); }
+
+    /* ===== 推广横幅 ===== */
+    .hqj-promos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 26px;
+    }
+    .hqj-promos a {
+        height: 150px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: block;
+    }
+    .hqj-promos img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ===== 新闻 tabs ===== */
+    .hqj-news { display: flex; border: 1px solid var(--hqj-line); margin-bottom: 40px; }
+    .hqj-news-tabs { width: 260px; display: flex; flex-direction: column; }
+    .hqj-news-tabs li {
+        height: 48px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px; color: var(--hqj-muted);
+        border-bottom: 1px solid var(--hqj-line);
+        cursor: pointer;
+    }
+    .hqj-news-tabs li:last-child { border-bottom: none; }
+    .hqj-news-tabs li.hqj-on {
+        background: var(--hqj-blue); color: #fff; font-weight: 700;
+    }
+    .hqj-news-body { flex: 1; padding: 14px 22px; }
+    .hqj-news-body li {
+        display: flex; justify-content: space-between;
+        font-size: 14px; padding: 6px 0;
+        border-bottom: 1px dashed #eee;
+    }
+    .hqj-news-body li span:last-child { color: var(--hqj-muted); font-size: 13px; }
+
+    /* ===== 右侧悬浮 ===== */
+    .hqj-float {
+        position: fixed;
+        right: 8px; top: 50%;
+        transform: translateY(-50%);
+        width: 46px;
+        background: #f5f5f5;
+        z-index: 80;
+    }
+    .hqj-float a {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 10px 0;
+        font-size: 11px; color: var(--hqj-muted);
+        border-bottom: 1px solid #e8e8e8;
+        cursor: pointer;
+    }
+    .hqj-float svg { width: 18px; height: 18px; margin-bottom: 4px; color: #666; }
+    .hqj-float .hqj-close { text-align: center; padding: 8px 0; font-size: 12px; color: #999; cursor: pointer; }
+
+    .hqj-icon { width: 1em; height: 1em; fill: none; vertical-align: -0.1em; }
+    .hqj-back { display: inline-block; margin: 10px 0 30px; color: var(--hqj-muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- SVG 图标精灵 -->
+<svg width="0" height="0" style="position:absolute">
+    <symbol id="hqj-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.6 15.6 21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-place" viewBox="0 0 24 24"><path d="M12 21.5s7-5.9 7-11.3A7 7 0 1 0 5 10.2c0 5.4 7 11.3 7 11.3z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="hqj-date" viewBox="0 0 24 24"><rect x="3.4" y="5" width="17.2" height="15.6" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.4 9.8h17.2M8 3.2v3.4M16 3.2v3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-swap" viewBox="0 0 24 24"><path d="M8.5 3.5 4.5 7.5l4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 7.5h14.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M15.5 20.5l4-4-4-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.5 16.5H4.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-ticket" viewBox="0 0 24 24"><path d="M3.2 8.6A2.4 2.4 0 0 1 5.6 6.2h12.8a2.4 2.4 0 0 1 2.4 2.4v1.5a2.1 2.1 0 0 0 0 4.2v1.5a2.4 2.4 0 0 1-2.4 2.4H5.6a2.4 2.4 0 0 1-2.4-2.4v-1.5a2.1 2.1 0 0 0 0-4.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12.6 8.4v1.2M12.6 11.4v1.2M12.6 14.4v1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-query" viewBox="0 0 24 24"><path d="M4 5.6A2.4 2.4 0 0 1 6.4 3.2h11.2A2.4 2.4 0 0 1 20 5.6v12.8a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 18.4z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7.8 8.4h8.4M7.8 12h8.4M7.8 15.6h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-food" viewBox="0 0 24 24"><path d="M6.6 3.4v6.2a2.4 2.4 0 0 0 4.8 0V3.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 3.4v17.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16.4 20.6V3.4c2.2 1.6 2.8 3.6 2.8 6.2 0 2.4-.6 4-2.8 5.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-single" viewBox="0 0 24 24"><path d="M3.6 12h16.8M14 5.6 20.4 12 14 18.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-round" viewBox="0 0 24 24"><path d="M4 8.4h12.6l-3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15.6H7.4l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-transfer" viewBox="0 0 24 24"><path d="M3.6 6.6h3.8l9.2 10.8h3.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.6 17.4h3.8l3.2-3.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.6 6.6h2l3.4 3.4-3.4 3.4h-2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-change" viewBox="0 0 24 24"><path d="M6.2 3.4h7.6l4.4 4.4v12.8H6.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.6 3.4v4.6h4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 13.2h6M12 10.2v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-s1" viewBox="0 0 24 24"><circle cx="8.6" cy="6.4" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 20.4c0-3.6 2.5-6.1 5.6-6.1 1.3 0 2.5.4 3.4 1.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.4 11c1.1-.9 2.9-2.2 2.9-3.7 0-1.4-1.1-2.3-2.4-1.6-.5.2-1 .7-1.3 1.2-.3-.5-.8-1-1.3-1.2-1.3-.7-2.4.2-2.4 1.6 0 1.5 1.8 2.8 2.9 3.7l.8.7z" fill="currentColor"/></symbol>
+    <symbol id="hqj-s2" viewBox="0 0 24 24"><circle cx="10.6" cy="10.4" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14.9 14.7 20.6 20.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.4 8.2h4.4v4.4H8.4z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="hqj-s3" viewBox="0 0 24 24"><path d="M3.4 15.4 5.2 9.6A2.6 2.6 0 0 1 7.7 7.8h8.6a2.6 2.6 0 0 1 2.5 1.8l1.8 5.8v4.6h-3.2v-2H6.6v2H3.4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4.4 15.4h15.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="7.6" cy="12.6" r="1.1" fill="currentColor"/><circle cx="16.4" cy="12.6" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="hqj-s4" viewBox="0 0 24 24"><path d="M12 3.2 3.8 7v10L12 20.8 20.2 17V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.8 7 12 11l8.2-4M12 11v9.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-s5" viewBox="0 0 24 24"><path d="M12 2.8v18.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 5.2h6.6l2 2.2-2 2.2H12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12h-6.6l-2 2.2 2 2.2H12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-s6" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13.2" rx="2.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="13.6" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.8 7 10 4.4h4L15.2 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-s7" viewBox="0 0 24 24"><path d="M3.4 5.6h17.2v11.2H11l-5 4v-4H3.4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 10h8M8 12.8h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-notice" viewBox="0 0 24 24"><path d="M4 9.4h3.4L16 4.6v14.8l-8.6-4.8H4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M18.4 9a4.4 4.4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7.4 14.2v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="hqj-phone" viewBox="0 0 24 24"><path d="M7.6 3.6 10 8.2l-2 2c.9 2 2.5 3.6 4.5 4.5l2-2 4.6 2.4-.6 3.2c-5.2.8-12-6-11.2-11.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="hqj-code" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.6" y="3.4" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="3.4" y="13.6" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13.6 13.6h3v3h-3zM17.6 17.6h3v3h-3z" fill="currentColor"/></symbol>
+    <symbol id="hqj-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="hqj-wrapper">
+    <!-- 顶部 -->
+    <header class="hqj-header">
+        <img class="hqj-logo" src="images/12306/logo@2x.png" alt="中国铁路12306">
+        <div class="hqj-header-right">
+            <div class="hqj-search">
+                <input type="text" placeholder="搜索车票、餐饮、常旅客、相关规章">
+                <button class="hqj-search-btn" aria-label="搜索">
+                    <svg class="hqj-icon" style="color:#fff"><use href="#hqj-search"></use></svg>
+                </button>
+            </div>
+            <ul class="hqj-top-menu">
+                <li>无障碍</li><li>敬老版</li><li>English</li><li>我的12306</li>
+                <li class="hqj-gray">登录</li><li class="hqj-gray">注册</li>
+            </ul>
+        </div>
+    </header>
+</div>
+
+<!-- 主导航 -->
+<div class="hqj-nav-box">
+    <div class="hqj-wrapper">
+        <ul class="hqj-nav">
+            <li class="hqj-on">首页</li>
+            <li>车票<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>团购服务<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>会员服务<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>站车服务<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>商旅服务<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>出行指南<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+            <li>信息查询<svg class="hqj-icon"><use href="#hqj-down"></use></svg></li>
+        </ul>
+    </div>
+</div>
+
+<!-- 首屏 -->
+<div class="hqj-first">
+    <div class="hqj-slide">
+        <ul id="hqj_slideList">
+            <li class="hqj-on"><img src="images/12306/banner1.jpg" alt="轮播1"></li>
+            <li><img src="images/12306/banner2.jpg" alt="轮播2"></li>
+            <li><img src="images/12306/banner3.jpg" alt="轮播3"></li>
+            <li><img src="images/12306/banner4.jpg" alt="轮播4"></li>
+            <li><img src="images/12306/banner5.jpg" alt="轮播5"></li>
+            <li><img src="images/12306/banner6.jpg" alt="轮播6"></li>
+        </ul>
+    </div>
+    <div class="hqj-dots" id="hqj_dots"></div>
+
+    <!-- 车票查询面板 -->
+    <div class="hqj-ticket-panel">
+        <ul class="hqj-side" id="hqj_side">
+            <li class="hqj-on"><svg class="hqj-icon"><use href="#hqj-ticket"></use></svg>车票</li>
+            <li><svg class="hqj-icon"><use href="#hqj-query"></use></svg>常用查询</li>
+            <li><svg class="hqj-icon"><use href="#hqj-food"></use></svg>订餐</li>
+        </ul>
+        <div class="hqj-main">
+            <ul class="hqj-ticket-tabs" id="hqj_ticketTabs">
+                <li class="hqj-on"><svg class="hqj-icon"><use href="#hqj-single"></use></svg>单程</li>
+                <li><svg class="hqj-icon"><use href="#hqj-round"></use></svg>往返</li>
+                <li><svg class="hqj-icon"><use href="#hqj-transfer"></use></svg>中转换乘</li>
+                <li><svg class="hqj-icon"><use href="#hqj-change"></use></svg>退改签</li>
+            </ul>
+            <div class="hqj-form">
+                <div class="hqj-form-row">
+                    <label>出发地</label>
+                    <div class="hqj-input-box">
+                        <input type="text" id="hqj_from" value="沈阳">
+                        <svg class="hqj-icon"><use href="#hqj-place"></use></svg>
+                    </div>
+                    <button class="hqj-swap" id="hqj_swapBtn" title="切换">
+                        <svg class="hqj-icon" style="color:#fff"><use href="#hqj-swap"></use></svg>
+                    </button>
+                </div>
+                <div class="hqj-form-row">
+                    <label>到达地</label>
+                    <div class="hqj-input-box">
+                        <input type="text" id="hqj_to" value="西安">
+                        <svg class="hqj-icon"><use href="#hqj-place"></use></svg>
+                    </div>
+                </div>
+                <div class="hqj-form-row">
+                    <label>出发日期</label>
+                    <div class="hqj-input-box">
+                        <input type="date" id="hqj_dateInput" value="2026-10-29">
+                        <svg class="hqj-icon"><use href="#hqj-date"></use></svg>
+                    </div>
+                </div>
+                <div class="hqj-checks">
+                    <label><input type="checkbox">学生</label>
+                    <label><input type="checkbox">高铁/动车</label>
+                </div>
+                <button class="hqj-query-btn" id="hqj_queryBtn">查询</button>
+                <div class="hqj-history">
+                    <span><svg class="hqj-icon"><use href="#hqj-place"></use></svg>沈阳-西安</span>
+                    <span><svg class="hqj-icon"><use href="#hqj-place"></use></svg>沈阳-郑州</span>
+                    <span><svg class="hqj-icon"><use href="#hqj-place"></use></svg>郑州-西安</span>
+                    <span>大</span><span>删除历史</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hqj-wrapper">
+    <!-- 便捷服务 -->
+    <ul class="hqj-services">
+        <li><svg class="hqj-icon"><use href="#hqj-s1"></use></svg>重点旅客预约</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s2"></use></svg>遗失物品查找</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s3"></use></svg>约车服务</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s4"></use></svg>便民托运</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s5"></use></svg>车站引导</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s6"></use></svg>站车风采</li>
+        <li><svg class="hqj-icon"><use href="#hqj-s7"></use></svg>用户反馈</li>
+    </ul>
+
+    <!-- 推广横幅 -->
+    <div class="hqj-promos">
+        <a href="javascript:;"><img src="images/12306/abanner1.jpg" alt="会员服务"></a>
+        <a href="javascript:;"><img src="images/12306/abanner2.jpg" alt="餐饮特产"></a>
+        <a href="javascript:;"><img src="images/12306/abanner3.jpg" alt="铁路保险"></a>
+        <a href="javascript:;"><img src="images/12306/abanner4.jpg" alt="计次定期票"></a>
+    </div>
+
+    <!-- 新闻 -->
+    <div class="hqj-news">
+        <ul class="hqj-news-tabs" id="hqj_newsTabs">
+            <li class="hqj-on">最新发布</li>
+            <li>常见问题</li>
+            <li>信用信息</li>
+        </ul>
+        <div class="hqj-news-body" id="hqj_newsBody"></div>
+    </div>
+
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+
+<!-- 右侧悬浮 -->
+<div class="hqj-float" id="hqj_float">
+    <a><svg class="hqj-icon"><use href="#hqj-notice"></use></svg>最新发布</a>
+    <a><svg class="hqj-icon"><use href="#hqj-phone"></use></svg>联系客服</a>
+    <a><svg class="hqj-icon"><use href="#hqj-code"></use></svg>APP下载</a>
+    <div class="hqj-close" id="hqj_floatClose">关闭</div>
+</div>
+
+<script>
+(function () {
+    // ===== 轮播 =====
+    var hqj_slides = document.querySelectorAll('#hqj_slideList li');
+    var hqj_dotsBox = document.getElementById('hqj_dots');
+    var hqj_cur = 0, hqj_timer;
+
+    hqj_slides.forEach(function (_, i) {
+        var d = document.createElement('i');
+        if (i === 0) d.classList.add('hqj-on');
+        d.addEventListener('click', function () { hqj_go(i); });
+        hqj_dotsBox.appendChild(d);
+    });
+    var hqj_dots = hqj_dotsBox.querySelectorAll('i');
+
+    function hqj_go(i) {
+        hqj_slides[hqj_cur].classList.remove('hqj-on');
+        hqj_dots[hqj_cur].classList.remove('hqj-on');
+        hqj_cur = i;
+        hqj_slides[hqj_cur].classList.add('hqj-on');
+        hqj_dots[hqj_cur].classList.add('hqj-on');
+    }
+    function hqj_auto() {
+        hqj_timer = setInterval(function () {
+            hqj_go((hqj_cur + 1) % hqj_slides.length);
+        }, 4000);
+    }
+    hqj_auto();
+
+    // ===== 左侧菜单切换 =====
+    var hqj_side = document.querySelectorAll('#hqj_side li');
+    hqj_side.forEach(function (li) {
+        li.addEventListener('click', function () {
+            hqj_side.forEach(function (x) { x.classList.remove('hqj-on'); });
+            li.classList.add('hqj-on');
+        });
+    });
+
+    // ===== 车票 tabs =====
+    var hqj_tabs = document.querySelectorAll('#hqj_ticketTabs li');
+    hqj_tabs.forEach(function (li) {
+        li.addEventListener('click', function () {
+            hqj_tabs.forEach(function (x) { x.classList.remove('hqj-on'); });
+            li.classList.add('hqj-on');
+        });
+    });
+
+    // ===== 出发/到达交换 =====
+    document.getElementById('hqj_swapBtn').addEventListener('click', function () {
+        var a = document.getElementById('hqj_from');
+        var b = document.getElementById('hqj_to');
+        var t = a.value; a.value = b.value; b.value = t;
+    });
+
+    // ===== 查询按钮 =====
+    document.getElementById('hqj_queryBtn').addEventListener('click', function () {
+        var f = document.getElementById('hqj_from').value;
+        var t = document.getElementById('hqj_to').value;
+        var d = document.getElementById('hqj_dateInput').value;
+        if (!f || !t) { alert('请填写出发地和到达地'); return; }
+        alert('查询：' + f + ' → ' + t + '，出发日期 ' + d);
+    });
+
+    // ===== 新闻数据 =====
+    var hqj_news = {
+        0: [
+            ['关于调整部分列车运行图的公告', '2026-10-28'],
+            ['铁路畅行常旅客会员服务升级通知', '2026-10-26'],
+            ['12306 APP 新增候补购票功能说明', '2026-10-24'],
+            ['国庆假期运输圆满收官', '2026-10-09'],
+            ['关于学生票优惠资质核验的提示', '2026-10-05']
+        ],
+        1: [
+            ['如何办理互联网退票？', '2026-10-20'],
+            ['候补订单的兑现规则是什么？', '2026-10-18'],
+            ['学生票每学年可购买几次？', '2026-10-12'],
+            ['忘记12306密码怎么办？', '2026-10-08'],
+            ['高铁可以携带多少行李？', '2026-10-01']
+        ],
+        2: [
+            ['失信被执行人（自然人）公示名单', '2026-10-27'],
+            ['关于限制严重失信人购票的公告', '2026-10-15'],
+            ['铁路旅客信用记录管理办法解读', '2026-10-10'],
+            ['失信已执行人（自然人）公布', '2026-10-03'],
+            ['信用修复申请流程说明', '2026-09-28']
+        ]
+    };
+    var hqj_body = document.getElementById('hqj_newsBody');
+    var hqj_newsTabs = document.querySelectorAll('#hqj_newsTabs li');
+    function hqj_renderNews(k) {
+        hqj_body.innerHTML = '';
+        hqj_news[k].forEach(function (n) {
+            var li = document.createElement('li');
+            li.innerHTML = '<span>' + n[0] + '</span><span>' + n[1] + '</span>';
+            hqj_body.appendChild(li);
+        });
+    }
+    hqj_newsTabs.forEach(function (li, i) {
+        li.addEventListener('click', function () {
+            hqj_newsTabs.forEach(function (x) { x.classList.remove('hqj-on'); });
+            li.classList.add('hqj-on');
+            hqj_renderNews(i);
+        });
+    });
+    hqj_renderNews(0);
+
+    // ===== 悬浮关闭 =====
+    document.getElementById('hqj_floatClose').addEventListener('click', function () {
+        document.getElementById('hqj_float').style.display = 'none';
+    });
+})();
+</script>
+</body>
+</html>
