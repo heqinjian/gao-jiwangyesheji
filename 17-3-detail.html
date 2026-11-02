@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：商品详情页，从 URL 取 id，fetch 获取单个商品数据 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品详情 | 17-3-detail 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #f3f5fa;
+        --hqj-panel: #fff;
+        --hqj-ink: #1f2738;
+        --hqj-muted: #7c869e;
+        --hqj-line: #e3e8f2;
+        --hqj-accent: #0ea5e9;
+        --hqj-red: #ef4444;
+        --hqj-orange: #f59e0b;
+        --hqj-green: #16a34a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .hqj-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .hqj-topbar {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .hqj-topbar a {
+        color: var(--hqj-accent); font-size: 14px; text-decoration: none;
+    }
+    .hqj-api { font-family: Consolas, monospace; font-size: 12.5px; color: var(--hqj-accent); }
+
+    .hqj-status { text-align: center; padding: 70px 0; color: var(--hqj-muted); }
+    .hqj-spinner {
+        width: 40px; height: 40px;
+        border: 3px solid var(--hqj-line);
+        border-top-color: var(--hqj-accent);
+        border-radius: 50%;
+        margin: 0 auto 14px;
+        animation: hqj-spin 0.8s linear infinite;
+    }
+    @keyframes hqj-spin { to { transform: rotate(360deg); } }
+    .hqj-error {
+        background: #fef2f2; border: 1px solid #fecaca;
+        color: var(--hqj-red); border-radius: 12px;
+        padding: 24px; text-align: center;
+    }
+    .hqj-btn {
+        display: inline-block; margin-top: 14px;
+        padding: 8px 20px; border: none; border-radius: 8px;
+        background: var(--hqj-accent); color: #fff;
+        font-size: 14px; font-family: inherit; cursor: pointer;
+        text-decoration: none;
+    }
+
+    .hqj-detail {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 28px;
+        display: none;
+    }
+    .hqj-detail.hqj-show { display: block; }
+    .hqj-main-grid {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 30px;
+    }
+    .hqj-thumb {
+        background: #fafafa;
+        border-radius: 12px;
+        height: 340px;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px;
+    }
+    .hqj-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .hqj-info h1 { font-size: 22px; margin-bottom: 10px; }
+    .hqj-brand { font-size: 13px; color: var(--hqj-muted); margin-bottom: 14px; }
+    .hqj-price-box {
+        background: #fff7ed;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 14px;
+    }
+    .hqj-price { color: var(--hqj-red); font-size: 28px; font-weight: 700; }
+    .hqj-price small { font-size: 13px; color: var(--hqj-muted); font-weight: 400; }
+    .hqj-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .hqj-stat {
+        text-align: center;
+        border: 1px solid var(--hqj-line);
+        border-radius: 10px;
+        padding: 10px 6px;
+    }
+    .hqj-stat b { display: block; font-size: 16px; }
+    .hqj-stat span { font-size: 12px; color: var(--hqj-muted); }
+    .hqj-stat .hqj-orange { color: var(--hqj-orange); }
+    .hqj-stat .hqj-green { color: var(--hqj-green); }
+    .hqj-stat .hqj-blue { color: var(--hqj-accent); }
+
+    .hqj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hqj-tag {
+        font-size: 12px; background: #f0f9ff;
+        color: var(--hqj-accent);
+        padding: 4px 12px; border-radius: 20px;
+    }
+
+    .hqj-desc-box {
+        margin-top: 26px;
+        border-top: 1px solid var(--hqj-line);
+        padding-top: 20px;
+    }
+    .hqj-desc-box h2 { font-size: 16px; margin-bottom: 10px; }
+    .hqj-desc-box p { font-size: 14px; color: #555; line-height: 1.8; }
+
+    .hqj-gallery { margin-top: 22px; }
+    .hqj-gallery h2 { font-size: 16px; margin-bottom: 10px; }
+    .hqj-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    .hqj-gallery-grid div {
+        height: 110px;
+        border: 1px solid var(--hqj-line);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        padding: 8px; background: #fafafa;
+    }
+    .hqj-gallery-grid img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    @media (max-width: 760px) {
+        .hqj-main-grid { grid-template-columns: 1fr; }
+        .hqj-thumb { height: 260px; }
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <div class="hqj-topbar">
+        <a href="17-3.html">← 返回商品列表</a>
+        <span class="hqj-api" id="hqj_apiText"></span>
+    </div>
+
+    <div id="hqj_content">
+        <div class="hqj-status">
+            <div class="hqj-spinner"></div>
+            <p>正在加载商品详情…</p>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var hqj_content = document.getElementById('hqj_content');
+
+    // 从 URL 查询串中取 id，例如 17-3-detail.html?id=5
+    var hqj_params = new URLSearchParams(window.location.search);
+    var hqj_id = hqj_params.get('id');
+
+    if (!hqj_id) {
+        hqj_content.innerHTML =
+            '<div class="hqj-error"><strong>缺少商品 id 参数</strong><br>' +
+            '请从商品列表页进入。<br><a class="hqj-btn" href="17-3.html">去商品列表</a></div>';
+        return;
+    }
+
+    var hqj_url = 'https://dummyjson.com/products/' + hqj_id;
+    document.getElementById('hqj_apiText').textContent = 'GET ' + hqj_url;
+
+    fetch(hqj_url)
+        .then(function (response) {
+            if (!response.ok) throw new Error('HTTP 状态码 ' + response.status);
+            return response.json();
+        })
+        .then(function (p) {
+            var tags = p.tags.map(function (t) {
+                return '<span class="hqj-tag">' + t + '</span>';
+            }).join('');
+
+            var gallery = p.images.map(function (src) {
+                return '<div><img src="' + src + '" alt="' + p.title + '"></div>';
+            }).join('');
+
+            hqj_content.innerHTML =
+                '<div class="hqj-detail hqj-show">' +
+                '<div class="hqj-main-grid">' +
+                '<div class="hqj-thumb"><img src="' + p.thumbnail + '" alt="' + p.title + '"></div>' +
+                '<div class="hqj-info">' +
+                '<h1>' + p.title + '</h1>' +
+                '<p class="hqj-brand">品牌：' + p.brand + '　商品编号：' + p.id + '</p>' +
+                '<div class="hqj-price-box"><span class="hqj-price">$' + p.price +
+                ' <small>（优惠 ' + p.discountPercentage + '%）</small></span></div>' +
+                '<div class="hqj-stats">' +
+                '<div class="hqj-stat"><b class="hqj-orange">★ ' + p.rating + '</b><span>评分</span></div>' +
+                '<div class="hqj-stat"><b class="hqj-green">' + p.stock + '</b><span>库存</span></div>' +
+                '<div class="hqj-stat"><b class="hqj-blue">' + p.category + '</b><span>分类</span></div>' +
+                '</div>' +
+                '<div class="hqj-tags">' + tags + '</div>' +
+                '</div></div>' +
+                '<div class="hqj-desc-box"><h2>商品描述</h2><p>' + p.description + '</p></div>' +
+                '<div class="hqj-gallery"><h2>商品图片</h2>' +
+                '<div class="hqj-gallery-grid">' + gallery + '</div></div>' +
+                '</div>';
+        })
+        .catch(function (err) {
+            hqj_content.innerHTML =
+                '<div class="hqj-error"><strong>详情加载失败：</strong>' + err.message +
+                '<br><a class="hqj-btn" href="17-3.html">返回列表</a></div>';
+        });
+})();
+</script>
+</body>
+</html>
