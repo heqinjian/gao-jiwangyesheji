@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：Promise + async/await 异步演示包饺子流程（串行+并行，setTimeout 模拟耗时） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>异步包饺子 | 17-6 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #f4f1ec;
+        --hqj-panel: #fff;
+        --hqj-ink: #2b2b2b;
+        --hqj-muted: #9a938a;
+        --hqj-line: #e8e2d8;
+        --hqj-accent: #d97706;
+        --hqj-green: #16a34a;
+        --hqj-red: #dc2626;
+        --hqj-blue: #2563eb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .hqj-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 16px 60px; }
+    .hqj-header { text-align: center; margin-bottom: 22px; }
+    .hqj-header h1 { font-size: 27px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+    .hqj-header p { color: var(--hqj-muted); font-size: 14px; }
+
+    .hqj-start {
+        display: block; margin: 0 auto 24px;
+        padding: 11px 44px;
+        border: none; border-radius: 24px;
+        background: var(--hqj-accent); color: #fff;
+        font-size: 16px; font-weight: 700;
+        font-family: inherit; cursor: pointer;
+    }
+    .hqj-start:disabled { opacity: 0.55; cursor: wait; }
+
+    /* 流程节点 */
+    .hqj-flow {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
+    }
+    .hqj-step {
+        display: flex; align-items: center; gap: 14px;
+        padding: 14px 16px;
+        border: 1.5px solid var(--hqj-line);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        transition: border-color 0.25s, background 0.25s;
+    }
+    .hqj-step.hqj-doing {
+        border-color: var(--hqj-accent);
+        background: #fffbeb;
+    }
+    .hqj-step.hqj-done {
+        border-color: var(--hqj-green);
+        background: #f0fdf4;
+    }
+    .hqj-icon-box {
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px;
+        flex: none;
+    }
+    .hqj-step.hqj-doing .hqj-icon-box { background: #fde68a; }
+    .hqj-step.hqj-done .hqj-icon-box { background: #bbf7d0; }
+
+    .hqj-step-info { flex: 1; }
+    .hqj-step-info h3 { font-size: 16px; margin-bottom: 3px; }
+    .hqj-step-info p { font-size: 12.5px; color: var(--hqj-muted); }
+    .hqj-step.hqj-done h3::after { content: " ✓"; color: var(--hqj-green); }
+
+    .hqj-timer {
+        font-family: Consolas, monospace;
+        font-size: 15px; font-weight: 700;
+        color: var(--hqj-accent);
+        min-width: 70px; text-align: right;
+    }
+    .hqj-step.hqj-done .hqj-timer { color: var(--hqj-green); }
+
+    /* 并行容器 */
+    .hqj-parallel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .hqj-parallel .hqj-step { margin-bottom: 0; }
+    .hqj-parallel-label {
+        font-size: 12.5px; color: var(--hqj-blue);
+        margin-bottom: 6px; font-weight: 700;
+    }
+    .hqj-arrow {
+        text-align: center; color: var(--hqj-muted);
+        font-size: 18px; margin: -4px 0 6px;
+    }
+
+    /* 日志 */
+    .hqj-log {
+        background: #151b2b;
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-family: Consolas, monospace;
+        font-size: 12.5px;
+        max-height: 220px;
+        overflow: auto;
+        color: #d6e0f5;
+    }
+    .hqj-log p { margin-bottom: 3px; }
+    .hqj-log .hqj-green { color: #a5e075; }
+    .hqj-log .hqj-yellow { color: #ffd166; }
+    .hqj-log .hqj-blue { color: #7dd3fc; }
+
+    /* 代码结构 */
+    .hqj-code-box {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 20px 24px;
+        margin-top: 18px;
+    }
+    .hqj-code-box h2 { font-size: 16px; margin-bottom: 10px; }
+    pre.hqj-code {
+        background: #151b2b; color: #d6e0f5;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-family: Consolas, monospace;
+        font-size: 12.5px; line-height: 1.7;
+        overflow-x: auto;
+    }
+    .hqj-kw { color: #c792ea; }
+    .hqj-com { color: #6b7794; }
+    .hqj-fn { color: #82aaff; }
+
+    .hqj-back {
+        display: inline-block; margin-top: 20px;
+        color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>异步<span class="hqj-hl">包饺子</span>流程</h1>
+        <p>Promise 封装 setTimeout，async/await 编排：先串行采购，再并行和面调馅，最后包饺子吃饺子</p>
+    </header>
+
+    <button class="hqj-start" id="hqj_startBtn">开始包饺子流程</button>
+
+    <div class="hqj-flow">
+        <!-- 串行步骤 -->
+        <div class="hqj-step" id="hqj_s_buy">
+            <div class="hqj-icon-box">🛒</div>
+            <div class="hqj-step-info">
+                <h3>买原料</h3>
+                <p>去超市采购面粉、猪肉、韭菜等（await 等待采购完成）</p>
+            </div>
+            <div class="hqj-timer" id="hqj_t_buy">6s</div>
+        </div>
+        <div class="hqj-arrow">↓</div>
+
+        <div class="hqj-step" id="hqj_s_take">
+            <div class="hqj-icon-box">📦</div>
+            <div class="hqj-step-info">
+                <h3>取原料</h3>
+                <p>把原料搬回家、分类放好</p>
+            </div>
+            <div class="hqj-timer" id="hqj_t_take">1s</div>
+        </div>
+        <div class="hqj-arrow">↓ 原料到位，下面两件事同时进行</div>
+
+        <!-- 并行步骤 -->
+        <p class="hqj-parallel-label">⇉ Promise.all：和面 与 调馅 同时进行，总耗时取决于较慢的一个</p>
+        <div class="hqj-parallel">
+            <div class="hqj-step" id="hqj_s_dough">
+                <div class="hqj-icon-box">🥣</div>
+                <div class="hqj-step-info">
+                    <h3>和面</h3>
+                    <p>加水揉面、醒面</p>
+                </div>
+                <div class="hqj-timer" id="hqj_t_dough">4s</div>
+            </div>
+            <div class="hqj-step" id="hqj_s_fill">
+                <div class="hqj-icon-box">🔪</div>
+                <div class="hqj-step-info">
+                    <h3>调馅</h3>
+                    <p>剁肉切韭菜、调料拌匀</p>
+                </div>
+                <div class="hqj-timer" id="hqj_t_fill">4s</div>
+            </div>
+        </div>
+        <div class="hqj-arrow">↓ 两个任务都完成后才继续</div>
+
+        <div class="hqj-step" id="hqj_s_wrap">
+            <div class="hqj-icon-box">🥟</div>
+            <div class="hqj-step-info">
+                <h3>包饺子</h3>
+                <p>擀皮、放馅、捏褶子</p>
+            </div>
+            <div class="hqj-timer" id="hqj_t_wrap">3s</div>
+        </div>
+        <div class="hqj-arrow">↓</div>
+
+        <div class="hqj-step" id="hqj_s_eat">
+            <div class="hqj-icon-box">😋</div>
+            <div class="hqj-step-info">
+                <h3>吃饺子</h3>
+                <p>下锅煮熟，开吃！</p>
+            </div>
+            <div class="hqj-timer" id="hqj_t_eat">2s</div>
+        </div>
+    </div>
+
+    <div class="hqj-log" id="hqj_log"><p class="hqj-com">// 流程日志：</p></div>
+
+    <div class="hqj-code-box">
+        <h2>核心异步代码结构</h2>
+        <pre class="hqj-code"><span class="hqj-kw">function</span> <span class="hqj-fn">hqj_wait</span>(秒, 名称) {
+  <span class="hqj-kw">return new</span> <span class="hqj-fn">Promise</span>(<span class="hqj-kw">function</span> (resolve) {
+    <span class="hqj-fn">setTimeout</span>(<span class="hqj-kw">function</span> () { resolve(名称); }, 秒 * 1000);
+  });
+}
+
+<span class="hqj-kw">async function</span> <span class="hqj-fn">hqj_main</span>() {
+  <span class="hqj-kw">await</span> <span class="hqj-fn">hqj_wait</span>(6, <span class="hqj-com">"买原料"</span>);   <span class="hqj-com">// 串行：完成才往下走</span>
+  <span class="hqj-kw">await</span> <span class="hqj-fn">hqj_wait</span>(1, <span class="hqj-com">"取原料"</span>);
+  <span class="hqj-kw">await</span> <span class="hqj-fn">Promise</span>.<span class="hqj-fn">all</span>([              <span class="hqj-com">// 并行：同时开始</span>
+    <span class="hqj-fn">hqj_wait</span>(4, <span class="hqj-com">"和面"</span>),
+    <span class="hqj-fn">hqj_wait</span>(4, <span class="hqj-com">"调馅"</span>)
+  ]);
+  <span class="hqj-kw">await</span> <span class="hqj-fn">hqj_wait</span>(3, <span class="hqj-com">"包饺子"</span>);
+  <span class="hqj-kw">await</span> <span class="hqj-fn">hqj_wait</span>(2, <span class="hqj-com">"吃饺子"</span>);
+}</pre>
+    </div>
+
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+
+<script>
+(function () {
+    var hqj_logEl = document.getElementById('hqj_log');
+    var hqj_startBtn = document.getElementById('hqj_startBtn');
+
+    function hqj_log(msg, cls) {
+        var p = document.createElement('p');
+        if (cls) p.className = cls;
+        p.textContent = new Date().toLocaleTimeString() + '  ' + msg;
+        hqj_logEl.appendChild(p);
+        hqj_logEl.scrollTop = hqj_logEl.scrollHeight;
+    }
+
+    // 把节点设置为某种状态
+    function hqj_set(stepId, state) {
+        var el = document.getElementById(stepId);
+        el.classList.remove('hqj-doing', 'hqj-done');
+        if (state) el.classList.add(state);
+    }
+
+    // 倒计时定时器 id，用于重置
+    var hqj_tickTimers = [];
+
+    // Promise 版等待：setTimeout 模拟异步任务，同时驱动 UI 倒计时
+    function hqj_wait(sec, stepId, timerId, name) {
+        return new Promise(function (resolve) {
+            hqj_set(stepId, 'hqj-doing');
+            document.getElementById(timerId).textContent = sec + 's 进行中';
+            hqj_log('开始：' + name + '（预计 ' + sec + ' 秒）', 'hqj-yellow');
+
+            var left = sec;
+            var tick = setInterval(function () {
+                left--;
+                if (left > 0) {
+                    document.getElementById(timerId).textContent = left + 's 进行中';
+                }
+            }, 1000);
+            hqj_tickTimers.push(tick);
+
+            setTimeout(function () {
+                clearInterval(tick);
+                hqj_set(stepId, 'hqj-done');
+                document.getElementById(timerId).textContent = '完成';
+                hqj_log('完成：' + name, 'hqj-green');
+                resolve(name);
+            }, sec * 1000);
+        });
+    }
+
+    async function hqj_main() {
+        hqj_startBtn.disabled = true;
+        hqj_logEl.innerHTML = '<p class="hqj-com">// 流程开始：</p>';
+
+        // 串行：买原料 → 取原料
+        await hqj_wait(6, 'hqj_s_buy', 'hqj_t_buy', '买原料');
+        await hqj_wait(1, 'hqj_s_take', 'hqj_t_take', '取原料');
+
+        // 并行：和面 与 调馅 同时开始，Promise.all 等两个都完成
+        hqj_log('和面、调馅同时开始（Promise.all）', 'hqj-blue');
+        await Promise.all([
+            hqj_wait(4, 'hqj_s_dough', 'hqj_t_dough', '和面'),
+            hqj_wait(4, 'hqj_s_fill', 'hqj_t_fill', '调馅')
+        ]);
+
+        // 串行收尾
+        await hqj_wait(3, 'hqj_s_wrap', 'hqj_t_wrap', '包饺子');
+        await hqj_wait(2, 'hqj_s_eat', 'hqj_t_eat', '吃饺子');
+
+        hqj_log('全部流程结束，饺子真香！', 'hqj-green');
+        hqj_startBtn.disabled = false;
+        hqj_startBtn.textContent = '再跑一遍';
+    }
+
+    hqj_startBtn.addEventListener('click', function () {
+        // 再跑一遍时重置所有节点状态
+        ['hqj_s_buy', 'hqj_s_take', 'hqj_s_dough', 'hqj_s_fill', 'hqj_s_wrap', 'hqj_s_eat']
+            .forEach(function (id) {
+                var el = document.getElementById(id);
+                el.classList.remove('hqj-doing', 'hqj-done');
+            });
+        hqj_main();
+    });
+})();
+</script>
+</body>
+</html>

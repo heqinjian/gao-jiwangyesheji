@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：JavaScript 两种定时器 setTimeout 与 setInterval 演示（启动/清除/倒计时） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS 定时器 | 17-5 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #f3f5fa;
+        --hqj-panel: #fff;
+        --hqj-ink: #1f2738;
+        --hqj-muted: #7c869e;
+        --hqj-line: #e3e8f2;
+        --hqj-accent: #0891b2;
+        --hqj-green: #16a34a;
+        --hqj-red: #ef4444;
+        --hqj-orange: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        line-height: 1.6;
+    }
+    .hqj-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 16px 60px; }
+    .hqj-header { text-align: center; margin-bottom: 24px; }
+    .hqj-header h1 { font-size: 27px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+    .hqj-header p { color: var(--hqj-muted); font-size: 14px; }
+
+    .hqj-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 18px;
+    }
+    .hqj-card {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 20px;
+    }
+    .hqj-card h2 {
+        font-size: 18px; margin-bottom: 6px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .hqj-card h2 .hqj-tag {
+        font-size: 11px; font-family: Consolas, monospace;
+        padding: 2px 8px; border-radius: 10px;
+        background: #ecfeff; color: var(--hqj-accent);
+    }
+    .hqj-card > p { font-size: 13px; color: var(--hqj-muted); margin-bottom: 14px; }
+
+    .hqj-display {
+        background: #f8fafc;
+        border: 1px solid var(--hqj-line);
+        border-radius: 10px;
+        padding: 16px;
+        text-align: center;
+        margin-bottom: 14px;
+        min-height: 92px;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+    }
+    .hqj-big {
+        font-size: 30px; font-weight: 700;
+        font-family: Consolas, monospace;
+        color: var(--hqj-accent);
+    }
+    .hqj-sub { font-size: 13px; color: var(--hqj-muted); }
+
+    .hqj-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hqj-btn {
+        flex: 1;
+        padding: 9px 0;
+        border: none; border-radius: 8px;
+        font-size: 14px; font-family: inherit;
+        cursor: pointer;
+        background: var(--hqj-green); color: #fff;
+    }
+    .hqj-btn.hqj-red { background: var(--hqj-red); }
+    .hqj-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .hqj-input-row {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 12px; font-size: 13px;
+    }
+    .hqj-input-row input {
+        width: 90px; height: 32px;
+        border: 1px solid #cbd5e1; border-radius: 8px;
+        padding: 0 10px; font-family: Consolas, monospace;
+        outline: none;
+    }
+
+    /* 时钟 */
+    .hqj-clock {
+        font-size: 26px; font-family: Consolas, monospace;
+        font-weight: 700; color: var(--hqj-orange);
+        letter-spacing: 2px;
+    }
+
+    .hqj-log {
+        margin-top: 12px;
+        background: #151b2b;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        color: #a5e075;
+        max-height: 130px; overflow: auto;
+    }
+    .hqj-log p { margin-bottom: 2px; }
+
+    .hqj-block {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-top: 18px;
+    }
+    .hqj-block h2 { font-size: 17px; margin-bottom: 12px; }
+    .hqj-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .hqj-table th, .hqj-table td {
+        border: 1px solid var(--hqj-line);
+        padding: 9px 12px; text-align: left;
+    }
+    .hqj-table th { background: #f8fafc; }
+    .hqj-table code {
+        font-family: Consolas, monospace; color: var(--hqj-accent);
+    }
+
+    .hqj-back {
+        display: inline-block; margin-top: 20px;
+        color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>JavaScript <span class="hqj-hl">两种定时器</span></h1>
+        <p>setTimeout 只执行一次，setInterval 重复执行，都可以用对应的 clear 方法取消</p>
+    </header>
+
+    <div class="hqj-grid">
+        <!-- setTimeout -->
+        <div class="hqj-card">
+            <h2>setTimeout <span class="hqj-tag">一次性</span></h2>
+            <p>等待指定毫秒后执行一次回调，清除用 clearTimeout。</p>
+            <div class="hqj-input-row">
+                延迟 <input type="number" id="hqj_delay" value="3" min="1"> 秒
+            </div>
+            <div class="hqj-display">
+                <div class="hqj-big" id="hqj_timeoutDisplay">待启动</div>
+                <div class="hqj-sub" id="hqj_timeoutSub">点击开始后倒计时</div>
+            </div>
+            <div class="hqj-controls">
+                <button class="hqj-btn" id="hqj_timeoutStart">开始倒计时</button>
+                <button class="hqj-btn hqj-red" id="hqj_timeoutCancel" disabled>取消</button>
+            </div>
+        </div>
+
+        <!-- setInterval -->
+        <div class="hqj-card">
+            <h2>setInterval <span class="hqj-tag">重复执行</span></h2>
+            <p>每隔指定毫秒重复执行回调，清除用 clearInterval。</p>
+            <div class="hqj-input-row">
+                间隔 <input type="number" id="hqj_gap" value="1" min="1"> 秒
+            </div>
+            <div class="hqj-display">
+                <div class="hqj-big" id="hqj_count">0</div>
+                <div class="hqj-sub">已执行次数</div>
+            </div>
+            <div class="hqj-controls">
+                <button class="hqj-btn" id="hqj_intervalStart">开始</button>
+                <button class="hqj-btn hqj-red" id="hqj_intervalStop" disabled>停止</button>
+            </div>
+        </div>
+
+        <!-- 实时时钟 -->
+        <div class="hqj-card">
+            <h2>实时时钟 <span class="hqj-tag">setInterval 应用</span></h2>
+            <p>每 1 秒刷新一次当前时间，页面加载即运行。</p>
+            <div class="hqj-display">
+                <div class="hqj-clock" id="hqj_clock">--:--:--</div>
+                <div class="hqj-sub" id="hqj_dateText"></div>
+            </div>
+            <div class="hqj-log" id="hqj_log">
+                <p>// 操作日志会显示在这里</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 对比 -->
+    <div class="hqj-block">
+        <h2>两种定时器对比</h2>
+        <table class="hqj-table">
+            <tr><th>对比项</th><th>setTimeout</th><th>setInterval</th></tr>
+            <tr><td>执行次数</td><td>只执行 1 次</td><td>无限重复，直到被清除</td></tr>
+            <tr><td>启动</td><td><code>setTimeout(fn, 毫秒)</code></td><td><code>setInterval(fn, 毫秒)</code></td></tr>
+            <tr><td>取消</td><td><code>clearTimeout(id)</code></td><td><code>clearInterval(id)</code></td></tr>
+            <tr><td>典型用途</td><td>延迟提示、防抖、倒计时</td><td>轮询、时钟、动画帧刷新</td></tr>
+        </table>
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </div>
+</div>
+
+<script>
+(function () {
+    var hqj_log = document.getElementById('hqj_log');
+    function hqj_addLog(msg) {
+        var p = document.createElement('p');
+        var now = new Date().toLocaleTimeString();
+        p.textContent = now + '  ' + msg;
+        hqj_log.appendChild(p);
+        hqj_log.scrollTop = hqj_log.scrollHeight;
+    }
+
+    // ===== setTimeout 倒计时 =====
+    var hqj_timerId = null;
+    var hqj_left = 0;
+    var hqj_tickId = null;
+    var hqj_startBtn = document.getElementById('hqj_timeoutStart');
+    var hqj_cancelBtn = document.getElementById('hqj_timeoutCancel');
+    var hqj_display = document.getElementById('hqj_timeoutDisplay');
+    var hqj_sub = document.getElementById('hqj_timeoutSub');
+
+    document.getElementById('hqj_timeoutStart').addEventListener('click', function () {
+        var sec = parseInt(document.getElementById('hqj_delay').value, 10);
+        if (!sec || sec < 1) { alert('请输入大于 0 的秒数'); return; }
+
+        hqj_left = sec;
+        hqj_display.textContent = hqj_left;
+        hqj_sub.textContent = '秒后执行任务';
+        hqj_startBtn.disabled = true;
+        hqj_cancelBtn.disabled = false;
+
+        hqj_log.innerHTML = '';
+        hqj_addLog('setTimeout 已启动，' + sec + ' 秒后执行');
+
+        // 用 1 秒的 interval 仅做倒计时显示
+        hqj_tickId = setInterval(function () {
+            hqj_left--;
+            if (hqj_left > 0) hqj_display.textContent = hqj_left;
+        }, 1000);
+
+        hqj_timerId = setTimeout(function () {
+            clearInterval(hqj_tickId);
+            hqj_display.textContent = '任务执行！';
+            hqj_sub.textContent = '回调只执行了一次';
+            hqj_startBtn.disabled = false;
+            hqj_cancelBtn.disabled = true;
+            hqj_addLog('回调执行：这是一次性的延迟任务');
+        }, sec * 1000);
+    });
+
+    document.getElementById('hqj_timeoutCancel').addEventListener('click', function () {
+        clearTimeout(hqj_timerId);
+        clearInterval(hqj_tickId);
+        hqj_display.textContent = '已取消';
+        hqj_sub.textContent = '回调不会再执行';
+        hqj_startBtn.disabled = false;
+        hqj_cancelBtn.disabled = true;
+        hqj_addLog('clearTimeout 取消了任务');
+    });
+
+    // ===== setInterval 计数器 =====
+    var hqj_intervalId = null;
+    var hqj_count = 0;
+    var hqj_countEl = document.getElementById('hqj_count');
+    document.getElementById('hqj_intervalStart').addEventListener('click', function () {
+        var gap = parseInt(document.getElementById('hqj_gap').value, 10);
+        if (!gap || gap < 1) { alert('请输入大于 0 的间隔秒数'); return; }
+
+        document.getElementById('hqj_intervalStart').disabled = true;
+        document.getElementById('hqj_intervalStop').disabled = false;
+        hqj_addLog('setInterval 启动，每 ' + gap + ' 秒执行一次');
+
+        hqj_intervalId = setInterval(function () {
+            hqj_count++;
+            hqj_countEl.textContent = hqj_count;
+            hqj_addLog('第 ' + hqj_count + ' 次执行回调');
+        }, gap * 1000);
+    });
+
+    document.getElementById('hqj_intervalStop').addEventListener('click', function () {
+        clearInterval(hqj_intervalId);
+        document.getElementById('hqj_intervalStart').disabled = false;
+        document.getElementById('hqj_intervalStop').disabled = true;
+        hqj_addLog('clearInterval 停止，共执行 ' + hqj_count + ' 次');
+        hqj_count = 0;
+    });
+
+    // ===== 实时时钟 =====
+    function hqj_updateClock() {
+        var now = new Date();
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+        document.getElementById('hqj_clock').textContent =
+            pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+        document.getElementById('hqj_dateText').textContent =
+            now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+    }
+    hqj_updateClock();
+    setInterval(hqj_updateClock, 1000);
+})();
+</script>
+</body>
+</html>
