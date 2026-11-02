@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：接口测试工具，支持 GET/POST/PUT/PATCH/DELETE，显示响应数据与错误信息 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口测试工具 | 17-4 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #eef1f6;
+        --hqj-panel: #fff;
+        --hqj-ink: #1f2738;
+        --hqj-muted: #7c869e;
+        --hqj-line: #e3e8f2;
+        --hqj-accent: #4f46e5;
+        --hqj-green: #16a34a;
+        --hqj-red: #ef4444;
+        --hqj-orange: #f59e0b;
+        --hqj-dark: #151b2b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .hqj-wrap { max-width: 1000px; margin: 0 auto; padding: 30px 16px 60px; }
+    .hqj-header { text-align: center; margin-bottom: 22px; }
+    .hqj-header h1 { font-size: 26px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+    .hqj-header p { color: var(--hqj-muted); font-size: 14px; }
+
+    .hqj-panel {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 18px;
+    }
+    .hqj-panel h2 {
+        font-size: 16px; margin-bottom: 14px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .hqj-dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--hqj-accent);
+    }
+
+    /* 请求行 */
+    .hqj-req-row { display: flex; gap: 10px; }
+    .hqj-method {
+        width: 120px;
+        height: 42px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0 10px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--hqj-accent);
+        background: #fff;
+        font-family: inherit;
+        cursor: pointer;
+    }
+    .hqj-url {
+        flex: 1;
+        height: 42px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0 14px;
+        font-size: 14px;
+        font-family: Consolas, monospace;
+        outline: none;
+    }
+    .hqj-url:focus, .hqj-method:focus { border-color: var(--hqj-accent); }
+
+    .hqj-send {
+        width: 110px;
+        height: 42px;
+        border: none;
+        border-radius: 8px;
+        background: var(--hqj-accent);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+    }
+    .hqj-send:disabled { opacity: 0.6; cursor: wait; }
+
+    /* 快捷示例 */
+    .hqj-presets {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin-top: 12px;
+    }
+    .hqj-chip {
+        font-size: 12px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--hqj-line);
+        background: #f8fafc;
+        cursor: pointer;
+        font-family: Consolas, monospace;
+    }
+    .hqj-chip:hover { border-color: var(--hqj-accent); color: var(--hqj-accent); }
+    .hqj-chip b { color: var(--hqj-green); }
+
+    /* 请求体 */
+    .hqj-body-box { display: none; margin-top: 14px; }
+    .hqj-body-box.hqj-show { display: block; }
+    .hqj-body-box label {
+        font-size: 13px; color: var(--hqj-muted);
+        display: flex; justify-content: space-between;
+        margin-bottom: 6px;
+    }
+    .hqj-body-box textarea {
+        width: 100%;
+        min-height: 150px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        resize: vertical;
+        outline: none;
+    }
+    .hqj-body-box textarea:focus { border-color: var(--hqj-accent); }
+
+    /* 响应状态条 */
+    .hqj-resp-status {
+        display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
+    .hqj-status-badge {
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 13px;
+    }
+    .hqj-status-badge.hqj-ok { background: #dcfce7; color: var(--hqj-green); }
+    .hqj-status-badge.hqj-fail { background: #fee2e2; color: var(--hqj-red); }
+    .hqj-meta { color: var(--hqj-muted); font-family: Consolas, monospace; }
+
+    .hqj-resp-pre {
+        background: var(--hqj-dark);
+        color: #d6e0f5;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-family: Consolas, monospace;
+        font-size: 12.5px;
+        line-height: 1.7;
+        max-height: 420px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+    .hqj-err-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: var(--hqj-red);
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 13.5px;
+        line-height: 1.7;
+    }
+    .hqj-placeholder { color: var(--hqj-muted); font-size: 14px; padding: 20px 0; text-align: center; }
+
+    .hqj-back {
+        display: inline-block; margin-top: 8px;
+        color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>接口<span class="hqj-hl">测试工具</span></h1>
+        <p>选择请求方法、填写 URL 与请求体，发送后查看状态码、耗时与返回数据（测试接口支持 CORS）</p>
+    </header>
+
+    <!-- 请求面板 -->
+    <section class="hqj-panel">
+        <h2><span class="hqj-dot"></span>请求 Request</h2>
+        <div class="hqj-req-row">
+            <select class="hqj-method" id="hqj_method">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+            </select>
+            <input class="hqj-url" id="hqj_url" type="text"
+                   value="https://jsonplaceholder.typicode.com/posts/1" spellcheck="false">
+            <button class="hqj-send" id="hqj_send">发送</button>
+        </div>
+
+        <div class="hqj-presets">
+            <span class="hqj-chip" data-m="GET" data-u="https://jsonplaceholder.typicode.com/posts/1"><b>GET</b> 单条资源</span>
+            <span class="hqj-chip" data-m="GET" data-u="https://jsonplaceholder.typicode.com/users"><b>GET</b> 用户列表</span>
+            <span class="hqj-chip" data-m="POST" data-u="https://jsonplaceholder.typicode.com/posts"><b>POST</b> 新建资源</span>
+            <span class="hqj-chip" data-m="PUT" data-u="https://jsonplaceholder.typicode.com/posts/1"><b>PUT</b> 更新资源</span>
+            <span class="hqj-chip" data-m="PATCH" data-u="https://jsonplaceholder.typicode.com/posts/1"><b>PATCH</b> 局部更新</span>
+            <span class="hqj-chip" data-m="DELETE" data-u="https://jsonplaceholder.typicode.com/posts/1"><b>DELETE</b> 删除资源</span>
+        </div>
+
+        <div class="hqj-body-box" id="hqj_bodyBox">
+            <label>
+                <span>请求体 Body（JSON 格式，发送前自动校验）</span>
+                <span id="hqj_bodyHint">Content-Type: application/json</span>
+            </label>
+            <textarea id="hqj_body" spellcheck="false"></textarea>
+        </div>
+    </section>
+
+    <!-- 响应面板 -->
+    <section class="hqj-panel">
+        <h2><span class="hqj-dot" style="background:var(--hqj-green)"></span>响应 Response</h2>
+        <div id="hqj_resp">
+            <p class="hqj-placeholder">尚未发送请求，点击「发送」或选择一个快捷示例。</p>
+        </div>
+    </section>
+
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+
+<script>
+(function () {
+    var hqj_methodEl = document.getElementById('hqj_method');
+    var hqj_urlEl = document.getElementById('hqj_url');
+    var hqj_sendEl = document.getElementById('hqj_send');
+    var hqj_bodyBox = document.getElementById('hqj_bodyBox');
+    var hqj_bodyEl = document.getElementById('hqj_body');
+    var hqj_respEl = document.getElementById('hqj_resp');
+
+    // 各方法的默认请求体
+    var hqj_defaultBody = {
+        POST: '{\n  "title": "何秦剑的测试帖子",\n  "body": "这是通过 fetch POST 发送的数据",\n  "userId": 1\n}',
+        PUT: '{\n  "id": 1,\n  "title": "更新后的标题",\n  "body": "PUT 会替换整个资源",\n  "userId": 1\n}',
+        PATCH: '{\n  "title": "只改标题这一个字段"\n}'
+    };
+
+    function hqj_toggleBody() {
+        var m = hqj_methodEl.value;
+        if (m === 'POST' || m === 'PUT' || m === 'PATCH') {
+            hqj_bodyBox.classList.add('hqj-show');
+            if (!hqj_bodyEl.value) hqj_bodyEl.value = hqj_defaultBody[m];
+        } else {
+            hqj_bodyBox.classList.remove('hqj-show');
+        }
+    }
+    hqj_methodEl.addEventListener('change', hqj_toggleBody);
+    hqj_toggleBody();
+
+    // 快捷示例
+    document.querySelectorAll('.hqj-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            hqj_methodEl.value = chip.dataset.m;
+            hqj_urlEl.value = chip.dataset.u;
+            hqj_bodyEl.value = hqj_defaultBody[chip.dataset.m] || '';
+            hqj_toggleBody();
+            hqj_send();
+        });
+    });
+
+    hqj_sendEl.addEventListener('click', hqj_send);
+
+    function hqj_send() {
+        var method = hqj_methodEl.value;
+        var url = hqj_urlEl.value.trim();
+
+        if (!url) {
+            hqj_showError('URL 不能为空，请填写接口地址。');
+            return;
+        }
+
+        var options = { method: method };
+        var hasBody = hqj_bodyBox.classList.contains('hqj-show');
+
+        if (hasBody) {
+            var raw = hqj_bodyEl.value.trim();
+            if (!raw) {
+                hqj_showError(method + ' 请求需要填写 JSON 请求体。');
+                return;
+            }
+            try {
+                JSON.parse(raw);   // 发送前校验 JSON
+            } catch (e) {
+                hqj_showError('请求体不是合法 JSON：' + e.message);
+                return;
+            }
+            options.headers = { 'Content-Type': 'application/json' };
+            options.body = raw;
+        }
+
+        hqj_sendEl.disabled = true;
+        hqj_respEl.innerHTML = '<p class="hqj-placeholder">请求发送中，请稍候…</p>';
+        var start = performance.now();
+
+        fetch(url, options)
+            .then(function (response) {
+                var elapsed = Math.round(performance.now() - start);
+                var cloned = response.clone();
+                return response.text().then(function (text) {
+                    hqj_renderResponse(response, text, elapsed);
+                });
+            })
+            .catch(function (err) {
+                hqj_showError('网络请求失败：' + err.message +
+                    '（可能原因：地址错误、服务器不可达、接口未开启 CORS 跨域、本地断网）');
+            })
+            .finally(function () {
+                hqj_sendEl.disabled = false;
+            });
+    }
+
+    function hqj_renderResponse(response, text, elapsed) {
+        var ok = response.ok;
+        var badgeCls = ok ? 'hqj-ok' : 'hqj-fail';
+        var display;
+
+        try {
+            display = JSON.stringify(JSON.parse(text), null, 2);
+        } catch (e) {
+            display = text || '（响应体为空）';
+        }
+
+        hqj_respEl.innerHTML =
+            '<div class="hqj-resp-status">' +
+            '<span class="hqj-status-badge ' + badgeCls + '">' +
+            response.status + ' ' + response.statusText + '</span>' +
+            '<span class="hqj-meta">耗时 ' + elapsed + ' ms</span>' +
+            '<span class="hqj-meta">Content-Type: ' +
+            (response.headers.get('content-type') || '未知') + '</span>' +
+            '</div>' +
+            '<pre class="hqj-resp-pre">' + hqj_escape(display) + '</pre>';
+
+        if (!ok) {
+            var warn = document.createElement('div');
+            warn.className = 'hqj-err-box';
+            warn.style.marginTop = '10px';
+            warn.textContent = 'HTTP 状态码 ' + response.status +
+                ' 表示请求未成功（4xx 客户端错误 / 5xx 服务器错误），请检查 URL、参数或请求体。';
+            hqj_respEl.appendChild(warn);
+        }
+    }
+
+    function hqj_showError(msg) {
+        hqj_respEl.innerHTML = '<div class="hqj-err-box">' + hqj_escape(msg) + '</div>';
+        hqj_sendEl.disabled = false;
+    }
+
+    function hqj_escape(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+})();
+</script>
+</body>
+</html>
