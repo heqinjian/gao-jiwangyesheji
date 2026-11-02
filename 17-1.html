@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：JSON 语法与 JS 互转（JSON.parse / JSON.stringify）演示 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 图鉴 | 17-1 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #f3f5fa;
+        --hqj-panel: #fff;
+        --hqj-ink: #1f2738;
+        --hqj-muted: #7c869e;
+        --hqj-line: #e3e8f2;
+        --hqj-accent: #d97706;
+        --hqj-blue: #2f7cf6;
+        --hqj-green: #16a34a;
+        --hqj-red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        line-height: 1.6;
+    }
+    .hqj-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 16px 60px; }
+    .hqj-header { text-align: center; margin-bottom: 24px; }
+    .hqj-header h1 { font-size: 27px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+    .hqj-header p { color: var(--hqj-muted); font-size: 14px; }
+
+    .hqj-block {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 20px;
+    }
+    .hqj-block h2 {
+        display: flex; align-items: center; gap: 10px;
+        font-size: 19px; margin-bottom: 14px;
+    }
+    .hqj-badge {
+        width: 30px; height: 30px; border-radius: 8px;
+        background: var(--hqj-accent); color: #fff;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 14px;
+    }
+
+    pre.hqj-code {
+        background: #151b2b;
+        color: #d6e0f5;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        overflow-x: auto;
+        white-space: pre;
+    }
+    .hqj-k { color: #82aaff; }      /* 键 */
+    .hqj-s { color: #a5e075; }      /* 字符串 */
+    .hqj-n { color: #ffb86c; }      /* 数字 */
+    .hqj-b { color: #ff79c6; }      /* 布尔 */
+    .hqj-z { color: #6b7794; }      /* null */
+
+    .hqj-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    .hqj-card {
+        border: 1px solid var(--hqj-line);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .hqj-card-hd {
+        padding: 10px 14px;
+        background: var(--hqj-bg);
+        border-bottom: 1px solid var(--hqj-line);
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .hqj-card-hd span { color: var(--hqj-muted); font-weight: 400; font-size: 12px; }
+    .hqj-card .hqj-code { border-radius: 0; }
+
+    .hqj-rules { padding-left: 20px; font-size: 14px; color: var(--hqj-muted); }
+    .hqj-rules li { margin-bottom: 6px; }
+    .hqj-rules strong { color: var(--hqj-ink); }
+
+    /* 操场 */
+    .hqj-play-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+    .hqj-play-col h3 { font-size: 14px; margin-bottom: 8px; color: var(--hqj-blue); }
+    .hqj-play-col pre { min-height: 150px; }
+    .hqj-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .hqj-btn {
+        padding: 8px 16px;
+        border: 1px solid var(--hqj-blue);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--hqj-blue);
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+    }
+    .hqj-btn:hover { background: var(--hqj-blue); color: #fff; }
+    .hqj-btn.hqj-green { border-color: var(--hqj-green); color: var(--hqj-green); }
+    .hqj-btn.hqj-green:hover { background: var(--hqj-green); color: #fff; }
+    .hqj-result {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        color: var(--hqj-green);
+    }
+    .hqj-result.hqj-err { background: #fef2f2; border-color: #fecaca; color: var(--hqj-red); }
+
+    .hqj-back {
+        display: inline-block; margin-top: 16px;
+        color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+    }
+    .hqj-back:hover { color: var(--hqj-accent); }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1><span class="hqj-hl">JSON</span> 图鉴</h1>
+        <p>JSON（JavaScript Object Notation）是前后端数据交换的通用文本格式</p>
+    </header>
+
+    <!-- 语法 -->
+    <section class="hqj-block">
+        <h2><span class="hqj-badge">1</span> JSON 长什么样</h2>
+        <pre class="hqj-code" id="hqj_sample"></pre>
+        <ul class="hqj-rules" style="margin-top:14px">
+            <li><strong>键必须用双引号</strong>：JSON 里没有单引号，<code>"name"</code> 合法，<code>'name'</code> 不合法。</li>
+            <li>支持的数据类型：字符串、数字、布尔（true/false）、null、数组、对象。</li>
+            <li><strong>不支持</strong>函数、undefined、注释；字符串也必须用双引号。</li>
+            <li>键值对之间用逗号分隔，最后一个键值对后面不能有逗号。</li>
+        </ul>
+    </section>
+
+    <!-- 两种结构 -->
+    <section class="hqj-block">
+        <h2><span class="hqj-badge">2</span> 对象与数组两种结构</h2>
+        <div class="hqj-grid">
+            <div class="hqj-card">
+                <div class="hqj-card-hd">JSON 对象 <span>花括号 { }，键值对</span></div>
+                <pre class="hqj-code" id="hqj_obj"></pre>
+            </div>
+            <div class="hqj-card">
+                <div class="hqj-card-hd">JSON 数组 <span>方括号 [ ]，有序列表</span></div>
+                <pre class="hqj-code" id="hqj_arr"></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- 操场 -->
+    <section class="hqj-block">
+        <h2><span class="hqj-badge">3</span> 转换操场：JS 对象 ⇄ JSON 字符串</h2>
+        <div class="hqj-controls">
+            <button class="hqj-btn" id="hqj_stringify">JSON.stringify（对象 → 文本）</button>
+            <button class="hqj-btn hqj-green" id="hqj_parse">JSON.parse（文本 → 对象）</button>
+            <button class="hqj-btn" id="hqj_badParse">解析一段错误 JSON</button>
+        </div>
+        <div class="hqj-play-grid">
+            <div class="hqj-play-col">
+                <h3>JavaScript 对象</h3>
+                <pre class="hqj-code" id="hqj_jsSide"></pre>
+            </div>
+            <div class="hqj-play-col">
+                <h3>JSON 字符串</h3>
+                <pre class="hqj-code" id="hqj_jsonSide"></pre>
+            </div>
+        </div>
+        <div class="hqj-result" id="hqj_result">点击上方按钮，观察两种格式的转换。</div>
+    </section>
+
+    <!-- 常用场景 -->
+    <section class="hqj-block">
+        <h2><span class="hqj-badge">4</span> 什么时候用 JSON</h2>
+        <ul class="hqj-rules">
+            <li><strong>接口通信：</strong>fetch 拿到的响应通过 <code>response.json()</code> 直接解析成 JS 对象。</li>
+            <li><strong>本地存储：</strong>localStorage 只能存字符串，对象需先 stringify，取出时再 parse。</li>
+            <li><strong>配置文件：</strong>package.json、VS Code 配置等都采用 JSON 格式。</li>
+        </ul>
+        <a class="hqj-back" href="index.html">← 返回首页</a>
+    </section>
+</div>
+
+<script>
+(function () {
+    // ===== 示例数据 =====
+    var hqj_sampleObj = {
+        name: '何秦剑',
+        age: 20,
+        isVip: true,
+        score: null,
+        skills: ['HTML', 'CSS', 'JavaScript'],
+        school: { city: '大连', grade: 2024 }
+    };
+
+    // 简单的 JSON 语法高亮
+    function hqj_highlight(json) {
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
+                var cls = 'hqj-n';
+                if (/^"/.test(match)) {
+                    cls = /:$/.test(match) ? 'hqj-k' : 'hqj-s';
+                } else if (/true|false/.test(match)) {
+                    cls = 'hqj-b';
+                } else if (/null/.test(match)) {
+                    cls = 'hqj-z';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+    }
+
+    function hqj_show(id, text) {
+        document.getElementById(id).innerHTML = hqj_highlight(text);
+    }
+
+    hqj_show('hqj_sample', JSON.stringify(hqj_sampleObj, null, 2));
+    hqj_show('hqj_obj', JSON.stringify({ id: 1, title: '音乐手机', price: 2199 }, null, 2));
+    hqj_show('hqj_arr', JSON.stringify(['沈阳', '西安', '郑州'], null, 2));
+
+    // 操场初始状态
+    var hqj_jsSide = document.getElementById('hqj_jsSide');
+    hqj_jsSide.textContent =
+        'var hqj_user = {\n  name: "何秦剑",\n  age: 20,\n  tags: ["前端", "JSON"]\n};';
+    var hqj_jsonSide = document.getElementById('hqj_jsonSide');
+    var hqj_result = document.getElementById('hqj_result');
+
+    var hqj_user = { name: '何秦剑', age: 20, tags: ['前端', 'JSON'] };
+
+    document.getElementById('hqj_stringify').onclick = function () {
+        var json = JSON.stringify(hqj_user, null, 2);
+        hqj_jsonSide.innerHTML = hqj_highlight(json);
+        hqj_result.classList.remove('hqj-err');
+        hqj_result.textContent = 'stringify 成功：对象变成了纯文本，可用于网络传输或本地存储。';
+    };
+
+    document.getElementById('hqj_parse').onclick = function () {
+        var hqj_text = '{"name":"何秦剑","age":20,"tags":["前端","JSON"]}';
+        hqj_jsonSide.innerHTML = hqj_highlight(JSON.stringify(JSON.parse(hqj_text), null, 2));
+        var obj = JSON.parse(hqj_text);
+        hqj_result.classList.remove('hqj-err');
+        hqj_result.textContent = 'parse 成功：文本变回对象，可直接 obj.name = "' + obj.name + '"。';
+    };
+
+    document.getElementById('hqj_badParse').onclick = function () {
+        try {
+            JSON.parse('{name: "何秦剑",}');   // 键没引号 + 多余逗号
+        } catch (e) {
+            hqj_jsonSide.textContent = '{name: "何秦剑",}';
+            hqj_result.classList.add('hqj-err');
+            hqj_result.textContent = 'parse 报错：' + e.message + '（真实项目中要用 try/catch 兜底）';
+        }
+    };
+})();
+</script>
+</body>
+</html>

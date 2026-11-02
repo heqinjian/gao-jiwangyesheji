@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-01  大模型：GPT-6-luna  功能：使用 fetch 获取跨域商品接口数据（列表+详情，含加载/错误处理） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fetch 获取接口数据 | 17-2 何秦剑</title>
+<style>
+    :root {
+        --hqj-bg: #f3f5fa;
+        --hqj-panel: #fff;
+        --hqj-ink: #1f2738;
+        --hqj-muted: #7c869e;
+        --hqj-line: #e3e8f2;
+        --hqj-accent: #0ea5e9;
+        --hqj-green: #16a34a;
+        --hqj-red: #ef4444;
+        --hqj-orange: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--hqj-bg);
+        color: var(--hqj-ink);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        line-height: 1.6;
+    }
+    .hqj-wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 60px; }
+    .hqj-header { text-align: center; margin-bottom: 22px; }
+    .hqj-header h1 { font-size: 27px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: var(--hqj-accent); }
+    .hqj-header p { color: var(--hqj-muted); font-size: 14px; }
+
+    .hqj-bar {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 12px;
+        padding: 14px 18px;
+        display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+        margin-bottom: 18px;
+    }
+    .hqj-api {
+        flex: 1;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        color: var(--hqj-accent);
+        word-break: break-all;
+    }
+    .hqj-btn {
+        padding: 8px 18px;
+        border: none;
+        border-radius: 8px;
+        background: var(--hqj-accent);
+        color: #fff;
+        font-size: 14px;
+        font-family: inherit;
+        cursor: pointer;
+    }
+    .hqj-btn:hover { opacity: 0.9; }
+    .hqj-btn.hqj-ghost {
+        background: #fff;
+        border: 1px solid var(--hqj-accent);
+        color: var(--hqj-accent);
+    }
+
+    /* 状态 */
+    .hqj-status {
+        text-align: center;
+        padding: 60px 0;
+        color: var(--hqj-muted);
+        font-size: 15px;
+    }
+    .hqj-spinner {
+        width: 38px; height: 38px;
+        border: 3px solid var(--hqj-line);
+        border-top-color: var(--hqj-accent);
+        border-radius: 50%;
+        margin: 0 auto 14px;
+        animation: hqj-spin 0.8s linear infinite;
+    }
+    @keyframes hqj-spin { to { transform: rotate(360deg); } }
+    .hqj-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: var(--hqj-red);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+    }
+
+    /* 商品网格 */
+    .hqj-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+    }
+    .hqj-card {
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .hqj-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    }
+    .hqj-thumb {
+        height: 170px;
+        background: #fafafa;
+        display: flex; align-items: center; justify-content: center;
+        padding: 14px;
+    }
+    .hqj-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .hqj-info { padding: 12px 14px; }
+    .hqj-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 44px;
+    }
+    .hqj-meta {
+        display: flex; align-items: center; justify-content: space-between;
+        font-size: 13px;
+    }
+    .hqj-price { color: var(--hqj-red); font-weight: 700; font-size: 16px; }
+    .hqj-rate { color: var(--hqj-orange); font-size: 12px; }
+
+    /* 原始 JSON */
+    .hqj-raw {
+        margin-top: 18px;
+        background: var(--hqj-panel);
+        border: 1px solid var(--hqj-line);
+        border-radius: 12px;
+        overflow: hidden;
+        display: none;
+    }
+    .hqj-raw.hqj-show { display: block; }
+    .hqj-raw-hd {
+        padding: 10px 16px;
+        background: #151b2b;
+        color: #fff;
+        font-size: 13px;
+        font-family: Consolas, monospace;
+    }
+    .hqj-raw pre {
+        max-height: 340px;
+        overflow: auto;
+        padding: 14px 16px;
+        font-family: Consolas, monospace;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: #d6e0f5;
+        background: #151b2b;
+    }
+
+    /* 详情弹窗 */
+    .hqj-modal-mask {
+        position: fixed; inset: 0;
+        background: rgba(15,23,42,0.55);
+        display: none;
+        align-items: center; justify-content: center;
+        z-index: 100;
+        padding: 20px;
+    }
+    .hqj-modal-mask.hqj-show { display: flex; }
+    .hqj-modal {
+        background: #fff;
+        width: 560px; max-width: 100%;
+        max-height: 88vh;
+        overflow: auto;
+        border-radius: 14px;
+        position: relative;
+    }
+    .hqj-modal-close {
+        position: absolute; right: 12px; top: 10px;
+        width: 30px; height: 30px;
+        border: none; background: #f1f5f9;
+        border-radius: 50%;
+        font-size: 16px; cursor: pointer;
+        z-index: 2;
+    }
+    .hqj-modal-body { padding: 24px; }
+    .hqj-modal-thumb {
+        height: 220px;
+        background: #fafafa;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+    }
+    .hqj-modal-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .hqj-modal h2 { font-size: 19px; margin-bottom: 10px; }
+    .hqj-modal .hqj-price { font-size: 22px; margin-bottom: 10px; }
+    .hqj-desc { font-size: 13px; color: var(--hqj-muted); margin-bottom: 12px; }
+    .hqj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hqj-tag {
+        font-size: 12px;
+        background: #f0f9ff;
+        color: var(--hqj-accent);
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    .hqj-back {
+        display: inline-block; margin-top: 22px;
+        color: var(--hqj-muted); font-size: 13px; text-decoration: none;
+    }
+    .hqj-back:hover { color: var(--hqj-accent); }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>fetch <span class="hqj-hl">获取接口数据</span></h1>
+        <p>原生 fetch API 调用支持跨域（CORS）的公开接口，列表 + 详情</p>
+    </header>
+
+    <div class="hqj-bar">
+        <span class="hqj-api" id="hqj_apiUrl">GET https://dummyjson.com/products?limit=8</span>
+        <button class="hqj-btn" id="hqj_loadBtn">加载数据</button>
+        <button class="hqj-btn hqj-ghost" id="hqj_rawBtn">查看原始 JSON</button>
+    </div>
+
+    <div id="hqj_content">
+        <div class="hqj-status">
+            <div class="hqj-spinner" style="display:none"></div>
+            <p>点击「加载数据」，通过 fetch 从服务器获取商品列表。</p>
+        </div>
+    </div>
+
+    <div class="hqj-raw" id="hqj_raw">
+        <div class="hqj-raw-hd">服务器返回的原始 JSON</div>
+        <pre id="hqj_rawPre"></pre>
+    </div>
+
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="hqj-modal-mask" id="hqj_mask">
+    <div class="hqj-modal">
+        <button class="hqj-modal-close" id="hqj_modalClose">✕</button>
+        <div class="hqj-modal-body" id="hqj_modalBody"></div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var hqj_LIST_URL = 'https://dummyjson.com/products?limit=8';
+    var hqj_content = document.getElementById('hqj_content');
+    var hqj_raw = document.getElementById('hqj_raw');
+    var hqj_rawPre = document.getElementById('hqj_rawPre');
+    var hqj_mask = document.getElementById('hqj_mask');
+    var hqj_modalBody = document.getElementById('hqj_modalBody');
+
+    function hqj_showLoading() {
+        hqj_content.innerHTML =
+            '<div class="hqj-status"><div class="hqj-spinner"></div><p>正在请求接口数据，请稍候…</p></div>';
+    }
+
+    function hqj_showError(msg) {
+        hqj_content.innerHTML =
+            '<div class="hqj-error"><strong>请求失败：</strong>' + msg +
+            '<br><br><button class="hqj-btn" onclick="document.getElementById(\'hqj_loadBtn\').click()">重新加载</button></div>';
+    }
+
+    // 加载列表
+    function hqj_load() {
+        hqj_showLoading();
+        hqj_raw.classList.remove('hqj-show');
+
+        fetch(hqj_LIST_URL)
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP 状态码 ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                hqj_renderList(data.products);
+                hqj_rawPre.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(function (err) {
+                hqj_showError(err.message);
+            });
+    }
+
+    function hqj_renderList(products) {
+        var grid = document.createElement('div');
+        grid.className = 'hqj-grid';
+
+        products.forEach(function (p) {
+            var card = document.createElement('div');
+            card.className = 'hqj-card';
+            card.innerHTML =
+                '<div class="hqj-thumb"><img src="' + p.thumbnail + '" alt="' + p.title + '"></div>' +
+                '<div class="hqj-info">' +
+                '<div class="hqj-title">' + p.title + '</div>' +
+                '<div class="hqj-meta">' +
+                '<span class="hqj-price">$' + p.price + '</span>' +
+                '<span class="hqj-rate">★ ' + p.rating + '</span>' +
+                '</div></div>';
+            card.addEventListener('click', function () { hqj_loadDetail(p.id); });
+            grid.appendChild(card);
+        });
+
+        hqj_content.innerHTML = '';
+        hqj_content.appendChild(grid);
+    }
+
+    // 加载详情：再次使用 fetch 请求单个商品
+    function hqj_loadDetail(id) {
+        hqj_modalBody.innerHTML = '<div class="hqj-status"><div class="hqj-spinner"></div><p>加载详情…</p></div>';
+        hqj_mask.classList.add('hqj-show');
+
+        fetch('https://dummyjson.com/products/' + id)
+            .then(function (response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function (p) {
+                var tags = p.tags.map(function (t) {
+                    return '<span class="hqj-tag">' + t + '</span>';
+                }).join('');
+                hqj_modalBody.innerHTML =
+                    '<div class="hqj-modal-thumb"><img src="' + p.thumbnail + '" alt="' + p.title + '"></div>' +
+                    '<h2>' + p.title + '</h2>' +
+                    '<div class="hqj-price">$' + p.price +
+                    ' <span style="font-size:13px;color:#888;font-weight:400">★ ' + p.rating +
+                    ' · 库存 ' + p.stock + '</span></div>' +
+                    '<p class="hqj-desc">' + p.description + '</p>' +
+                    '<div class="hqj-tags">' + tags + '</div>';
+            })
+            .catch(function (err) {
+                hqj_modalBody.innerHTML = '<div class="hqj-error">详情加载失败：' + err.message + '</div>';
+            });
+    }
+
+    document.getElementById('hqj_loadBtn').addEventListener('click', hqj_load);
+    document.getElementById('hqj_rawBtn').addEventListener('click', function () {
+        if (!hqj_rawPre.textContent) { alert('请先加载数据'); return; }
+        hqj_raw.classList.toggle('hqj-show');
+    });
+    document.getElementById('hqj_modalClose').addEventListener('click', function () {
+        hqj_mask.classList.remove('hqj-show');
+    });
+    hqj_mask.addEventListener('click', function (e) {
+        if (e.target === hqj_mask) hqj_mask.classList.remove('hqj-show');
+    });
+
+    // 页面打开后自动加载一次
+    hqj_load();
+})();
+</script>
+</body>
+</html>
