@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- 何秦剑  建立时间：2026-11-05  大模型：GPT-6-luna  功能：ECharts 双图——echarts-gl 3D 地球与纽约百万街道线图（库与数据全部本地化于 cdn/echarts） -->
+<!-- 何秦剑  建立时间：2026-11-05  大模型：GPT-6-luna  功能：ECharts GL 3D 地球（真实感着色、地形凹凸、星空环境，库与贴图全部本地化） -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ECharts 双图 | 18-4 何秦剑</title>
+<title>3D 地球 | 18-4 何秦剑</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -23,7 +23,6 @@
         border: 1px solid #30363d;
         border-radius: 14px;
         padding: 18px 20px 22px;
-        margin-bottom: 22px;
     }
     .hqj-chart-block h2 {
         font-size: 17px; margin-bottom: 4px;
@@ -35,35 +34,10 @@
         background: #1f6feb22; color: #58a6ff;
     }
     .hqj-chart-block > p { font-size: 12.5px; color: #8b949e; margin-bottom: 12px; }
-    .hqj-chart { width: 100%; height: 560px; }
-
-    .hqj-progress {
-        margin-top: 12px;
-        background: #0d1117;
-        border: 1px solid #30363d;
-        border-radius: 10px;
-        padding: 12px 16px;
-        font-family: Consolas, monospace;
-        font-size: 12.5px;
-    }
-    .hqj-bar {
-        height: 8px; background: #21262d;
-        border-radius: 4px; overflow: hidden;
-        margin: 8px 0;
-    }
-    .hqj-bar i {
-        display: block; height: 100%; width: 0;
-        background: linear-gradient(90deg, #1f6feb, #58d68d);
-        transition: width 0.2s;
-    }
-    .hqj-progress-row {
-        display: flex; justify-content: space-between;
-        color: #8b949e;
-    }
-    .hqj-progress-row b { color: #58d68d; font-weight: normal; }
+    .hqj-chart { width: 100%; height: 640px; }
 
     .hqj-back {
-        display: inline-block; margin-top: 6px;
+        display: inline-block; margin-top: 18px;
         color: #8b949e; font-size: 13px; text-decoration: none;
     }
 </style>
@@ -71,29 +45,14 @@
 <body>
 <div class="hqj-wrap">
     <header class="hqj-header">
-        <h1>ECharts <span class="hqj-hl">双图演示</span></h1>
-        <p>3D 地球（echarts-gl）+ 纽约近百万街道线图（32 个二进制分块加载），所有库与数据均在本地 cdn 目录</p>
+        <h1>3D <span class="hqj-hl">地球</span></h1>
+        <p>echarts-gl 真实感着色、地形凹凸贴图、星空环境与后期辉光，可拖拽旋转、滚轮缩放</p>
     </header>
 
-    <!-- 图一：3D 地球 -->
     <div class="hqj-chart-block">
         <h2>3D 地球 <span class="hqj-badge">echarts-gl · globe</span></h2>
-        <p>真实感着色、地形凹凸贴图、星空环境与后期辉光，可鼠标拖拽旋转、滚轮缩放</p>
+        <p>所有库与贴图均位于本地 cdn/echarts 目录，无外部 CDN 依赖</p>
         <div class="hqj-chart" id="hqj_globe"></div>
-    </div>
-
-    <!-- 图二：纽约街道 -->
-    <div class="hqj-chart-block">
-        <h2>纽约百万街道线图 <span class="hqj-badge">lines · geo · 分块 appendData</span></h2>
-        <p>深色底上橙色线条绘制纽约街道，支持缩放平移；数据以 32 个 .bin 分块渐进加载</p>
-        <div class="hqj-chart" id="hqj_ny"></div>
-        <div class="hqj-progress">
-            <div class="hqj-progress-row">
-                <span id="hqj_loadText">等待加载…</span>
-                <span id="hqj_pointText">街道点：0</span>
-            </div>
-            <div class="hqj-bar"><i id="hqj_bar"></i></div>
-        </div>
     </div>
 
     <a class="hqj-back" href="index.html">← 返回首页</a>
@@ -104,9 +63,8 @@
 <script>
 (function () {
     var hqj_assetBase = 'cdn/echarts/';
-
-    // ===== 图一：3D 地球 =====
     var hqj_globeChart = echarts.init(document.getElementById('hqj_globe'));
+
     hqj_globeChart.setOption({
         backgroundColor: '#000',
         globe: {
@@ -127,105 +85,8 @@
         }
     });
 
-    // ===== 图二：纽约街道线图 =====
-    var hqj_nyChart = echarts.init(document.getElementById('hqj_ny'));
-    var hqj_CHUNK_COUNT = 32;
-    var hqj_dataCount = 0;
-    var hqj_loadText = document.getElementById('hqj_loadText');
-    var hqj_pointText = document.getElementById('hqj_pointText');
-    var hqj_bar = document.getElementById('hqj_bar');
-
-    hqj_nyChart.setOption({
-        progressive: 20000,
-        backgroundColor: '#111',
-        geo: {
-            center: [-74.04327099998152, 40.86737600240287],
-            zoom: 360,
-            map: 'world',
-            roam: true,
-            silent: true,
-            itemStyle: {
-                color: 'transparent',
-                borderColor: 'rgba(255,255,255,0.1)',
-                borderWidth: 1
-            }
-        },
-        series: [{
-            type: 'lines',
-            coordinateSystem: 'geo',
-            blendMode: 'lighter',
-            dimensions: ['value'],
-            data: new Float64Array(),
-            polyline: true,
-            large: true,
-            lineStyle: { color: 'orange', width: 0.5, opacity: 0.3 }
-        }]
-    });
-
-    // 先加载本地 world.json 注册地图，再逐块加载二进制街道数据
-    fetch(hqj_assetBase + 'world.json')
-        .then(function (res) { return res.json(); })
-        .then(function (geoJson) {
-            echarts.registerMap('world', geoJson);
-            hqj_loadText.textContent = '地图注册完成，开始加载街道数据';
-            hqj_fetchData(0);
-        })
-        .catch(function (err) {
-            hqj_loadText.textContent = '地图加载失败：' + err.message + '（本地 file:// 打开受限，请通过服务器或 GitHub Pages 访问）';
-        });
-
-    function hqj_fetchData(idx) {
-        if (idx >= hqj_CHUNK_COUNT) {
-            hqj_loadText.textContent = '全部 32 个分块加载完成';
-            hqj_bar.style.width = '100%';
-            return;
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', hqj_assetBase + 'links-ny/links_ny_' + idx + '.bin', true);
-        xhr.responseType = 'arraybuffer';
-
-        xhr.onload = function () {
-            var rawData = new Float32Array(this.response);
-            var data = new Float64Array(rawData.length - 2);
-            var offsetX = rawData[0];
-            var offsetY = rawData[1];
-            var off = 0;
-            var addedDataCount = 0;
-
-            for (var i = 2; i < rawData.length; ) {
-                var count = rawData[i++];
-                data[off++] = count;
-                for (var k = 0; k < count; k++) {
-                    var x = rawData[i++] + offsetX;
-                    var y = rawData[i++] + offsetY;
-                    data[off++] = x;
-                    data[off++] = y;
-                    addedDataCount++;
-                }
-            }
-
-            hqj_nyChart.appendData({ seriesIndex: 0, data: data });
-            hqj_dataCount += addedDataCount;
-            hqj_pointText.textContent = '街道点：' + hqj_dataCount.toLocaleString();
-
-            var done = idx + 1;
-            hqj_bar.style.width = (done / hqj_CHUNK_COUNT * 100) + '%';
-            hqj_loadText.textContent = '分块加载进度：' + done + ' / ' + hqj_CHUNK_COUNT;
-
-            hqj_fetchData(idx + 1);
-        };
-
-        xhr.onerror = function () {
-            hqj_loadText.textContent = '分块 ' + idx + ' 加载失败（本地 file:// 打开受限，请通过服务器或 GitHub Pages 访问）';
-        };
-
-        xhr.send();
-    }
-
     window.addEventListener('resize', function () {
         hqj_globeChart.resize();
-        hqj_nyChart.resize();
     });
 })();
 </script>

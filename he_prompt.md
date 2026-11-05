@@ -146,3 +146,6 @@
 
 ## 2026-11-05 13:57:40
 实现18-4，包括echarts的两个图，cdn文件下载到cdn目录下，示例网址https://echarts.apache.org/examples/zh/editor.html?c=globe-echarts-gl-hello-world&gl=1和https://echarts.apache.org/examples/zh/editor.html?c=lines-ny
+
+## 2026-11-05 14:09:53
+纽约百万街道线图加载不出来，你分两个文件实现18-4地球18-5纽约百万街道线图
