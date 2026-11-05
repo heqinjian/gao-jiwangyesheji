@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-05  大模型：GPT-6-luna  功能：基于本地 Mermaid 库渲染智能客服系统流程图与 ER 图（库文件位于 cdn/mermaid） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mermaid 流程图与 ER 图 | 18-6 何秦剑</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #f6f8fb;
+        color: #1f2937;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .hqj-wrap { max-width: 1180px; margin: 0 auto; padding: 30px 16px 56px; }
+    .hqj-header { text-align: center; margin-bottom: 24px; }
+    .hqj-header h1 { font-size: 26px; margin-bottom: 8px; }
+    .hqj-header h1 .hqj-hl { color: #7c3aed; }
+    .hqj-header p { color: #6b7280; font-size: 13.5px; }
+
+    .hqj-panel {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 22px 26px;
+        margin-bottom: 20px;
+    }
+    .hqj-panel h2 {
+        font-size: 18px; margin-bottom: 6px;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .hqj-panel h2 .hqj-badge {
+        font-size: 11px; font-family: Consolas, monospace;
+        padding: 2px 9px; border-radius: 10px;
+        background: #7c3aed18; color: #7c3aed;
+    }
+    .hqj-panel > p { font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+
+    .hqj-mermaid {
+        display: flex; justify-content: center;
+        overflow-x: auto;
+    }
+    .hqj-mermaid svg { min-width: 600px; }
+
+    .hqj-status {
+        text-align: center; font-family: Consolas, monospace;
+        font-size: 13px; color: #7c3aed; margin-bottom: 14px;
+    }
+
+    .hqj-back {
+        display: inline-block; margin-top: 10px;
+        color: #6b7280; font-size: 13px; text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>Mermaid <span class="hqj-hl">智能客服系统</span>流程图与 ER 图</h1>
+        <p>文本即图表：Mermaid 库本地加载，离线渲染，无需任何外部 CDN</p>
+    </header>
+
+    <p class="hqj-status" id="hqj_status">正在初始化 Mermaid…</p>
+
+    <div class="hqj-panel">
+        <h2>智能客服业务流程图 <span class="hqj-badge">flowchart TD</span></h2>
+        <p>从用户提问到答案返回的完整链路，含 FAQ 匹配、RAG 生成、人工兜底与评价回流</p>
+        <div class="hqj-mermaid">
+flowchart TD
+    A([用户提问]) --> B[多渠道接入<br/>网页/APP/公众号/电话]
+    B --> C[会话管理与上下文加载]
+    C --> D[意图识别与实体抽取]
+    D --> E{置信度判断}
+    E -->|高置信| F[FAQ 精确匹配]
+    E -->|中置信| G[RAG 知识库向量检索]
+    G --> H[LLM 大模型生成答案]
+    E -->|低置信| I[转人工坐席]
+    F --> J[返回答案]
+    H --> J
+    I --> K[人工答复]
+    K --> J
+    J --> L{用户评价}
+    L -->|不满意| D
+    L -->|满意| M[(会话记录回流知识库)]
+        </div>
+    </div>
+
+    <div class="hqj-panel">
+        <h2>数据库 ER 图 <span class="hqj-badge">erDiagram</span></h2>
+        <p>智能客服系统核心表结构：用户、会话、消息、坐席、工单、知识文档与 FAQ</p>
+        <div class="hqj-mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--|{ MESSAGE : "包含"
+    AGENT ||--o{ SESSION : "接待"
+    SESSION ||--o| TICKET : "生成"
+    CATEGORY ||--o{ FAQ : "归类"
+    USER {
+        bigint user_id PK
+        string name
+        string phone
+        datetime created_at
+    }
+    SESSION {
+        bigint session_id PK
+        bigint user_id FK
+        bigint agent_id FK
+        string channel
+        string status
+        datetime start_time
+    }
+    MESSAGE {
+        bigint message_id PK
+        bigint session_id FK
+        string role
+        text content
+        datetime sent_at
+    }
+    AGENT {
+        bigint agent_id PK
+        string name
+        string skill_group
+    }
+    TICKET {
+        bigint ticket_id PK
+        string title
+        string priority
+        string status
+    }
+    KB_DOC {
+        bigint doc_id PK
+        string title
+        text chunk
+        vector embedding
+        datetime updated_at
+    }
+    FAQ {
+        bigint faq_id PK
+        string question
+        text answer
+        int category_id FK
+    }
+    CATEGORY {
+        int category_id PK
+        string name
+    }
+        </div>
+    </div>
+
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+
+<script src="cdn/mermaid/mermaid.min.js"></script>
+<script>
+(async function () {
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'default',
+        flowchart: { curve: 'basis', useMaxWidth: true },
+        er: { useMaxWidth: true }
+    });
+
+    try {
+        await mermaid.run({
+            querySelector: '.hqj-mermaid'
+        });
+        document.getElementById('hqj_status').textContent = 'Mermaid 渲染完成：共 2 张图';
+    } catch (err) {
+        document.getElementById('hqj_status').textContent = '渲染失败：' + err.message;
+    }
+})();
+</script>
+</body>
+</html>
