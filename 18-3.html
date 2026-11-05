@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!-- 何秦剑  建立时间：2026-11-05  大模型：GPT-6-luna  功能：SVG 绘制基于知识库的智能客服系统架构图（科研风格，含在线问答与离线知识构建两条流程） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识库智能客服架构图 | 18-3 何秦剑</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #f8fafc;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .hqj-wrap { max-width: 1260px; margin: 0 auto; padding: 28px 16px 56px; }
+    .hqj-header { text-align: center; margin-bottom: 20px; }
+    .hqj-header h1 { font-size: 25px; margin-bottom: 6px; }
+    .hqj-header p { color: #64748b; font-size: 13.5px; }
+    .hqj-svg-box {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px;
+        overflow-x: auto;
+    }
+    svg { display: block; width: 100%; min-width: 960px; height: auto; }
+    .hqj-legend {
+        display: flex; gap: 26px; justify-content: center;
+        margin-top: 16px; font-size: 13px; color: #475569; flex-wrap: wrap;
+    }
+    .hqj-back {
+        display: inline-block; margin-top: 18px;
+        color: #64748b; font-size: 13px; text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<div class="hqj-wrap">
+    <header class="hqj-header">
+        <h1>基于知识库的智能客服系统架构图</h1>
+        <p>SVG 矢量图 · 科研方向：实线为在线问答链路，虚线为离线知识构建链路</p>
+    </header>
+
+    <div class="hqj-svg-box">
+        <svg viewBox="0 0 1200 1060" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="hqj_arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,3 L0,6 Z" fill="#2563eb"/>
+                </marker>
+                <marker id="hqj_arrowDash" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,3 L0,6 Z" fill="#9333ea"/>
+                </marker>
+                <marker id="hqj_arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L8,3 L0,6 Z" fill="#059669"/>
+                </marker>
+            </defs>
+
+            <!-- ============ 层 1：多渠道接入 ============ -->
+            <rect x="30" y="20" width="1140" height="110" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+            <text x="50" y="48" font-size="16" font-weight="bold" fill="#1d4ed8">L1 多渠道接入层</text>
+            <g font-size="14" fill="#1e293b" text-anchor="middle">
+                <rect x="70" y="62" width="190" height="48" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="165" y="92">网页在线客服</text>
+                <rect x="300" y="62" width="190" height="48" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="395" y="92">移动 APP</text>
+                <rect x="530" y="62" width="190" height="48" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="625" y="92">微信 / 公众号</text>
+                <rect x="760" y="62" width="190" height="48" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="855" y="92">电话语音（IVR）</text>
+                <rect x="990" y="62" width="150" height="48" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="1065" y="92">企业微信</text>
+            </g>
+
+            <!-- ============ 层 2：对话管理 ============ -->
+            <rect x="30" y="170" width="1140" height="100" rx="12" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="50" y="198" font-size="16" font-weight="bold" fill="#0e7490">L2 对话交互层</text>
+            <g font-size="14" fill="#1e293b" text-anchor="middle">
+                <rect x="180" y="212" width="240" height="44" rx="8" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+                <text x="300" y="240">会话管理 / 路由分发</text>
+                <rect x="480" y="212" width="240" height="44" rx="8" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+                <text x="600" y="240">上下文记忆管理</text>
+                <rect x="780" y="212" width="240" height="44" rx="8" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+                <text x="900" y="240">多轮对话状态跟踪</text>
+            </g>
+
+            <!-- ============ 层 3：智能问答核心 ============ -->
+            <rect x="30" y="310" width="1140" height="180" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+            <text x="50" y="338" font-size="16" font-weight="bold" fill="#15803d">L3 智能问答核心层（NLP + LLM）</text>
+            <g font-size="13.5" fill="#1e293b" text-anchor="middle">
+                <rect x="70" y="356" width="160" height="50" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="150" y="387">意图识别</text>
+                <rect x="250" y="356" width="160" height="50" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="330" y="387">实体抽取</text>
+                <rect x="430" y="356" width="160" height="50" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="510" y="387">FAQ 精确匹配</text>
+                <rect x="610" y="356" width="180" height="50" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>
+                <text x="700" y="387">RAG 检索增强生成</text>
+                <rect x="810" y="356" width="160" height="50" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>
+                <text x="890" y="387">大语言模型 LLM</text>
+                <rect x="990" y="356" width="150" height="50" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="1065" y="387">答案生成与排序</text>
+
+                <rect x="300" y="422" width="260" height="46" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="430" y="451">语义向量相似度计算</text>
+                <rect x="640" y="422" width="260" height="46" rx="8" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+                <text x="770" y="451">引用溯源 / 幻觉抑制</text>
+            </g>
+
+            <!-- ============ 层 4：离线知识构建 ============ -->
+            <rect x="30" y="530" width="700" height="170" rx="12" fill="#faf5ff" stroke="#9333ea" stroke-width="1.5"/>
+            <text x="50" y="558" font-size="16" font-weight="bold" fill="#7e22ce">L4 知识构建与管理层（离线 Pipeline）</text>
+            <g font-size="13" fill="#1e293b" text-anchor="middle">
+                <rect x="52" y="576" width="120" height="46" rx="8" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+                <text x="112" y="605">多源文档采集</text>
+                <rect x="192" y="576" width="120" height="46" rx="8" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+                <text x="252" y="605">解析与清洗</text>
+                <rect x="332" y="576" width="120" height="46" rx="8" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+                <text x="392" y="605">文本分块 Chunk</text>
+                <rect x="472" y="576" width="120" height="46" rx="8" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+                <text x="532" y="605">向量化 Embedding</text>
+                <rect x="612" y="576" width="96" height="46" rx="8" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+                <text x="660" y="605">人工审核</text>
+
+                <rect x="200" y="640" width="360" height="42" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2"/>
+                <text x="380" y="667">知识更新调度（增量更新 / 版本管理）</text>
+            </g>
+
+            <!-- 人工坐席（兜底） -->
+            <rect x="770" y="530" width="400" height="170" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+            <text x="790" y="558" font-size="16" font-weight="bold" fill="#c2410c">人工兜底</text>
+            <g font-size="13.5" fill="#1e293b" text-anchor="middle">
+                <rect x="800" y="576" width="160" height="48" rx="8" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+                <text x="880" y="606">人工坐席工作台</text>
+                <rect x="990" y="576" width="160" height="48" rx="8" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+                <text x="1070" y="606">转人工策略引擎</text>
+                <rect x="800" y="640" width="350" height="42" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+                <text x="975" y="667">会话记录回流 → 反哺知识库</text>
+            </g>
+
+            <!-- ============ 层 5：知识存储 ============ -->
+            <rect x="30" y="740" width="1140" height="120" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+            <text x="50" y="768" font-size="16" font-weight="bold" fill="#a16207">L5 知识存储层</text>
+            <g font-size="14" fill="#1e293b" text-anchor="middle">
+                <rect x="100" y="786" width="220" height="52" rx="8" fill="#fff" stroke="#ca8a04" stroke-width="2"/>
+                <text x="210" y="818">向量数据库</text>
+                <rect x="360" y="786" width="220" height="52" rx="8" fill="#fff" stroke="#ca8a04" stroke-width="2"/>
+                <text x="470" y="818">FAQ 知识库</text>
+                <rect x="620" y="786" width="220" height="52" rx="8" fill="#fff" stroke="#ca8a04" stroke-width="2"/>
+                <text x="730" y="818">知识图谱</text>
+                <rect x="880" y="786" width="220" height="52" rx="8" fill="#fff" stroke="#ca8a04" stroke-width="2"/>
+                <text x="990" y="818">原始文档库（对象存储）</text>
+            </g>
+
+            <!-- ============ 层 6：基础设施 ============ -->
+            <rect x="30" y="900" width="1140" height="110" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+            <text x="50" y="928" font-size="16" font-weight="bold" fill="#334155">L6 基础设施与运维保障</text>
+            <g font-size="13.5" fill="#1e293b" text-anchor="middle">
+                <rect x="80" y="944" width="200" height="46" rx="8" fill="#fff" stroke="#64748b" stroke-width="2"/>
+                <text x="180" y="973">GPU 算力 / 模型服务</text>
+                <rect x="320" y="944" width="200" height="46" rx="8" fill="#fff" stroke="#64748b" stroke-width="2"/>
+                <text x="420" y="973">日志监控与评估</text>
+                <rect x="560" y="944" width="200" height="46" rx="8" fill="#fff" stroke="#64748b" stroke-width="2"/>
+                <text x="660" y="973">数据安全与隐私合规</text>
+                <rect x="800" y="944" width="200" height="46" rx="8" fill="#fff" stroke="#64748b" stroke-width="2"/>
+                <text x="900" y="973">容器化部署（K8s）</text>
+            </g>
+
+            <!-- ============ 在线链路实线箭头（自上而下） ============ -->
+            <g stroke="#2563eb" stroke-width="2" fill="none">
+                <line x1="600" y1="130" x2="600" y2="168" marker-end="url(#hqj_arrow)"/>
+                <line x1="600" y1="270" x2="600" y2="308" marker-end="url(#hqj_arrow)"/>
+            </g>
+            <!-- 检索：核心层 ↔ 存储层（双向，绿色） -->
+            <g stroke="#059669" stroke-width="2.2" fill="none">
+                <line x1="500" y1="490" x2="350" y2="784" marker-end="url(#hqj_arrowGreen)"/>
+                <line x1="700" y1="490" x2="780" y2="784" marker-end="url(#hqj_arrowGreen)"/>
+            </g>
+            <!-- 转人工 -->
+            <line x1="900" y1="490" x2="900" y2="528" stroke="#ea580c" stroke-width="2" marker-end="url(#hqj_arrow)" fill="none"/>
+
+            <!-- ============ 离线知识构建虚线（紫色） ============ -->
+            <g stroke="#9333ea" stroke-width="2" stroke-dasharray="7,5" fill="none">
+                <path d="M 380 704 L 380 730 L 300 730 L 300 784" marker-end="url(#hqj_arrowDash)"/>
+                <path d="M 500 704 L 500 730 L 600 730 L 600 784" marker-end="url(#hqj_arrowDash)"/>
+            </g>
+            <!-- 回流虚线 -->
+            <path d="M 975 700 L 975 728 L 850 728 L 850 784" stroke="#9333ea" stroke-width="2" stroke-dasharray="7,5" fill="none" marker-end="url(#hqj_arrowDash)"/>
+
+            <!-- 流程标注 -->
+            <text x="560" y="155" font-size="12" fill="#2563eb">用户提问</text>
+            <text x="620" y="295" font-size="12" fill="#2563eb">进入 NLP 处理</text>
+            <text x="400" y="725" font-size="12" fill="#7e22ce">知识入库</text>
+        </svg>
+    </div>
+
+    <div class="hqj-legend">
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="32" y2="5" stroke="#2563eb" stroke-width="2.5"/></svg> 在线问答链路</span>
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="32" y2="5" stroke="#059669" stroke-width="2.5"/></svg> 知识检索（双向）</span>
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="32" y2="5" stroke="#9333ea" stroke-width="2.5" stroke-dasharray="6,4"/></svg> 离线知识构建 / 回流</span>
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="32" y2="5" stroke="#ea580c" stroke-width="2.5"/></svg> 转人工兜底</span>
+    </div>
+    <a class="hqj-back" href="index.html">← 返回首页</a>
+</div>
+</body>
+</html>
