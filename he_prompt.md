@@ -143,3 +143,6 @@
 
 ## 2026-11-05 13:41:48
 18-1写显示canvas动画包括文字何秦剑，18-2显示基于CANVAS的全栈系统系统架构图（电商系统），18-3其中包括基于知识库的智能客服的系统的系统架构图，图的格式为SVG，科研方向
+
+## 2026-11-05 13:57:40
+实现18-4，包括echarts的两个图，cdn文件下载到cdn目录下，示例网址https://echarts.apache.org/examples/zh/editor.html?c=globe-echarts-gl-hello-world&gl=1和https://echarts.apache.org/examples/zh/editor.html?c=lines-ny
